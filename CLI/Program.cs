@@ -1,4 +1,7 @@
 ﻿using System;
+using Compiler;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace CLI
 {
@@ -6,7 +9,12 @@ namespace CLI
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            var lexer = new Lexer();
+            var result = lexer.Lex("type Person = Foo;");
+            foreach (var r in result)
+            {
+                Console.WriteLine(r);
+            }
         }
     }
 }
