@@ -1,15 +1,17 @@
 using System;
+using Compiler;
 using Xunit;
 
-namespace COmpilerTests
+namespace CompilerTests
 {
     public class UnitTest1
     {
         [Fact]
         public void Test1()
         {
-            Assert.Equal(2, 2);
-
+            var lexer = new Lexer();
+            Assert.NotNull(lexer);
         }
     }
 }
+

@@ -3,6 +3,12 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CLI", "CLI\CLI.csproj", "{14F5497C-BA36-4183-8BCE-F426FCEDB58B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Compiler", "Compiler\Compiler.csproj", "{95AB3300-95BD-4E69-9E1B-CD281EA76F28}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{BE20F938-359D-49B2-A33B-4CDF07792C55}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CompilerTests", "CompilerTests\CompilerTests.csproj", "{5AFE6847-C9C1-40C5-810C-4C12B4569C11}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -13,5 +19,16 @@ Global
 		{14F5497C-BA36-4183-8BCE-F426FCEDB58B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{14F5497C-BA36-4183-8BCE-F426FCEDB58B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{14F5497C-BA36-4183-8BCE-F426FCEDB58B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{95AB3300-95BD-4E69-9E1B-CD281EA76F28}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{95AB3300-95BD-4E69-9E1B-CD281EA76F28}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{95AB3300-95BD-4E69-9E1B-CD281EA76F28}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{95AB3300-95BD-4E69-9E1B-CD281EA76F28}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5AFE6847-C9C1-40C5-810C-4C12B4569C11}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5AFE6847-C9C1-40C5-810C-4C12B4569C11}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5AFE6847-C9C1-40C5-810C-4C12B4569C11}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5AFE6847-C9C1-40C5-810C-4C12B4569C11}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{5AFE6847-C9C1-40C5-810C-4C12B4569C11} = {BE20F938-359D-49B2-A33B-4CDF07792C55}
 	EndGlobalSection
 EndGlobal
