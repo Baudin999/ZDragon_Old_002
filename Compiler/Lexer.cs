@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using System.Linq;
 
 namespace Compiler
 {
     public class Lexer
     {
-
         private bool _ignoreWhiteSpace = true;
 
         private string PrepareSource(string source)
@@ -26,7 +24,7 @@ namespace Compiler
 
             while (!input.AtEnd)
             {
-                var c = input.Current;
+                char c = input.Current;
                 if (index != input.Position)
                 {
                     index = input.Position;

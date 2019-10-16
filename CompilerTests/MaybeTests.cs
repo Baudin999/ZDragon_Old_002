@@ -6,12 +6,10 @@ namespace CompilerTests
 {
     public class MaybeTests
     {
-
-
         [Fact]
         public void CreateJust()
         {
-            var some = new Just<string>("Carlos");
+            Just<string> some = new Just<string>("Carlos");
             Assert.NotNull(some);
             Assert.Equal("Carlos", some.Get());
         }
@@ -19,11 +17,9 @@ namespace CompilerTests
         [Fact]
         public void CreateNothing()
         {
-            var nothing = new Nothing<string>();
+            Nothing<string> nothing = new Nothing<string>();
             Assert.NotNull(nothing);
             Assert.Throws<InvalidOperationException>(nothing.Get);
         }
-
-
     }
 }

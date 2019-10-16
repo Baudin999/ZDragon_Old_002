@@ -10,8 +10,8 @@ namespace CompilerTests
         [Fact]
         public void Test1()
         {
-            var lexer = new Lexer();
-            var result = lexer.Lex("type Person = Foo;");
+            Lexer lexer = new Lexer();
+            IEnumerable<Token> result = lexer.Lex("type Person = Foo;");
             Assert.NotNull(lexer);
             Assert.NotNull(result);
             Assert.Equal(5, result.Count());
@@ -20,8 +20,8 @@ namespace CompilerTests
         [Fact]
         public void CanLexIndentation()
         {
-            var lexer = new Lexer();
-            var result = lexer.Lex(@"
+            Lexer lexer = new Lexer();
+            IEnumerable<Token> result = lexer.Lex(@"
 type Person =
     FirstName: String
 ");

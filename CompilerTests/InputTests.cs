@@ -1,6 +1,5 @@
 ﻿using Compiler;
 using Xunit;
-using System;
 using Xunit.Abstractions;
 
 namespace CompilerTests

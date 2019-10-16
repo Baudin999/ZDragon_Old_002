@@ -54,15 +54,7 @@ namespace Compiler
 
         public IMaybe<char> Peek(int lookAhead)
         {
-            int index = Position + lookAhead;
-            if (index < _length)
-            {
-                return new Just<char>(Source[Position + lookAhead]);
-            }
-            else
-            {
-                return new Nothing<char>();
-            }
+            return (Position + lookAhead) < _length ? (IMaybe<char>) new Just<char>(Source[Position + lookAhead]) : new Nothing<char>();
         }
 
         /// <summary>
@@ -73,15 +65,15 @@ namespace Compiler
         /// <summary>
         /// Gets the current <see cref="System.Char" />.
         /// </summary>
-        public char Current { get { return Source[Position]; } }
+        public char Current => Source[Position];
 
         /// <summary>
         /// Gets a value indicating whether the end of the source is reached.
         /// </summary>
-        public bool AtEnd { get { return Position == _length; } }
+        public bool AtEnd => Position == _length;
 
         /// <summary>
-        /// Gets the current positon.
+        /// Gets the current position.
         /// </summary>
         public int Position { get; }
 
@@ -103,7 +95,7 @@ namespace Compiler
         /// </returns>
         public override string ToString()
         {
-            return String.Format("Line {0}, Column {1}", Line, Column);
+            return $"Line {Line}, Column {Column}";
         }
 
         /// <summary>
@@ -172,8 +164,8 @@ namespace Compiler
         /// <returns></returns>
         public TakeWhile TakeWhile(Predicate<char> predicate)
         {
-            var startIndex = this.Position;
-            var startLine = this.Line;
+            int startIndex = this.Position;
+            int startLine = this.Line;
 
             IInput input = this;
             StringBuilder builder = new StringBuilder(input.Current.ToString());
