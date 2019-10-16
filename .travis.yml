@@ -4,6 +4,7 @@ mono: none
 dotnet: 3.0.100
 script:
   - dotnet --version
+  - tree .
   - dotnet build --configuration Release
   - dotnet test 
 
