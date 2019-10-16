@@ -99,6 +99,8 @@ namespace Compiler
         /// </summary>
         public int Column { get { return _column; } }
 
+        public string Source1 => _source;
+
         /// <summary>
         /// Returns a string that represents the current object.
         /// </summary>

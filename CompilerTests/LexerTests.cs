@@ -14,7 +14,7 @@ namespace CompilerTests
             var result = lexer.Lex("type Person = Foo;");
             Assert.NotNull(lexer);
             Assert.NotNull(result);
-            Assert.Equal(8, result.Count());
+            Assert.Equal(5, result.Count());
         }
 
         [Fact]
