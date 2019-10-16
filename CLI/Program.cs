@@ -10,7 +10,10 @@ namespace CLI
         static void Main(string[] args)
         {
             var lexer = new Lexer();
-            var result = lexer.Lex("type Person = Foo;");
+            var result = lexer.Lex(@"
+type Person =
+    FirstName: String;
+");
             foreach (var r in result)
             {
                 Console.WriteLine(r);

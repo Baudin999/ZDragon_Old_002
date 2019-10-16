@@ -16,6 +16,18 @@ namespace CompilerTests
             Assert.NotNull(result);
             Assert.Equal(8, result.Count());
         }
+
+        [Fact]
+        public void CanLexIndentation()
+        {
+            var lexer = new Lexer();
+            var result = lexer.Lex(@"
+type Person =
+    FirstName: String
+");
+            Assert.NotNull(result);
+            
+        }
     }
 }
 
