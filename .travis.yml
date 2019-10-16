@@ -3,6 +3,7 @@ solution: ZDragon.NET.sln
 mono: none
 dotnet: 3.0.100
 install:
+  - nuget
   - nuget restore ZDragon.NET.sln
   - nuget install xunit.runners -Version 1.9.2 -OutputDirectory testrunner
 script:
