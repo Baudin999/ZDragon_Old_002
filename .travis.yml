@@ -1,7 +1,5 @@
 language: csharp
-dist: trusty
-sudo: required
 mono: none
 dotnet: 3.0.100
 script:
-  - dotnet build ~/ZDragon.NET/ZDragon.NET.sln
+  - dotnet build 
