@@ -78,7 +78,7 @@ namespace Compiler
         /// <summary>
         /// Gets a value indicating whether the end of the source is reached.
         /// </summary>
-        public bool AtEnd { get { return Position == Source.Length; } }
+        public bool AtEnd { get { return Position == _length; } }
 
         /// <summary>
         /// Gets the current positon.
@@ -103,7 +103,7 @@ namespace Compiler
         /// </returns>
         public override string ToString()
         {
-            return string.Format("Line {0}, Column {1}", Line, Column);
+            return String.Format("Line {0}, Column {1}", Line, Column);
         }
 
         /// <summary>
@@ -143,7 +143,7 @@ namespace Compiler
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
-            return string.Equals(Source, other.Source) && Position == other.Position;
+            return String.Equals(Source, other.Source) && Position == other.Position;
         }
 
         /// <summary>

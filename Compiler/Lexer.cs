@@ -35,9 +35,9 @@ namespace Compiler
                 {
                     throw new InvalidOperationException("BOO");
                 }
-                if (char.IsLetter(c))
+                if (Char.IsLetter(c))
                 {
-                    TakeWhile takeWhile = input.TakeWhile(ch => char.IsLetterOrDigit(ch));
+                    TakeWhile takeWhile = input.TakeWhile(ch => Char.IsLetterOrDigit(ch));
                     input = takeWhile.Input;
                     yield return new Token()
                     {
