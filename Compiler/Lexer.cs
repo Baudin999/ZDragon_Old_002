@@ -13,12 +13,22 @@ namespace Compiler
         {
             IInput input = new Input(code);
 
+            var index = -1;
+
             while (!input.AtEnd)
             {
                 var c = input.Current;
-                if (!Char.IsWhiteSpace(c))
+                if (index != input.Position)
                 {
-                    var takeWhile = input.TakeWhile(ch => !Char.IsWhiteSpace(ch));
+                    index = input.Position;
+                }
+                else
+                {
+                    throw new InvalidOperationException("BOO");
+                }
+                if (Char.IsLetter(c))
+                {
+                    var takeWhile = input.TakeWhile(ch => Char.IsLetterOrDigit(ch));
                     input = takeWhile.Input;
                     yield return new Token()
                     {
@@ -33,12 +43,27 @@ namespace Compiler
                 {
                     yield return new Token()
                     {
+                        StartIndex = input.Position,
+                        EndIndex = input.Position + 1,
+                        StartLine = input.Line,
+                        EndLine = input.Line,
                         Value = " ",
                         TokenType = TokenType.WhiteSpace
                     };
+                } else
+                {
+                    yield return new Token()
+                    {
+                        StartIndex = input.Position,
+                        EndIndex = input.Position + 1,
+                        StartLine = input.Line,
+                        EndLine = input.Line,
+                        Value = c.ToString(),
+                        TokenType = TokenType.Other
+                    };
                 }
-
                 input = input.Next();
+
             }
         }
 

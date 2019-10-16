@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace CompilerTests
 {
-    public class UnitTest1
+    public class LexerTests
     {
         [Fact]
         public void Test1()
@@ -14,7 +14,7 @@ namespace CompilerTests
             var result = lexer.Lex("type Person = Foo;");
             Assert.NotNull(lexer);
             Assert.NotNull(result);
-            Assert.Equal(4, result.Count());
+            Assert.Equal(8, result.Count());
         }
     }
 }

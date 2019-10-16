@@ -17,6 +17,9 @@ namespace Compiler
         /// <exception cref="System.InvalidOperationException">The input is already at the end of the source.</exception>
         IInput Next();
 
+        IMaybe<char> Peek();
+        IMaybe<char> Peek(int lookAhead);
+
         /// <summary>
         /// Gets the whole source.
         /// </summary>

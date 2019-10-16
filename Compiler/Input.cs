@@ -13,6 +13,7 @@ namespace Compiler
         private readonly int _position;
         private readonly int _line;
         private readonly int _column;
+        private readonly int _length;
 
         /// <summary>
         /// Gets the list of memos assigned to the <see cref="Input" /> instance.
@@ -34,6 +35,7 @@ namespace Compiler
             _position = position;
             _line = line;
             _column = column;
+            _length = source.Length;
 
             Memos = new Dictionary<object, object>();
         }
@@ -44,10 +46,27 @@ namespace Compiler
         /// <returns>A new <see cref="IInput" /> that is advanced.</returns>
         public IInput Next()
         {
-            if (AtEnd) return this;
-                //throw new InvalidOperationException("The input is already at the end of the source.");
+            if (AtEnd) throw new InvalidOperationException("The input is already at the end of the source.");
 
             return new Input(_source, _position + 1, Current == '\n' ? _line + 1 : _line, Current == '\n' ? 1 : _column + 1);
+        }
+
+
+        public IMaybe<char> Peek()
+        {
+            return Peek(1);
+        }
+
+        public IMaybe<char> Peek(int lookAhead)
+        {
+            var index = _position + lookAhead;
+            if (index < _length)
+            {
+                return new Just<char>(_source[_position + lookAhead]);
+            } else
+            {
+                return new Nothing<char>();
+            }
         }
 
         /// <summary>
@@ -166,10 +185,10 @@ namespace Compiler
             var startLine = this.Line;
 
             IInput input = this;
-            StringBuilder builder = new StringBuilder();
-            while (!input.AtEnd && predicate(input.Current)) {
-                builder.Append(input.Current);
+            StringBuilder builder = new StringBuilder(input.Current.ToString());
+            while (!input.AtEnd && predicate(input.Peek().Get())) {
                 input = input.Next();
+                builder.Append(input.Current);
             }
 
             return new TakeWhile()
