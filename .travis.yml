@@ -1,10 +1,7 @@
 language: csharp
-solution: ZDragon.NET.sln
+dist: trusty
+sudo: required
 mono: none
 dotnet: 3.0.100
 script:
-  - dotnet --version
-  - ls -la 
-  - dotnet build --configuration Release
-  - dotnet test 
-
+  - dotnet build ~/ZDragon.NET/ZDragon.NET.sln
