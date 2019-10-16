@@ -1,8 +1,12 @@
+dist: xenial
+addons:
+  snaps:
+  - name: dotnet-sdk
+    classic: true
+    channel: latest/beta
+sudo: required
 language: csharp
 mono: none
-dotnet: 3.0.100
-install: 
-  - sudo apt-get install tree
 script:
-  - tree .
-  - dotnet build 
+  - sudo snap alias dotnet-sdk.dotnet dotnet
+  - dotnet --version
