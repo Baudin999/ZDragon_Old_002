@@ -6,6 +6,6 @@ install:
   - dotnet restore ZDragon.NET.sln
   - dotnet install xunit.runners -Version 1.9.2 -OutputDirectory testrunner
 script:
-  - msbuild /p:Configuration=Release ZDragon.NET.sln
-  - mono ./testrunner/xunit.runners.1.9.2/tools/xunit.console.clr4.exe ./CompilerTests/bin/Release/CompilerTests.dll
+  - dotnet build --configuration Release
+  - dotnet test 
 
