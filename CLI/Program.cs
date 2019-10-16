@@ -7,17 +7,14 @@ namespace CLI
 {
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
-            var lexer = new Lexer();
-            var result = lexer.Lex(@"
+            Lexer lexer = new Lexer();
+            List<Token> result = lexer.Lex(@"
 type Person =
     FirstName: String;
-");
-            foreach (var r in result)
-            {
-                Console.WriteLine(r);
-            }
+").ToList();
+            result.ForEach(Console.WriteLine);
         }
     }
 }

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Compiler
 {
@@ -26,7 +25,7 @@ namespace Compiler
         string Source { get; }
 
         /// <summary>
-        /// Gets the current <see cref="System.Char" />.
+        /// Gets the current <see cref="char" />.
         /// </summary>
         char Current { get; }
 

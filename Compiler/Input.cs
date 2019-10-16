@@ -9,10 +9,6 @@ namespace Compiler
     /// </summary>
     public class Input : IInput
     {
-        private readonly string _source;
-        private readonly int _position;
-        private readonly int _line;
-        private readonly int _column;
         private readonly int _length;
 
         /// <summary>
@@ -31,10 +27,10 @@ namespace Compiler
 
         internal Input(string source, int position, int line = 1, int column = 1)
         {
-            _source = source;
-            _position = position;
-            _line = line;
-            _column = column;
+            Source = source;
+            Position = position;
+            Line = line;
+            Column = column;
             _length = source.Length;
 
             Memos = new Dictionary<object, object>();
@@ -48,9 +44,8 @@ namespace Compiler
         {
             if (AtEnd) throw new InvalidOperationException("The input is already at the end of the source.");
 
-            return new Input(_source, _position + 1, Current == '\n' ? _line + 1 : _line, Current == '\n' ? 1 : _column + 1);
+            return new Input(Source, Position + 1, Current == '\n' ? Line + 1 : Line, Current == '\n' ? 1 : Column + 1);
         }
-
 
         public IMaybe<char> Peek()
         {
@@ -59,11 +54,12 @@ namespace Compiler
 
         public IMaybe<char> Peek(int lookAhead)
         {
-            var index = _position + lookAhead;
+            int index = Position + lookAhead;
             if (index < _length)
             {
-                return new Just<char>(_source[_position + lookAhead]);
-            } else
+                return new Just<char>(Source[Position + lookAhead]);
+            }
+            else
             {
                 return new Nothing<char>();
             }
@@ -72,34 +68,32 @@ namespace Compiler
         /// <summary>
         /// Gets the whole source.
         /// </summary>
-        public string Source { get { return _source; } }
+        public string Source { get; }
 
         /// <summary>
         /// Gets the current <see cref="System.Char" />.
         /// </summary>
-        public char Current { get { return _source[_position]; } }
+        public char Current { get { return Source[Position]; } }
 
         /// <summary>
         /// Gets a value indicating whether the end of the source is reached.
         /// </summary>
-        public bool AtEnd { get { return _position == _source.Length; } }
+        public bool AtEnd { get { return Position == Source.Length; } }
 
         /// <summary>
         /// Gets the current positon.
         /// </summary>
-        public int Position { get { return _position; } }
+        public int Position { get; }
 
         /// <summary>
         /// Gets the current line number.
         /// </summary>
-        public int Line { get { return _line; } }
+        public int Line { get; }
 
         /// <summary>
         /// Gets the current column.
         /// </summary>
-        public int Column { get { return _column; } }
-
-        public string Source1 => _source;
+        public int Column { get; }
 
         /// <summary>
         /// Returns a string that represents the current object.
@@ -109,7 +103,7 @@ namespace Compiler
         /// </returns>
         public override string ToString()
         {
-            return string.Format("Line {0}, Column {1}", _line, _column);
+            return string.Format("Line {0}, Column {1}", Line, Column);
         }
 
         /// <summary>
@@ -122,7 +116,7 @@ namespace Compiler
         {
             unchecked
             {
-                return ((_source != null ? _source.GetHashCode() : 0) * 397) ^ _position;
+                return ((Source != null ? Source.GetHashCode() : 0) * 397) ^ Position;
             }
         }
 
@@ -149,7 +143,7 @@ namespace Compiler
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
-            return string.Equals(_source, other.Source) && _position == other.Position;
+            return string.Equals(Source, other.Source) && Position == other.Position;
         }
 
         /// <summary>
@@ -158,10 +152,7 @@ namespace Compiler
         /// <param name="left">The left <see cref="Input" />.</param>
         /// <param name="right">The right <see cref="Input" />.</param>
         /// <returns>true if both objects are equal.</returns>
-        public static bool operator ==(Input left, Input right)
-        {
-            return Equals(left, right);
-        }
+        public static bool operator ==(Input left, Input right) => Equals(left, right);
 
         /// <summary>
         /// Indicates whether the left <see cref="Input" /> is not equal to the right <see cref="Input" />.
@@ -169,10 +160,8 @@ namespace Compiler
         /// <param name="left">The left <see cref="Input" />.</param>
         /// <param name="right">The right <see cref="Input" />.</param>
         /// <returns>true if the objects are not equal.</returns>
-        public static bool operator !=(Input left, Input right)
-        {
-            return !Equals(left, right);
-        }
+        public static bool operator !=(Input left, Input right) => !Equals(left, right);
+
 
 
         /// <summary>

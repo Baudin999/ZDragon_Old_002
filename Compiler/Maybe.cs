@@ -15,15 +15,15 @@ namespace Compiler
 
     public class Just<T> : Maybe<T>
     {
-        private T value;
+        private readonly T _value;
         public Just(T value)
         {
-            this.value = value;
+            this._value = value;
         }
 
         public override T Get()
         {
-            return this.value;
+            return this._value;
         }
     }
 

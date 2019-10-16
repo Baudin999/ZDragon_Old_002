@@ -17,7 +17,7 @@ namespace Compiler
 
         public override string ToString()
         {
-            return String.Format($"({StartIndex}, {EndIndex}): {TokenType}::{Value}");
+            return string.Format($"({StartIndex}, {EndIndex}): {TokenType}::{Value}");
         }
     }
 

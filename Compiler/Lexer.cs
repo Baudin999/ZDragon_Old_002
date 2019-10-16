@@ -8,9 +8,9 @@ namespace Compiler
     public class Lexer
     {
 
-        private bool ignoreWhiteSpace = true;
+        private bool _ignoreWhiteSpace = true;
 
-        private string prepareSource(string source)
+        private string PrepareSource(string source)
         {
             source = new Regex(" +\n").Replace(source, "\n");
             source = new Regex("    |\t").Replace(source, "→");
@@ -20,9 +20,9 @@ namespace Compiler
         public IEnumerable<Token> Lex(string code)
         {
 
-            IInput input = new Input(prepareSource(code));
+            IInput input = new Input(PrepareSource(code));
 
-            var index = -1;
+            int index = -1;
 
             while (!input.AtEnd)
             {
@@ -35,9 +35,9 @@ namespace Compiler
                 {
                     throw new InvalidOperationException("BOO");
                 }
-                if (Char.IsLetter(c))
+                if (char.IsLetter(c))
                 {
-                    var takeWhile = input.TakeWhile(ch => Char.IsLetterOrDigit(ch));
+                    TakeWhile takeWhile = input.TakeWhile(ch => char.IsLetterOrDigit(ch));
                     input = takeWhile.Input;
                     yield return new Token()
                     {
@@ -75,7 +75,7 @@ namespace Compiler
                     };
                 } else if (Char.IsWhiteSpace(c))
                 {
-                    if (!ignoreWhiteSpace)
+                    if (!_ignoreWhiteSpace)
                     {
                         yield return new Token()
                         {
