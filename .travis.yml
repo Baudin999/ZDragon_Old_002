@@ -2,10 +2,8 @@ language: csharp
 solution: ZDragon.NET.sln
 mono: none
 dotnet: 3.0.100
-install:
-  - dotnet restore ZDragon.NET.sln
-  - dotnet install xunit.runners -Version 1.9.2 -OutputDirectory testrunner
 script:
+  - dotnet --version
   - dotnet build --configuration Release
   - dotnet test 
 
