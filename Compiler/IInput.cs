@@ -24,7 +24,7 @@ namespace Compiler
         string Source { get; }
 
         /// <summary>
-        /// Gets the current <see cref="char" />.
+        /// Gets the current <see cref="System.Char" />.
         /// </summary>
         char Current { get; }
 
