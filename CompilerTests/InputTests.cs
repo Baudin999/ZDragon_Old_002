@@ -18,8 +18,12 @@ namespace CompilerTests
         [Fact]
         public void StreamThroughInput()
         {
-            IInput input = new Input("type Person");
-            Assert.Equal(11, input.Source.Length);
+            Input input = new Input("type Person");
+            while (input.HasNext())
+            {
+                Assert.NotNull(input.Current());
+                input.Next();
+            }
         }
     }
 }

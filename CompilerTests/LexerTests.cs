@@ -12,6 +12,7 @@ namespace CompilerTests
         {
             var lexer = new Lexer();
             var result = lexer.Lex("type Person = Foo;");
+            
             Assert.NotNull(lexer);
             Assert.NotNull(result);
             Assert.Equal(5, result.Count());
@@ -26,6 +27,7 @@ type Person =
     FirstName: String
 ");
             Assert.NotNull(result);
+            Assert.Equal(10, result.Count());
             
         }
     }

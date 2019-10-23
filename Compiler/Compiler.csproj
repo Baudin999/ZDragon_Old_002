@@ -4,4 +4,8 @@
     <TargetFramework>netcoreapp3.0</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="IInput.cs" />
+    <Compile Remove="Maybe.cs" />
+  </ItemGroup>
 </Project>
