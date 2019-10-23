@@ -8,4 +8,7 @@
     <Compile Remove="IInput.cs" />
     <Compile Remove="Maybe.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Tokens\" />
+  </ItemGroup>
 </Project>

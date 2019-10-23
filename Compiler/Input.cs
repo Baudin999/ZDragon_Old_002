@@ -34,7 +34,7 @@ namespace Compiler
             _length = source.Length;
         }
 
-        internal bool IsKeyword(string keyword)
+        internal bool IsEqualTo(string keyword)
         {
             // TODO: get some performance gain by checking the keywords instead of
             // calling this method over and over....
