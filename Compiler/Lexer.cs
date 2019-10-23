@@ -9,15 +9,20 @@ namespace Compiler
     public class Lexer
     {
 
-        private bool ignoreWhiteSpace = true;
+        private bool _ignoreWhiteSpace = true;
 
         private string prepareSource(string source)
         {
             source = new Regex(@"\r\n|\n").Replace(source, "↓");
             source = new Regex(@"[\s\t]+↓").Replace(source, "↓");
             source = new Regex("    |\t").Replace(source, "→");
-            Console.WriteLine(source);
             return source;
+        }
+
+        public Lexer IgnoreWhitespace(bool ignoreWhitespace)
+        {
+            _ignoreWhiteSpace = ignoreWhitespace;
+            return this;
         }
 
         public IEnumerable<Token> Lex(string code)
@@ -34,24 +39,24 @@ namespace Compiler
                     input.IsEqualTo("choice"))
                 {
                     context = true;
-                    Console.WriteLine("Starting Context");
+                    yield return new Token() { TokenType = TokenType.ContextStarted };
                     yield return TokenLexers.Word(input);
                 }
                 else if (!context && Char.IsLetter(input.Current()))
                 {
                     yield return TokenLexers.TakeUntillEndOfContext(input);
+                    yield return new Token() { TokenType = TokenType.ContextEnded };
                 }
                 else if (context && Char2.IsNewLine(input.Current()) && TokenLexers.EndContext(input))
                 {
-                    // do nothing but end Context...
-                    Console.WriteLine("Ending Context " + input.Current().ToString());
                     context = false;
+                    yield return new Token() { TokenType = TokenType.ContextEnded };
                 }
                 else if (context && Char.IsUpper(input.Current()))
                 {
                     yield return TokenLexers.Identifier(input);
                 }
-                else if ( context && Char.IsLower(input.Current()))
+                else if (context && Char.IsLower(input.Current()))
                 {
                     yield return TokenLexers.Word(input);
                 }
@@ -93,9 +98,10 @@ namespace Compiler
                     newline.Value = "↓";
                     yield return newline;
                 }
-                else if (Char.IsWhiteSpace(input.Current())) {
+                else if (Char.IsWhiteSpace(input.Current()))
+                {
                     var whiteSpace = TokenLexers.Whitespace(input);
-                    if (!ignoreWhiteSpace)
+                    if (!_ignoreWhiteSpace)
                     {
                         yield return whiteSpace;
                     }
@@ -111,7 +117,7 @@ namespace Compiler
             }
         }
 
-        
+
     }
 
 }

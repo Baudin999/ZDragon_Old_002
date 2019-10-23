@@ -47,6 +47,8 @@ namespace Compiler
         KW_Component,
         KW_View,
         Chapter,
-        Paragraph
+        Paragraph,
+        ContextEnded,
+        ContextStarted
     }
 }

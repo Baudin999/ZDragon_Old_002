@@ -1,14 +1,9 @@
 ﻿using System;
-using Compiler;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace CLI
+namespace CompilerTests
 {
-    class Program
+    public static class Examples
     {
-
-        static string Example1 = @"
+        public static string Example1 = @"
 
 # This is a chapter
 
@@ -36,15 +31,5 @@ choice Gender =
     | ""Other""
 
 ";
-
-        static void Main(string[] args)
-        {
-            var lexer = new Lexer();
-            var result = lexer.Lex(Example1);
-            foreach (var r in result)
-            {
-                Console.WriteLine(r);
-            }
-        }
     }
 }
