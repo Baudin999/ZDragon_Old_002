@@ -10,5 +10,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Tokens\" />
+    <Folder Include="AST\" />
   </ItemGroup>
 </Project>

@@ -46,6 +46,9 @@ choice Gender =
             {
                 Console.WriteLine(r);
             }
+
+            var parseTree = new Parser(result).Parse();
+            var i = 0;
         }
     }
 }
