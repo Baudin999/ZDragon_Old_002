@@ -19,8 +19,9 @@ out the use of the word type.
 @ This is a Person annotation.
 type Person a =
     @ The first name
-    FirstName: Name;
+    FirstName: Name = Name ""Carlos"";
     Gender: Gender;
+    Age: Number = 0.75;
 
 And another paragraph! These things should flow like the documentation
 you are writing!

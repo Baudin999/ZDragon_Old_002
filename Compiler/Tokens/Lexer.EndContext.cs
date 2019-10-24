@@ -3,7 +3,7 @@ namespace Compiler
 {
     public static partial class TokenLexers
     {
-        public static bool EndContext(Input input)
+        public static bool EndContext(Input input, int depth = 2)
         {
             if (Char2.IsNewLine(input.Current()))
             {
@@ -13,7 +13,7 @@ namespace Compiler
                     index++;
                 }
 
-                var contextEnded = index == 2 && input.HasPeek(index) && input.Peek(index) != '→';
+                var contextEnded = index == depth && input.HasPeek(index) && input.Peek(index) != '→';
                 if (contextEnded)
                 {
                     for (var i = 0; i < index; ++i) input.Next();

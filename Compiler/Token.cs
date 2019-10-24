@@ -49,6 +49,9 @@ namespace Compiler
         Chapter,
         Paragraph,
         ContextEnded,
-        ContextStarted
+        ContextStarted,
+        String,
+        Number,
+        Comment
     }
 }

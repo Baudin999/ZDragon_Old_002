@@ -47,10 +47,14 @@ namespace Compiler
                     yield return TokenLexers.TakeUntillEndOfContext(input);
                     yield return new Token() { TokenType = TokenType.ContextEnded };
                 }
-                else if (context && Char2.IsNewLine(input.Current()) && TokenLexers.EndContext(input))
+                else if (context && Char2.IsNewLine(input.Current()) && TokenLexers.EndContext(input, 1))
                 {
                     context = false;
                     yield return new Token() { TokenType = TokenType.ContextEnded };
+                }
+                else if (context && Char.IsNumber(input.Current()))
+                {
+                    yield return TokenLexers.Number(input);
                 }
                 else if (context && Char.IsUpper(input.Current()))
                 {
@@ -59,6 +63,18 @@ namespace Compiler
                 else if (context && Char.IsLower(input.Current()))
                 {
                     yield return TokenLexers.Word(input);
+                }
+                else if (context && input.Current() == '"')
+                {
+                    yield return TokenLexers.String(input);
+                }
+                else if (context && char.IsNumber(input.Current()))
+                {
+                    yield return TokenLexers.Number(input);
+                }
+                else if (input.Current() == '{')
+                {
+                    yield return TokenLexers.Comment(input);
                 }
                 else if (input.Current() == '#')
                 {
@@ -114,6 +130,14 @@ namespace Compiler
                 {
                     input.Next();
                 }
+            }
+
+            // If we are still inside of a context when the code has been parsed,
+            // we'll want to end the context, jsut for good measure!
+            if (context)
+            {
+                yield return new Token() { TokenType = TokenType.ContextEnded };
+                context = false;
             }
         }
 

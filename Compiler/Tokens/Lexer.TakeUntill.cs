@@ -5,29 +5,21 @@ namespace Compiler
 {
     public static partial class TokenLexers
     {
-        public static Token Word(Input input)
+        internal static Token TakeUntill(Input input, char end, TokenType type)
         {
             var start = input.Position;
             var startColumn = input.Column;
             var startLine = input.Line;
 
             StringBuilder builder = new StringBuilder();
-            while ((char.IsLetter(input.Current()) || char.IsNumber(input.Current())) || input.Current() == '_')
+            builder.Append(input.Current());
+            while (input.HasNext() && input.Next() != end)
             {
                 builder.Append(input.Current());
-                if (input.HasNext()) input.Next();
-                else break;
             }
+            builder.Append(input.Current());
 
-            var word = builder.ToString();
-            var type = TokenType.Word;
-            if (word == "type") type = TokenType.KW_Type;
-            if (word == "alias") type = TokenType.KW_Alias;
-            if (word == "data") type = TokenType.KW_Data;
-            if (word == "choice") type = TokenType.KW_Choice;
-            if (word == "flow") type = TokenType.KW_Flow;
-            if (word == "component") type = TokenType.KW_Component;
-            if (word == "view") type = TokenType.KW_View;
+            if (input.HasNext()) input.Next();
 
             return new Token()
             {

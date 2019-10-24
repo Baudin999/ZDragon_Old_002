@@ -39,7 +39,7 @@ namespace Compiler
             // TODO: get some performance gain by checking the keywords instead of
             // calling this method over and over....
             var length = keyword.Length;
-            if (_length <= _position + length)
+            if (_length < _position + length)
             {
                 return false;
             }
@@ -51,7 +51,7 @@ namespace Compiler
             return true;
         }
 
-        public bool HasNext() => _position < _length;
+        public bool HasNext() => _position + 1 < _length;
         public bool HasPeek(int pos) => _position + pos < _length;
 
         public char Current() => _source[_position];
@@ -59,7 +59,8 @@ namespace Compiler
         public char Next() {
             if (HasNext())
             {
-                var c = _source[_position++];
+                _position += 1;
+                var c = _source[_position];
                 if (c == '↓')
                 {
                     _line++;

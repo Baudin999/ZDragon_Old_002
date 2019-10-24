@@ -53,6 +53,8 @@ namespace Compiler
                 TokenType = type
             };
         }
+
+        
     }
 
     public static class Char2
