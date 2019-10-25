@@ -12,7 +12,7 @@ parse in a sensible way instead of 'per' token. We should filter
 out the use of the word type.
 
 @ This is a Person annotation.
-type Person a =
+type Person 'a =
     @ The first name
     FirstName: Name;
     Gender: Gender;
