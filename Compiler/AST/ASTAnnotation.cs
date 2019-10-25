@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
+using System.Linq;
 
 namespace Compiler.AST
 {
@@ -14,17 +16,12 @@ namespace Compiler.AST
 
         public static IEnumerable<ASTAnnotation> Parse(Parser parser)
         {
-            parser.TryConsume(TokenType.NewLine);
-
-            while (parser.Current.TokenType == TokenType.Indent && parser.Peek().TokenType == TokenType.Annotation)
+            var annotations = parser.ConsumeWhile(TokenType.Annotation);
+            return annotations.Select(annotation =>
             {
-                parser.TryConsume(TokenType.Indent);
-                parser.TryConsume(TokenType.Annotation, out Token t);
-                if (t != null)
-                {
-                    yield return new ASTAnnotation(t.Value);
-                }
-            }
+                var result = new Regex(@"\s*@\s*").Replace(annotation.Value, "");
+                return new ASTAnnotation(result);
+            });
         }
     }
 }

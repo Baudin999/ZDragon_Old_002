@@ -48,10 +48,46 @@ namespace Compiler
         /// <param name="tokenType"></param>
         /// <param name="ignoreWhitespace"></param>
         /// <returns></returns>
-        public Token Consume(TokenType tokenType, bool ignoreWhitespace)
+        public Token Consume(TokenType tokenType, bool ignoreWhitespace = true)
         {
-            ////
-            return null;
+            while (true)
+            {
+                if (this.Current.TokenType == tokenType)
+                {
+                    var result = this.Current;
+                    if (HasNext()) this.Next();
+                    return result;
+                }
+                else if (this.Current.TokenType == TokenType.Indent || this.Current.TokenType == TokenType.NewLine)
+                {
+                    this.Next();
+                }
+                else
+                {
+                    throw new InvalidTokenException($"Trying to parse tokenType {tokenType}, but found {Current.TokenType}");
+                }
+            }
+        }
+
+        public IEnumerable<Token> ConsumeWhile(TokenType tokenType, bool ignoreWhitespace = true)
+        {
+            while (true)
+            {
+                if (this.Current.TokenType == tokenType)
+                {
+                    var result = this.Current;
+                    if (HasNext()) this.Next();
+                    yield return result;
+                }
+                else if (this.Current.TokenType == TokenType.Indent || this.Current.TokenType == TokenType.NewLine)
+                {
+                    this.Next();
+                }
+                else
+                {
+                    break;
+                }
+            }
         }
 
         public void TryConsume(TokenType tokenType, out Token t)

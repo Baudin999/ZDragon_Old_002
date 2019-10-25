@@ -21,9 +21,9 @@ namespace CompilerTests
             Input input = new Input("type Person");
             while (input.HasNext())
             {
-                Assert.NotNull(input.Current());
                 input.Next();
             }
+            Assert.True(!input.HasNext());
         }
     }
 }
