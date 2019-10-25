@@ -37,7 +37,7 @@ namespace Compiler
         Equal,
         Or,
         Separator,
-        Ident,
+        Indent,
         EndStatement,
         KW_Type,
         KW_Alias,
