@@ -98,7 +98,7 @@ namespace Compiler
                 }
                 else if (Char2.Indent(input.Current()))
                 {
-                    yield return TokenLexers.Take(input, TokenType.Ident);
+                    yield return TokenLexers.Take(input, TokenType.Indent);
                 }
                 else if (Char2.Equal(input.Current()))
                 {

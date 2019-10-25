@@ -7,28 +7,23 @@ namespace Compiler
     {
         public static Token GenericParameter(Input input)
         {
-            input.Next();
+
+            if (input.Current() != '\'')
+            {
+                throw new InvalidOperationException("Not a GenericParameter.");
+            }
+
             var start = input.Position;
             var startColumn = input.Column;
             var startLine = input.Line;
 
             StringBuilder builder = new StringBuilder();
-            while ((char.IsLetter(input.Current()) || char.IsNumber(input.Current())) || input.Current() == '_')
+            builder.Append(input.Current());
+
+            while (input.HasNext() && Char.IsLetter(input.Next()))
             {
                 builder.Append(input.Current());
-                if (input.HasNext()) input.Next();
-                else break;
             }
-
-            var word = builder.ToString();
-            var type = TokenType.GenericParameter;
-            if (word == "type") type = TokenType.KW_Type;
-            if (word == "alias") type = TokenType.KW_Alias;
-            if (word == "data") type = TokenType.KW_Data;
-            if (word == "choice") type = TokenType.KW_Choice;
-            if (word == "flow") type = TokenType.KW_Flow;
-            if (word == "component") type = TokenType.KW_Component;
-            if (word == "view") type = TokenType.KW_View;
 
             return new Token()
             {
@@ -39,7 +34,7 @@ namespace Compiler
                 EndColumn = input.Column,
                 EndLine = input.Line,
                 Value = builder.ToString(),
-                TokenType = type
+                TokenType = TokenType.GenericParameter
             };
         }
     }
