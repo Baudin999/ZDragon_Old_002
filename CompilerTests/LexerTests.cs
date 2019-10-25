@@ -150,6 +150,18 @@ LastName: String;
             Assert.Equal(4, result.Count());
             Assert.Equal(TokenType.Number, result[2].TokenType);
         }
+
+        [Fact]
+        public void GenericParameter()
+        {
+            string code = "type 'a";
+            var lexer = new Lexer();
+            var result = lexer.Lex(code).ToList();
+            Assert.NotNull(result);
+            Assert.Equal(4, result.Count());
+            Assert.Equal(TokenType.GenericParameter, result[2].TokenType);
+            Assert.Equal("'a", result[2].Value);
+        }
     }
 }
 

@@ -6,7 +6,9 @@ addons:
     channel: latest/beta
 sudo: required
 language: csharp
+solution: ZDragon.NET.sln
 mono: none
 script:
   - sudo snap alias dotnet-sdk.dotnet dotnet
-  - dotnet --version
+  - dotnet build --configuration Release
+  - dotnet test

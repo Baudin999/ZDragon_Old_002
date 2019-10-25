@@ -60,6 +60,10 @@ namespace Compiler
                 {
                     yield return TokenLexers.Identifier(input);
                 }
+                else if (context && input.Current()== '\'')
+                {
+                    yield return TokenLexers.GenericParameter(input);
+                }
                 else if (context && Char.IsLower(input.Current()))
                 {
                     yield return TokenLexers.Word(input);
@@ -94,7 +98,7 @@ namespace Compiler
                 }
                 else if (Char2.Indent(input.Current()))
                 {
-                    yield return TokenLexers.Take(input, TokenType.Ident);
+                    yield return TokenLexers.Take(input, TokenType.Indent);
                 }
                 else if (Char2.Equal(input.Current()))
                 {

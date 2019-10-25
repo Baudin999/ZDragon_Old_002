@@ -16,9 +16,9 @@ namespace Compiler.AST
         {
             parser.TryConsume(TokenType.NewLine);
 
-            while (parser.Current.TokenType == TokenType.Ident && parser.Peek().TokenType == TokenType.Annotation)
+            while (parser.Current.TokenType == TokenType.Indent && parser.Peek().TokenType == TokenType.Annotation)
             {
-                parser.TryConsume(TokenType.Ident);
+                parser.TryConsume(TokenType.Indent);
                 parser.TryConsume(TokenType.Annotation, out Token t);
                 if (t != null)
                 {

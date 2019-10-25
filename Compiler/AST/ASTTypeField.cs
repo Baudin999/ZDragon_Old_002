@@ -14,7 +14,7 @@ namespace Compiler.AST
             this.Annotations = ASTAnnotation.Parse(parser).ToList();
 
             parser.TryConsume(TokenType.NewLine);
-            parser.TryConsume(TokenType.Ident);
+            parser.TryConsume(TokenType.Indent);
 
             if (parser.Current.TokenType == TokenType.Identifier)
             {
