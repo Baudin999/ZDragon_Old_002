@@ -40,6 +40,20 @@ namespace Compiler
             }
         }
 
+        /// <summary>
+        /// Consume a token of a type but ignore newlines, indentation or whitespace.
+        /// This is a convenience method which can let you focus on the core of the
+        /// application logic and not on teh fluff.
+        /// </summary>
+        /// <param name="tokenType"></param>
+        /// <param name="ignoreWhitespace"></param>
+        /// <returns></returns>
+        public Token Consume(TokenType tokenType, bool ignoreWhitespace)
+        {
+            ////
+            return null;
+        }
+
         public void TryConsume(TokenType tokenType, out Token t)
         {
             if (this.Current.TokenType == tokenType)
