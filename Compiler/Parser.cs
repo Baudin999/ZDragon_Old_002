@@ -39,5 +39,25 @@ namespace Compiler
 
             }
         }
+
+        public void TryConsume(TokenType tokenType, out Token t)
+        {
+            if (this.Current.TokenType == tokenType)
+            {
+                t = Next();
+            }
+            else
+            {
+                t = null;
+            }
+        }
+
+        public void TryConsume(TokenType tokenType)
+        {
+            Token t;
+            TryConsume(tokenType, out t);
+        }
+
+        public Token Peek(int pos = 1) => tokenStream[position + pos];
     }
 }

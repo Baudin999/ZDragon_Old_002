@@ -52,6 +52,7 @@ namespace Compiler
         ContextStarted,
         String,
         Number,
-        Comment
+        Comment,
+        GenericParameter
     }
 }

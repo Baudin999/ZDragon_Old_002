@@ -62,9 +62,9 @@ type Person =
             var result = lexer.Lex(code).ToList();
             Assert.NotNull(result);
             Assert.Equal(3, result.Count());
-            Assert.Equal(result[0].TokenType, TokenType.ContextStarted);
-            Assert.Equal(result[1].TokenType, TokenType.KW_Type);
-            Assert.Equal(result[2].TokenType, TokenType.ContextEnded);
+            Assert.Equal(TokenType.ContextStarted, result[0].TokenType);
+            Assert.Equal(TokenType.KW_Type, result[1].TokenType);
+            Assert.Equal(TokenType.ContextEnded, result[2].TokenType);
 
             /*
             Keywords result in us entering a context. A context is ended
@@ -87,9 +87,9 @@ LastName: String;
             var result = lexer.Lex(code).ToList();
             Assert.NotNull(result);
             Assert.Equal(14, result.Count());
-            Assert.Equal(result[11].TokenType, TokenType.ContextEnded);
-            Assert.Equal(result[12].TokenType, TokenType.Paragraph);
-            Assert.Equal(result[12].Value, "LastName: String;↓");
+            Assert.Equal(TokenType.ContextEnded, result[11].TokenType);
+            Assert.Equal(TokenType.Paragraph, result[12].TokenType);
+            Assert.Equal("LastName: String;↓", result[12].Value);
 
         }
 
@@ -101,7 +101,7 @@ LastName: String;
             var result = lexer.Lex(code).ToList();
             Assert.NotNull(result);
             Assert.Equal(1, result.Count());
-            Assert.Equal(result[0].TokenType, TokenType.Paragraph);
+            Assert.Equal(TokenType.Paragraph, result[0].TokenType);
 
             /*
             Because the string is not defined in a context we expect
@@ -119,7 +119,7 @@ LastName: String;
             var result = lexer.Lex(code).ToList();
             Assert.NotNull(result);
             Assert.Equal(4, result.Count());
-            Assert.Equal(result[2].TokenType, TokenType.String);
+            Assert.Equal(TokenType.String, result[2].TokenType);
 
             /*
             We write 'type' in there because strings are only parsed
@@ -136,7 +136,7 @@ LastName: String;
             var result = lexer.Lex(code).ToList();
             Assert.NotNull(result);
             Assert.Equal(1, result.Count());
-            Assert.Equal(result[0].TokenType, TokenType.Paragraph);
+            Assert.Equal(TokenType.Paragraph, result[0].TokenType);
         }
 
 
@@ -148,7 +148,7 @@ LastName: String;
             var result = lexer.Lex(code).ToList();
             Assert.NotNull(result);
             Assert.Equal(4, result.Count());
-            Assert.Equal(result[2].TokenType, TokenType.Number);
+            Assert.Equal(TokenType.Number, result[2].TokenType);
         }
     }
 }
