@@ -48,7 +48,6 @@ choice Gender =
             }
 
             var parseTree = new Parser(result).Parse();
-            var i = 0;
         }
     }
 }
