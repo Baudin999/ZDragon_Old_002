@@ -9,6 +9,7 @@
     <Compile Remove="Maybe.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Tokens\" />
     <Folder Include="AST\" />
   </ItemGroup>
 </Project>
