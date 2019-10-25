@@ -9,6 +9,7 @@ language: csharp
 solution: ZDragon.NET.sln
 mono: none
 script:
+  - ls /home/travis/build/Baudin999/ZDragon.NET/CompilerTests
   - sudo snap alias dotnet-sdk.dotnet dotnet
   - dotnet --version
   - dotnet build --configuration Release
