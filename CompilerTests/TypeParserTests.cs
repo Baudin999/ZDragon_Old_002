@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace CompilerTests
 {
-    public class ParserTests
+    public class TypeParserTests
     {
         [Fact]
         public void BasicParserTest()
@@ -127,6 +127,27 @@ type Person
 
             Assert.Single(parseTree);
             Assert.Single((parseTree[0] as ASTType).Annotations);
+        }
+
+        [Fact]
+        public void TypeAnnotations2()
+        {
+            var code = @"
+@ The person type
+type Person =
+    FirstName: String;
+@ An address is a place
+@ A second annotation line...
+type Address
+";
+            var tokens = new Lexer().Lex(code);
+            var parseTree = new Parser(tokens).Parse().ToList();
+            Assert.NotNull(parseTree);
+
+            Assert.Equal(2, parseTree.Count);
+            Assert.Single((parseTree[0] as ASTType).Annotations);
+            Assert.Equal(2, (parseTree[1] as ASTType).Annotations.Count);
+
         }
     }
 }
