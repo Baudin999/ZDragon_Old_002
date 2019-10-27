@@ -26,11 +26,16 @@ namespace Compiler
 
         public IEnumerable<object> Parse()
         {
+            List<ASTAnnotation> annotations = new List<ASTAnnotation>();
             while (HasNext())
             {
                 if (Current.TokenType == TokenType.KW_Type)
                 {
-                    yield return new ASTType(this);
+                    yield return new ASTType(this, annotations);
+                }
+                else if (Current.TokenType == TokenType.Annotation)
+                {
+                    annotations = ASTAnnotation.Parse(this).ToList();
                 }
                 else
                 {
@@ -68,7 +73,7 @@ namespace Compiler
                 }
             }
         }
-
+        
         public IEnumerable<Token> ConsumeWhile(TokenType tokenType, bool ignoreWhitespace = true)
         {
             while (true)
@@ -76,10 +81,10 @@ namespace Compiler
                 if (this.Current.TokenType == tokenType)
                 {
                     var result = this.Current;
-                    if (HasNext()) this.Next();
+                    if (this.HasNext()) this.Next();
                     yield return result;
                 }
-                else if (this.Current.TokenType == TokenType.Indent || this.Current.TokenType == TokenType.NewLine)
+                else if (HasNext() && (this.Current.TokenType == TokenType.Indent || this.Current.TokenType == TokenType.NewLine))
                 {
                     this.Next();
                 }

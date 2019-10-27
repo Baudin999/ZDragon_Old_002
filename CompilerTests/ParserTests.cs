@@ -117,7 +117,16 @@ type Address =
         [Fact]
         public void TypeAnnotations()
         {
-            Assert.True(true);
+            var code = @"
+@ The person type
+type Person
+";
+            var tokens = new Lexer().Lex(code);
+            var parseTree = new Parser(tokens).Parse().ToList();
+            Assert.NotNull(parseTree);
+
+            Assert.Single(parseTree);
+            Assert.Single((parseTree[0] as ASTType).Annotations);
         }
     }
 }

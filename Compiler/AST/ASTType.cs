@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace Compiler.AST
@@ -6,11 +7,14 @@ namespace Compiler.AST
     public class ASTType : IASTNode
     {
         public string Name { get; private set; }
+        public IEnumerable Annotations { get; set; }
+
         public List<string> Parameters = new List<string>();
         public List<ASTTypeField> Fields = new List<ASTTypeField>();
 
-        public ASTType(Parser parser)
+        public ASTType(Parser parser, IEnumerable<ASTAnnotation> annotations)
         {
+            this.Annotations = annotations;
             parser.Next();
             if (parser.Current.TokenType == TokenType.Identifier)
             {
