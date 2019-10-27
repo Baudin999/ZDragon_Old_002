@@ -22,16 +22,16 @@ type Person =
             Assert.NotNull(parseTree);
 
             List<object> list = parseTree.ToList();
-            Assert.Equal(1, list.Count());
+            Assert.Single(list);
 
             ASTType t = list[0] as ASTType;
             Assert.Equal("Person", t.Name);
-            Assert.Equal(0, t.Parameters.Count);
-            Assert.Equal(1, t.Fields.Count);
+            Assert.Empty(t.Parameters);
+            Assert.Single(t.Fields);
 
 
             ASTTypeField field = t.Fields[0];
-            Assert.Equal(1, field.Annotations.Count);
+            Assert.Single(field.Annotations);
             Assert.True(field.Annotations[0] is ASTAnnotation);
             Assert.Equal("The First Name of the Person", field.Annotations[0].Value);
 
@@ -56,11 +56,11 @@ type Person =
             Assert.NotNull(parseTree);
 
             List<object> list = parseTree.ToList();
-            Assert.Equal(1, list.Count());
+            Assert.Single(list);
 
             ASTType t = list[0] as ASTType;
             Assert.Equal("Person", t.Name);
-            Assert.Equal(0, t.Parameters.Count);
+            Assert.Empty(t.Parameters);
             Assert.Equal(3, t.Fields.Count);
 
             ASTTypeField field = t.Fields[0];
@@ -76,12 +76,12 @@ type Person =
             ASTTypeField lastNameField = t.Fields[1];
             Assert.Equal("LastName", lastNameField.Name);
             Assert.Equal("String", lastNameField.Type);
-            Assert.Equal(0, lastNameField.Annotations.Count);
+            Assert.Empty(lastNameField.Annotations);
 
             ASTTypeField ageField = t.Fields[2];
             Assert.Equal("Age", ageField.Name);
             Assert.Equal("Number", ageField.Type);
-            Assert.Equal(1, ageField.Annotations.Count);
+            Assert.Single(ageField.Annotations);
         }
 
         [Fact]
@@ -112,6 +112,12 @@ type Address =
             ASTType addressType = parseTree[1] as ASTType;
             Assert.Equal("Address", addressType.Name);
 
+        }
+
+        [Fact]
+        public void TypeAnnotations()
+        {
+            Assert.True(true);
         }
     }
 }

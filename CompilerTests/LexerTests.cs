@@ -100,7 +100,7 @@ LastName: String;
             var lexer = new Lexer();
             var result = lexer.Lex(code).ToList();
             Assert.NotNull(result);
-            Assert.Equal(1, result.Count());
+            Assert.Single(result);
             Assert.Equal(TokenType.Paragraph, result[0].TokenType);
 
             /*
@@ -135,7 +135,7 @@ LastName: String;
             var lexer = new Lexer();
             var result = lexer.Lex(code).ToList();
             Assert.NotNull(result);
-            Assert.Equal(1, result.Count());
+            Assert.Single(result);
             Assert.Equal(TokenType.Paragraph, result[0].TokenType);
         }
 

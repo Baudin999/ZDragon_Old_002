@@ -20,4 +20,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Compiler\Compiler.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <None Remove="TestResults\4cbd3726-c5fc-40f3-9845-7701bf053b15\coverage.cobertura.xml" />
+  </ItemGroup>
 </Project>
