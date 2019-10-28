@@ -36,7 +36,7 @@ type Person =
             Assert.Equal("The First Name of the Person", field.Annotations[0].Value);
 
             Assert.Equal("FirstName", field.Name);
-            Assert.Equal("String", field.Type);
+            Assert.Equal(Helpers.ToTypeDefinition(new [] { "String" }), field.Type);
         }
 
         [Fact]
@@ -70,17 +70,17 @@ type Person =
             Assert.Equal("A second Annotation is always cool to add", field.Annotations[1].Value);
 
             Assert.Equal("FirstName", field.Name);
-            Assert.Equal("String", field.Type);
+            Assert.Equal("String", field.Type[0].Value);
 
 
             ASTTypeField lastNameField = t.Fields[1];
             Assert.Equal("LastName", lastNameField.Name);
-            Assert.Equal("String", lastNameField.Type);
+            Assert.Equal("String", lastNameField.Type[0].Value);
             Assert.Empty(lastNameField.Annotations);
 
             ASTTypeField ageField = t.Fields[2];
             Assert.Equal("Age", ageField.Name);
-            Assert.Equal("Number", ageField.Type);
+            Assert.Equal(new List<ASTTypeDefinition>() { new ASTTypeDefinition("Number") }, ageField.Type);
             Assert.Single(ageField.Annotations);
         }
 
@@ -205,4 +205,12 @@ type Person =
         }
     }
 
+
+    public static class Helpers
+    {
+        public static List<ASTTypeDefinition> ToTypeDefinition(string[] parameters)
+        {
+            return parameters.Select(p => new ASTTypeDefinition(p)).ToList();
+        }
+    }
 }

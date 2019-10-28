@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Compiler;
 using Compiler.AST;
@@ -22,6 +23,7 @@ alias Name = String;
 
             ASTAlias alias = parseTree[0] as ASTAlias;
             Assert.Equal("Name", alias.Name);
+            Assert.Equal(new List<ASTTypeDefinition>() {new ASTTypeDefinition("String") }, alias.Type);
         }
 
         [Fact]
@@ -44,6 +46,22 @@ alias Name = String
             
         }
 
-        
+        [Fact]
+        public void ListAlias()
+        {
+            var code = @"
+alias Name = List String;
+";
+            var tokens = new Lexer().Lex(code);
+            var parseTree = new Parser(tokens).Parse().ToList();
+            Assert.NotNull(parseTree);
+            Assert.Single(parseTree);
+
+            ASTAlias alias = parseTree[0] as ASTAlias;
+            Assert.Equal(new List<ASTTypeDefinition>() { new ASTTypeDefinition("List"), new ASTTypeDefinition("String") }, alias.Type);
+
+        }
+
+
     }
 }
