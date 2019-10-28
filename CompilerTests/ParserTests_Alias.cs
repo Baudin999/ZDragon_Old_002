@@ -23,7 +23,7 @@ alias Name = String;
 
             ASTAlias alias = parseTree[0] as ASTAlias;
             Assert.Equal("Name", alias.Name);
-            Assert.Equal(new List<ASTTypeDefinition>() {new ASTTypeDefinition("String") }, alias.Type);
+            Assert.Equal(Helpers.ToTypeDefinition(new[] { "String" }), alias.Type);
         }
 
         [Fact]
@@ -58,7 +58,7 @@ alias Name = List String;
             Assert.Single(parseTree);
 
             ASTAlias alias = parseTree[0] as ASTAlias;
-            Assert.Equal(new List<ASTTypeDefinition>() { new ASTTypeDefinition("List"), new ASTTypeDefinition("String") }, alias.Type);
+            Assert.Equal(Helpers.ToTypeDefinition(new[] { "List", "String" }), alias.Type);
 
         }
 

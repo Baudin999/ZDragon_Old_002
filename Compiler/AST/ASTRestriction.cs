@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Compiler.AST
 {
-    public class ASTRestriction
+    public class ASTRestriction : IASTNode
     {
         public string Key { get; }
         public string Value { get; }

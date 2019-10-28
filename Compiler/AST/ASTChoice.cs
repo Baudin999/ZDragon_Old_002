@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Compiler.AST
 {
-    public class ASTChoice
+    public class ASTChoice : IASTNode
     {
         public string Name { get; private set; }
         public List<ASTTypeDefinition> Type { get; private set; }

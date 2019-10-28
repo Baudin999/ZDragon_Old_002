@@ -10,6 +10,7 @@ namespace Compiler
         private int position;
         private readonly int length;
         private readonly List<Token> tokenStream;
+        public List<ASTError> Errors { get; }
 
         public Token Current => tokenStream[position];
 
@@ -18,6 +19,7 @@ namespace Compiler
             this.tokenStream = tokenStream.ToList();
             this.length = tokenStream.Count();
             this.position = 0;
+            Errors = new List<ASTError>();
         }
 
         public bool HasNext() => position < length;
@@ -26,14 +28,17 @@ namespace Compiler
         public Token Peek(int index = 1) => tokenStream[position + index];
 
 
-        public IEnumerable<object> Parse()
+        public IEnumerable<IASTNode> Parse()
         {
             List<ASTAnnotation> annotations = new List<ASTAnnotation>();
+            List<ASTDirective> directives = new List<ASTDirective>();
             while (HasNext())
             {
                 if (Current.TokenType == TokenType.KW_Type)
                 {
-                    yield return new ASTType(this, annotations);
+                    var (errors, t) = ASTType.Parse(this, annotations, directives);
+                    this.Errors.AddRange(errors);
+                    yield return t;
                 }
                 else if (Current.TokenType == TokenType.KW_Alias)
                 {
@@ -47,11 +52,14 @@ namespace Compiler
                 {
                     annotations = ASTAnnotation.Parse(this).ToList();
                 }
+                else if (Current.TokenType == TokenType.Directive)
+                {
+                    directives = ASTDirective.Parse(this).ToList();
+                }
                 else
                 {
                     Next();
                 }
-
             }
             yield break;
         }

@@ -4,7 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace Compiler.AST
 {
-    public class ASTTypeDefinition
+    public class ASTTypeDefinition : IASTNode
     {
         public string Value { get; }
         public ASTTypeDefinition(string value)

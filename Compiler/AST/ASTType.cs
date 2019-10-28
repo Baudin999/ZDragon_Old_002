@@ -8,23 +8,38 @@ namespace Compiler.AST
     {
         public string Name { get; private set; }
         public List<ASTAnnotation> Annotations { get; set; }
+        public List<ASTDirective> Directives { get; set; }
 
         public List<string> Parameters = new List<string>();
         public List<ASTTypeField> Fields = new List<ASTTypeField>();
 
-        public ASTType(Parser parser, List<ASTAnnotation> annotations)
+        public ASTType() { }
+        public ASTType(string name, List<string> parameters, List<ASTTypeField> fields, List<ASTAnnotation> annotations, List<ASTDirective> directives)
         {
+            this.Name = name;
+            this.Parameters = parameters;
+            this.Fields = fields;
             this.Annotations = annotations;
+            this.Directives = directives;
+        }
+
+        public static (List<ASTError>, ASTType) Parse(Parser parser, List<ASTAnnotation> annotations, List<ASTDirective> directives)
+        {
+            List<ASTError> errors = new List<ASTError>();
+            ASTType result = new ASTType();
+
+            result.Annotations = annotations;
+            result.Directives = directives;
             parser.Next();
             if (parser.Current.TokenType == TokenType.Identifier)
             {
-                this.Name = parser.Current.Value;
+                result.Name = parser.Current.Value;
                 parser.Next();
             }
 
             while (parser.Current.TokenType == TokenType.GenericParameter)
             {
-                this.Parameters.Add(parser.Current.Value);
+                result.Parameters.Add(parser.Current.Value);
                 parser.Next();
             }
 
@@ -37,14 +52,19 @@ namespace Compiler.AST
                 parser.Next();
                 while (parser.Current.TokenType != TokenType.ContextEnded)
                 {
-                    Fields.Add(new ASTTypeField(parser));
+                    result.Fields.Add(new ASTTypeField(parser));
+                }
+                if (result.Fields.Count == 0)
+                {
+                    errors.Add(new ASTError($"Missing type body. If you use an '=' sign you should have at least one field."));
                 }
             }
             else
             {
                 parser.Next();
             }
-            
+
+            return (errors, result);
         }
 
     }

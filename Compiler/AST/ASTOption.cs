@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Compiler.AST
 {
-    public class ASTOption
+    public class ASTOption : IASTNode
     {
         public string Value { get;  }
         public IEnumerable<ASTAnnotation> Annotations { get; }

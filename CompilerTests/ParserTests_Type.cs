@@ -21,7 +21,7 @@ type Person =
             var parseTree = new Parser(tokens).Parse();
             Assert.NotNull(parseTree);
 
-            List<object> list = parseTree.ToList();
+            List<IASTNode> list = parseTree.ToList();
             Assert.Single(list);
 
             ASTType t = list[0] as ASTType;
@@ -55,7 +55,7 @@ type Person =
             var parseTree = new Parser(tokens).Parse();
             Assert.NotNull(parseTree);
 
-            List<object> list = parseTree.ToList();
+            List<IASTNode> list = parseTree.ToList();
             Assert.Single(list);
 
             ASTType t = list[0] as ASTType;
