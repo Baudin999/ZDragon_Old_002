@@ -22,6 +22,8 @@ namespace Compiler
 
         public bool HasNext() => position < length;
         public Token Next() => tokenStream[position++];
+        public bool HasPeek(int index = 1) => (position + index) < length;
+        public Token Peek(int index = 1) => tokenStream[position + index];
 
 
         public IEnumerable<object> Parse()
@@ -33,6 +35,10 @@ namespace Compiler
                 {
                     yield return new ASTType(this, annotations);
                 }
+                else if (Current.TokenType == TokenType.KW_Alias)
+                {
+                    yield return new ASTAlias(this);
+                }
                 else if (Current.TokenType == TokenType.Annotation)
                 {
                     annotations = ASTAnnotation.Parse(this).ToList();
@@ -43,6 +49,7 @@ namespace Compiler
                 }
 
             }
+            yield break;
         }
 
         /// <summary>
@@ -69,7 +76,7 @@ namespace Compiler
                 }
                 else
                 {
-                    throw new InvalidTokenException($"Trying to parse tokenType {tokenType}, but found {Current.TokenType}");
+                    throw new InvalidTokenException($"Trying to parse tokenType {tokenType}, but found {Current.TokenType}. ");
                 }
             }
         }
@@ -95,24 +102,41 @@ namespace Compiler
             }
         }
 
-        public void TryConsume(TokenType tokenType, out Token t)
-        {
-            if (this.Current.TokenType == tokenType)
-            {
-                t = Next();
-            }
-            else
-            {
-                t = null;
-            }
-        }
-
         public void TryConsume(TokenType tokenType)
         {
             Token t;
             TryConsume(tokenType, out t);
         }
 
-        public Token Peek(int pos = 1) => tokenStream[position + pos];
+
+        public void TryConsume(TokenType tokenType, out Token t) //, bool ignoreWhitespace = true)
+        {
+            Token result = null;
+            int index = 0;
+            while (HasPeek(index))
+            {
+                var token = Peek(index);
+                if (token.TokenType == tokenType)
+                {
+                    result = token;
+                    for (int i = 0; i <= index; ++i)
+                    {
+                        if (HasNext()) Next();
+                    }
+                    break;
+                }
+                else if (token.TokenType == TokenType.Indent || token.TokenType == TokenType.NewLine)
+                {
+                    index += 1;
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            t = result;
+        }
+
     }
 }

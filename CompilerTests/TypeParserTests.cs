@@ -95,7 +95,7 @@ type Person =
     LastName: String;
     @ Age as a number is weird ofc!
     Age: Number;
-    Addresses: List Address;
+    Addresses: List;
 type Address =
     Street: String;
     HouseNumber: Number;
@@ -149,5 +149,60 @@ type Address
             Assert.Equal(2, (parseTree[1] as ASTType).Annotations.Count);
 
         }
+
+        [Fact]
+        public void MultipleTypes2()
+        {
+            var code = @"
+type Person =
+    FirstName: String
+        & min 2
+        & max 30
+    ;
+@ The address
+type Address =
+    Street: String;
+    HouseNumber: String;
+type Company
+
+@ A product is something you can sell to
+@ a consumer or customer. Products can be
+@ physical, financial or services.
+@ Pricing can be recurring or one off, prices
+@ can very depending on the amount you buy.
+type Product =
+    Name: String
+        & min 1
+        & max 50
+    ;
+    Description: String;
+";
+            var tokens = new Lexer().Lex(code);
+            var parseTree = new Parser(tokens).Parse().ToList();
+            Assert.NotNull(parseTree);
+
+            Assert.Equal(4, parseTree.Count);
+        }
+
+        [Fact]
+        public void FieldRestrictions()
+        {
+            var code = @"
+type Person =
+    FirstName: String
+        & min 2
+        & max 30
+    ;
+";
+            var tokens = new Lexer().Lex(code);
+            var parseTree = new Parser(tokens).Parse().ToList();
+            Assert.NotNull(parseTree);
+
+            Assert.Single(parseTree);
+            ASTType t = (ASTType)parseTree[0];
+            Assert.Single(t.Fields);
+            Assert.Equal(2, t.Fields[0].Restrictions.Count);
+        }
     }
+
 }

@@ -53,6 +53,7 @@ namespace Compiler
         String,
         Number,
         Comment,
-        GenericParameter
+        GenericParameter,
+        And
     }
 }

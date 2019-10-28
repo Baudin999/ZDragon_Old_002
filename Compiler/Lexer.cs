@@ -68,6 +68,10 @@ namespace Compiler
                 {
                     yield return TokenLexers.Word(input);
                 }
+                else if (context && input.Current() == '&')
+                {
+                    yield return TokenLexers.Take(input, TokenType.And);
+                }
                 else if (context && input.Current() == '"')
                 {
                     yield return TokenLexers.String(input);

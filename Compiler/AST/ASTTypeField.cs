@@ -9,21 +9,29 @@ namespace Compiler.AST
         public string Name { get; private set; }
         public string Type { get; private set; }
         public List<ASTAnnotation> Annotations { get; private set; }
+        public List<ASTRestriction> Restrictions { get; private set; }
+
 
         public ASTTypeField(Parser parser)
         {
+            this.Restrictions = new List<ASTRestriction>();
             this.Annotations = ASTAnnotation.Parse(parser).ToList();
             this.Name = parser.Consume(TokenType.Identifier).Value;
             Token Separator = parser.Consume(TokenType.Separator);
             this.Type = parser.Consume(TokenType.Identifier).Value;
 
 
-            while (parser.Current.TokenType != TokenType.EndStatement)
-            {
-                parser.Next();
-            }
+            this.Restrictions = ASTRestriction.CreateRestrictions(parser).ToList();
 
-            parser.TryConsume(TokenType.EndStatement);
+
+            //while (parser.HasNext() &&
+            //    parser.Current.TokenType != TokenType.EndStatement)
+            //{
+            //    parser.Next();
+            //}
+
+            parser.Consume(TokenType.EndStatement);
+            //if (parser.HasNext()) parser.Next();
         }
 
     }
