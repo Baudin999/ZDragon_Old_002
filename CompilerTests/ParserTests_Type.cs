@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace CompilerTests
 {
-    public class TypeParserTests
+    public class ParserTests_Type
     {
         [Fact]
         public void BasicParserTest()
@@ -173,6 +173,8 @@ type Company
 type Product =
     Name: String
         & min 1
+
+        @ Product Name max length
         & max 50
     ;
     Description: String;
@@ -202,6 +204,32 @@ type Person =
             ASTType t = (ASTType)parseTree[0];
             Assert.Single(t.Fields);
             Assert.Equal(2, t.Fields[0].Restrictions.Count);
+        }
+
+        [Fact]
+        public void FieldRestrictionsAnnotations()
+        {
+            var code = @"
+type Person =
+    FirstName: String
+        & min 2
+
+        @ Should not be 30
+        & max 30
+    ;
+";
+            var tokens = new Lexer().Lex(code);
+            var parseTree = new Parser(tokens).Parse().ToList();
+            Assert.NotNull(parseTree);
+
+            Assert.Single(parseTree);
+            ASTType t = (ASTType)parseTree[0];
+            Assert.Single(t.Fields);
+            Assert.Equal(2, t.Fields[0].Restrictions.Count);
+
+            ASTTypeField field = t.Fields[0];
+            Assert.Equal(2, field.Restrictions.Count);
+            Assert.Equal("Should not be 30", field.Restrictions[1].Annotations.First().Value);
         }
     }
 

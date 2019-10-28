@@ -39,6 +39,10 @@ namespace Compiler
                 {
                     yield return new ASTAlias(this);
                 }
+                else if (Current.TokenType == TokenType.KW_Choice)
+                {
+                    yield return new ASTChoice(this);
+                }
                 else if (Current.TokenType == TokenType.Annotation)
                 {
                     annotations = ASTAnnotation.Parse(this).ToList();
