@@ -7,12 +7,9 @@ namespace Compiler
 {
     public class Parser
     {
-        private int position;
         private readonly int length;
         private readonly List<Token> tokenStream;
-        public List<ASTError> Errors { get; }
-
-        public Token Current => tokenStream[position];
+        private int position;
 
         public Parser(IEnumerable<Token> tokenStream)
         {
@@ -22,6 +19,8 @@ namespace Compiler
             Errors = new List<ASTError>();
         }
 
+        public List<ASTError> Errors { get; }
+        public Token Current => tokenStream[position];
         public bool HasNext() => position < length;
         public Token Next() => tokenStream[position++];
         public bool HasPeek(int index = 1) => (position + index) < length;

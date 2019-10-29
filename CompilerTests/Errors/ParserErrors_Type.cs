@@ -19,7 +19,6 @@ type Person =
 
             Assert.Single(parser.Errors);
 
-
         }
     }
 }
