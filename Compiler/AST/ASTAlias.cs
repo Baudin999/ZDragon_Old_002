@@ -10,7 +10,7 @@ namespace Compiler.AST
         public List<ASTTypeDefinition> Type { get; private set; }
         public List<ASTRestriction> Restrictions { get; }
 
-        public ASTAlias(Parser parser)
+        public ASTAlias(IParser parser)
         {
             if (parser.HasNext()) parser.Next();
             var nameId = parser.Consume(TokenType.Identifier);

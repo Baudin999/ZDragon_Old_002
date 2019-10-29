@@ -14,7 +14,7 @@ namespace Compiler.AST
         }
 
 
-        public static IEnumerable<ASTDirective> Parse(Parser parser)
+        public static IEnumerable<ASTDirective> Parse(IParser parser)
         {
             var directives = parser.ConsumeWhile(TokenType.Directive).ToList();
 

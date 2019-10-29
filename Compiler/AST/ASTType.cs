@@ -23,7 +23,7 @@ namespace Compiler.AST
             this.Directives = directives;
         }
 
-        public static (List<ASTError>, ASTType) Parse(Parser parser, List<ASTAnnotation> annotations, List<ASTDirective> directives)
+        public static (List<ASTError>, ASTType) Parse(IParser parser, List<ASTAnnotation> annotations, List<ASTDirective> directives)
         {
             List<ASTError> errors = new List<ASTError>();
             ASTType result = new ASTType();

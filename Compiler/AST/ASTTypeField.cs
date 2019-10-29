@@ -12,7 +12,7 @@ namespace Compiler.AST
         public List<ASTRestriction> Restrictions { get; private set; }
 
 
-        public ASTTypeField(Parser parser)
+        public ASTTypeField(IParser parser)
         {
             this.Restrictions = new List<ASTRestriction>();
             this.Annotations = ASTAnnotation.Parse(parser).ToList();

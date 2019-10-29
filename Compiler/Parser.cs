@@ -5,7 +5,7 @@ using Compiler.AST;
 
 namespace Compiler
 {
-    public class Parser
+    public class Parser : IParser
     {
         private readonly int length;
         private readonly List<Token> tokenStream;
@@ -16,10 +16,10 @@ namespace Compiler
             this.tokenStream = tokenStream.ToList();
             this.length = tokenStream.Count();
             this.position = 0;
-            Errors = new List<ASTError>();
+            Errors = new List<IASTError>();
         }
 
-        public List<ASTError> Errors { get; }
+        public List<IASTError> Errors { get; }
         public Token Current => tokenStream[position];
         public bool HasNext() => position < length;
         public Token Next() => tokenStream[position++];

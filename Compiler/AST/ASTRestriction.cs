@@ -16,7 +16,7 @@ namespace Compiler.AST
             this.Annotations = annotations;
         }
 
-        public static IEnumerable<ASTRestriction> CreateRestrictions(Parser parser)
+        public static IEnumerable<ASTRestriction> CreateRestrictions(IParser parser)
         {
             var annotations = ASTAnnotation.Parse(parser);
             parser.TryConsume(TokenType.And, out Token t);

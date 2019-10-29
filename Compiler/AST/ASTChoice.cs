@@ -10,7 +10,7 @@ namespace Compiler.AST
         public List<ASTTypeDefinition> Type { get; private set; }
         public List<ASTOption> Options { get; }
 
-        public ASTChoice(Parser parser)
+        public ASTChoice(IParser parser)
         {
             if (parser.HasNext()) parser.Next();
             var nameId = parser.Consume(TokenType.Identifier);

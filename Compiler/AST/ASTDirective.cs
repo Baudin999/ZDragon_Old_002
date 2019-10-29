@@ -14,7 +14,7 @@ namespace Compiler.AST
         }
 
 
-        public static IEnumerable<ASTAnnotation> Parse(Parser parser)
+        public static IEnumerable<ASTAnnotation> Parse(IParser parser)
         {
             var annotations = parser.ConsumeWhile(TokenType.Annotation).ToList();
 
