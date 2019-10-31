@@ -10,5 +10,6 @@ solution: ZDragon.NET.sln
 mono: none
 script:
   - sudo snap alias dotnet-sdk.dotnet dotnet
+  - dotnet tool install --global coverlet.console
   - dotnet build --configuration Release
-  - dotnet test
+  - coverlet /CompilerTests/bin/CompilerTests.dll --target "dotnet" --targetargs "test --no-build"
