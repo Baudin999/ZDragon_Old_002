@@ -54,6 +54,8 @@ namespace Compiler
         Number,
         Comment,
         GenericParameter,
-        And
+        And,
+        KW_Extends,
+        Pattern
     }
 }

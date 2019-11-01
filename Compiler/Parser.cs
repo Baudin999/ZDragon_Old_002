@@ -117,14 +117,15 @@ namespace Compiler
             }
         }
 
-        public void TryConsume(TokenType tokenType)
+        public Token? TryConsume(TokenType tokenType)
         {
             Token? t;
             TryConsume(tokenType, out t);
+            return t;
         }
 
 
-        public void TryConsume(TokenType tokenType, out Token? t)
+        public Token? TryConsume(TokenType tokenType, out Token? t)
         {
             Token? result = default;
             int index = 0;
@@ -151,6 +152,7 @@ namespace Compiler
             }
 
             t = result;
+            return t;
         }
 
     }

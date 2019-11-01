@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using Compiler;
 using Compiler.AST;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace CompilerTests
 {
     public class VisitorTests
     {
+
+
         [Fact]
         public void TestASTVisitor()
         {
@@ -19,7 +22,7 @@ type Person
             IEnumerable<IASTNode> nodeTree = parser.Parse();
 
             VisitorSource visitor = new VisitorSource(nodeTree);
-            Console.WriteLine(visitor);
+            string result = string.Join("\n\n", visitor.Start());
         }
     }
 }

@@ -103,6 +103,7 @@ alias Name = String
 
             foreach (ASTRestriction restriction in alias.Restrictions) { 
                 Assert.Single(restriction.Annotations);
+                Assert.Equal(TokenType.Number, restriction.Token.TokenType);
             }
 
         }
@@ -124,6 +125,45 @@ alias Name = Maybe String;
             Assert.Empty(alias.Restrictions);
             Assert.Equal(2, alias.Annotations.Count());
             Assert.Equal(Helpers.ToTypeDefinition(new[] { "Maybe", "String" }), alias.Type);
+        }
+
+        [Fact]
+        public void PatternRestrictions()
+        {
+            var code = @"
+alias Name = String
+    & pattern /[A-Z][a-z]{1,30}/
+;
+";
+            var tokens = new Lexer().Lex(code);
+            var parseTree = new Parser(tokens).Parse().ToList();
+            Assert.NotNull(parseTree);
+            Assert.Single(parseTree);
+
+            ASTAlias alias = parseTree[0] as ASTAlias;
+            Assert.Single(alias.Restrictions);
+            ASTRestriction restriction = alias.Restrictions.First();
+            Assert.Equal(TokenType.Pattern, restriction.Token.TokenType);
+        }
+
+        [Fact]
+        public void StringRestrictions()
+        {
+            var code = @"
+alias Name = String
+    & default ""Other thing""
+;
+";
+            var tokens = new Lexer().Lex(code);
+            var parseTree = new Parser(tokens).Parse().ToList();
+            Assert.NotNull(parseTree);
+            Assert.Single(parseTree);
+
+            ASTAlias alias = parseTree[0] as ASTAlias;
+            Assert.Single(alias.Restrictions);
+            ASTRestriction restriction = alias.Restrictions.First();
+            Assert.Equal(TokenType.String, restriction.Token.TokenType);
+
         }
     }
 }

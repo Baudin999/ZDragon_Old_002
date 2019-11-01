@@ -6,54 +6,61 @@ using Compiler.AST;
 namespace Compiler
 {
     public class VisitorSource
-        : VisitorBase
+        : VisitorBase<string>
     {
         List<string> value = new List<string>();
         public VisitorSource(IEnumerable<IASTNode> nodeTree) : base(nodeTree)
         {
-            // let's not call start inside of the contructor
+            // let's nostring call starstring inside of the contructor
         }
 
-        public override void VisitASTAlias(ASTAlias astAlias)
+        public override string VisitASTAlias(ASTAlias astAlias)
         {
-            
+            return "";
         }
 
-        public override void VisitASTAnnotation(ASTAnnotation astAnnotation)
+        public override string VisitASTAnnotation(ASTAnnotation astAnnotation)
         {
-            
+            return "";
         }
 
-        public override void VisitASTChoice(ASTChoice astChoice)
+        public override string VisitASTChoice(ASTChoice astChoice)
         {
-            
+            return "";
         }
 
-        public override void VisitASTDirective(ASTDirective astDirective)
+        public override string VisitASTDirective(ASTDirective astDirective)
         {
-            
+            return "";
         }
 
-        public override void VisitASTType(ASTType astType)
+        public override string VisitASTType(ASTType astType)
         {
             List<string> parts = new List<string>();
             parts.AddRange(astType.Annotations.Select(a => $"@ {a.Value}"));
-            parts.AddRange(astType.Directives.Select(a => $"% {a.Value}"));
+            parts.AddRange(astType.Directives.Select(a => $"% {a.Key}: {a.Value}"));
+
+            if (astType.Fields.Count() == 0)
+            {
+                parts.Add($"type {astType.Name}");
+            }
+
+            return string.Join("\n", parts.ToArray());
         }
 
-        public override void VisitASTTypeDefinition(ASTTypeDefinition astTypeDefinition)
+        public override string VisitASTTypeDefinition(ASTTypeDefinition astTypeDefinition)
         {
-            
+            return "";
         }
 
-        public override void VisitASTTypeField(ASTTypeField astTypeField)
+        public override string VisitASTTypeField(ASTTypeField astTypeField)
         {
-            
+            return "";
         }
 
-        public override void VisitDefault(IASTNode node)
+        public override string VisitDefault(IASTNode node)
         {
-            
+            return "";
         }
     }
 }

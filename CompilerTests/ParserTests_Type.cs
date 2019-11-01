@@ -40,6 +40,31 @@ type Person =
         }
 
         [Fact]
+        public void ComplexTypeTest()
+        {
+            var code = @"
+type Person =
+    FirstName: String;
+
+type School =
+    Name: String;
+
+type Customer
+type Product
+type Price =
+    StartDate: DateTime;
+    EndDate: DateTime;
+
+";
+            var tokens = new Lexer().Lex(code);
+            var parser = new Parser(tokens);
+            var parseTree = parser.Parse();
+            Assert.NotNull(parseTree);
+            var nodes = parseTree.ToList();
+            Assert.Equal(5, nodes.Count);
+        }
+
+        [Fact]
         public void MultipleFieldsParserTest()
         {
             var code = @"
@@ -271,6 +296,26 @@ type Person
 
             ASTType t = parseTree[0] as ASTType;
             Assert.Equal(2, t.Directives.Count());
+        }
+
+        [Fact]
+        public void Extensions01()
+        {
+            var code = @"
+type Person =
+    FirstName: String;
+
+type Customer extends Person
+";
+            var tokens = new Lexer().Lex(code);
+            var parser = new Parser(tokens);
+            var parseTree = parser.Parse().ToList();
+            Assert.NotNull(parseTree);
+            Assert.Empty(parser.Errors.ToList());
+
+
+            var customer = parseTree[0] as ASTType;
+            Assert.Single(customer.Fields);
         }
     }
 

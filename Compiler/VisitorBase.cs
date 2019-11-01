@@ -4,7 +4,7 @@ using Compiler.AST;
 
 namespace Compiler
 {
-    public abstract class VisitorBase
+    public abstract class VisitorBase<T>
     {
         public IEnumerable<IASTNode> NodeTree { get; }
 
@@ -13,36 +13,34 @@ namespace Compiler
             this.NodeTree = nodeTree;
         }
 
-        public void Start()
+        public IEnumerable<T> Start()
         {
             foreach (IASTNode node in NodeTree)
             {
-                Visit(node);
+                yield return Visit(node);
             }
         }
 
 
-        public void Visit(IASTNode node)
+        public T Visit(IASTNode node)
         {
             switch (node)
             {
                 case ASTType t:
-                    VisitASTType(t);
-                    break;
+                    return VisitASTType(t);
                 default:
-                    this.VisitDefault(node);
-                    break;
+                    return this.VisitDefault(node);
             }
         }
 
-        public abstract void VisitASTType(ASTType astType);
-        public abstract void VisitASTAlias(ASTAlias astAlias);
-        public abstract void VisitASTChoice(ASTChoice astChoice);
-        public abstract void VisitASTAnnotation(ASTAnnotation astAnnotation);
-        public abstract void VisitASTDirective(ASTDirective astDirective);
-        public abstract void VisitASTTypeDefinition(ASTTypeDefinition astTypeDefinition);
-        public abstract void VisitASTTypeField(ASTTypeField astTypeField);
+        public abstract T VisitASTType(ASTType astType);
+        public abstract T VisitASTAlias(ASTAlias astAlias);
+        public abstract T VisitASTChoice(ASTChoice astChoice);
+        public abstract T VisitASTAnnotation(ASTAnnotation astAnnotation);
+        public abstract T VisitASTDirective(ASTDirective astDirective);
+        public abstract T VisitASTTypeDefinition(ASTTypeDefinition astTypeDefinition);
+        public abstract T VisitASTTypeField(ASTTypeField astTypeField);
 
-        public abstract void VisitDefault(IASTNode node);
+        public abstract T VisitDefault(IASTNode node);
     }
 }

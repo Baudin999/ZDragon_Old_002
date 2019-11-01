@@ -12,6 +12,7 @@ namespace Compiler.AST
         public IEnumerable<ASTDirective> Directives { get; set; } = Enumerable.Empty<ASTDirective>();
 
         public IEnumerable<string> Parameters = Enumerable.Empty<string>();
+        public IEnumerable<string> Extensions = Enumerable.Empty<string>();
         public IEnumerable<ASTTypeField> Fields = Enumerable.Empty<ASTTypeField>();
 
         public ASTType() { }
@@ -41,20 +42,34 @@ namespace Compiler.AST
             result.Name = parser.Consume(TokenType.Identifier).Value;
             result.Parameters =
                 parser
-                    .ConsumeWhile(TokenType
-                    .GenericParameter)
+                    .ConsumeWhile(TokenType.GenericParameter)
                     .Select(v => v.Value)
                     .ToList();
+
+
+            /*
+             * If there is an 'extends' extension.
+             */
+            var extends = parser.TryConsume(TokenType.KW_Extends);
+            if (!(extends is null))
+            {
+                result.Extensions =
+                    parser
+                        .ConsumeWhile(TokenType.Identifier)
+                        .Select(v => v.Value)
+                        .ToList();
+            }
+
 
             /*
              * If there is an '=' sign we know that there will be
              * Fields which we can parse...
              */
-            if (parser.Current.TokenType == TokenType.Equal)
+            var equals = parser.TryConsume(TokenType.Equal);
+            if (!(equals is null))
             {
-                parser.Next();
                 List<ASTTypeField> fields = new List<ASTTypeField>();
-                while (parser.Current.TokenType != TokenType.ContextEnded)
+                while (parser.TryConsume(TokenType.ContextEnded) == null)
                 {
                     fields.Add(new ASTTypeField(parser));
                 }
@@ -63,10 +78,6 @@ namespace Compiler.AST
                 {
                     errors.Add(new ASTError($"Missing type body. If you use an '=' sign you should have at least one field."));
                 }
-            }
-            else
-            {
-                parser.Next();
             }
 
             return (errors, result);

@@ -25,6 +25,7 @@ namespace Compiler
             if (word == "alias") type = TokenType.KW_Alias;
             if (word == "data") type = TokenType.KW_Data;
             if (word == "choice") type = TokenType.KW_Choice;
+            if (word == "extends") type = TokenType.KW_Extends;
             if (word == "flow") type = TokenType.KW_Flow;
             if (word == "component") type = TokenType.KW_Component;
             if (word == "view") type = TokenType.KW_View;

@@ -41,6 +41,9 @@ namespace Compiler
                     context = true;
                     yield return new Token() { TokenType = TokenType.ContextStarted };
                     yield return TokenLexers.Word(input);
+                } else if (input.IsEqualTo("extends"))
+                {
+                    yield return TokenLexers.Word(input);
                 }
                 else if (!context && Char.IsLetter(input.Current()))
                 {
@@ -71,6 +74,10 @@ namespace Compiler
                 else if (context && input.Current() == '&')
                 {
                     yield return TokenLexers.Take(input, TokenType.And);
+                }
+                else if (context && input.Current() == '/')
+                {
+                    yield return TokenLexers.Pattern(input);
                 }
                 else if (context && input.Current() == '"')
                 {
