@@ -1,31 +1,48 @@
-﻿using System;
+﻿
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Linq;
 
 namespace Compiler.AST
 {
-    public class ASTAnnotation : IASTNode
+    public class ASTDirective : IASTNode
     {
+        public string Key { get; }
         public string Value { get; }
-        public ASTAnnotation(string value)
+        public ASTDirective(string key, string value)
         {
+            this.Key = key;
             this.Value = value;
         }
 
 
-        public static IEnumerable<ASTAnnotation> Parse(IParser parser)
+        public static (List<ASTError>, List<ASTDirective>) Parse(IParser parser)
         {
-            var annotations = parser.ConsumeWhile(TokenType.Annotation).ToList();
+            List<ASTError> errors = new List<ASTError>();
+            var directives = parser.ConsumeWhile(TokenType.Directive);
 
-            var result = annotations.Select(annotation =>
+            var result = directives.Select(directive =>
             {
-                var result = new Regex(@"\s*@\s*").Replace(annotation.Value, "");
-                return new ASTAnnotation(result);
-            });
+                var result = new Regex(@"\s*%\s*").Replace(directive.Value, "").Split(":");
+                if (result.Length != 2)
+                {
+                    errors.Add(new ASTError($@"Directives should have a key and a value part separated by a semi-colon ':'
 
-            if (parser.HasNext() && parser.Current.TokenType == TokenType.Annotation) parser.Next();
-            return result;
+This directive looked like:
+{directive.Value}
+
+Example:
+% api: /some/url/{{param}}
+type Person =
+    FirstName: String;
+"));
+                    result = new[] { "no-key", result[0] };
+                }
+                return new ASTDirective(result[0].Trim(), result[1].Trim());
+            }).ToList();
+
+            if (parser.HasNext() && parser.Current.TokenType == TokenType.Directive) parser.Next();
+            return (errors, result);
         }
     }
 }

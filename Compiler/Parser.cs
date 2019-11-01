@@ -36,12 +36,14 @@ namespace Compiler
                 if (Current.TokenType == TokenType.KW_Type)
                 {
                     var (errors, t) = ASTType.Parse(this, annotations, directives);
-                    this.Errors.AddRange(errors);
+                    Errors.AddRange(errors);
                     yield return t;
                 }
                 else if (Current.TokenType == TokenType.KW_Alias)
                 {
-                    yield return new ASTAlias(this);
+                    var (errors, alias) = ASTAlias.Parse(this, annotations, directives);
+                    Errors.AddRange(errors);
+                    yield return alias;
                 }
                 else if (Current.TokenType == TokenType.KW_Choice)
                 {
@@ -53,7 +55,9 @@ namespace Compiler
                 }
                 else if (Current.TokenType == TokenType.Directive)
                 {
-                    directives = ASTDirective.Parse(this).ToList();
+                    var (errors, dirs) = ASTDirective.Parse(this);
+                    Errors.AddRange(errors.ToList());
+                    directives = dirs.ToList();
                 }
                 else
                 {
@@ -115,14 +119,14 @@ namespace Compiler
 
         public void TryConsume(TokenType tokenType)
         {
-            Token t;
+            Token? t;
             TryConsume(tokenType, out t);
         }
 
 
-        public void TryConsume(TokenType tokenType, out Token t) //, bool ignoreWhitespace = true)
+        public void TryConsume(TokenType tokenType, out Token? t)
         {
-            Token result = null;
+            Token? result = default;
             int index = 0;
             while (HasPeek(index))
             {

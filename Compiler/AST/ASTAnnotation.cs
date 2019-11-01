@@ -1,30 +1,31 @@
-﻿
+﻿using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Linq;
 
 namespace Compiler.AST
 {
-    public class ASTDirective : IASTNode
+    public class ASTAnnotation : IASTNode
     {
         public string Value { get; }
-        public ASTDirective(string value)
+        public ASTAnnotation(string value)
         {
             this.Value = value;
         }
 
 
-        public static IEnumerable<ASTDirective> Parse(IParser parser)
+        public static IEnumerable<ASTAnnotation> Parse(IParser parser)
         {
-            var directives = parser.ConsumeWhile(TokenType.Directive).ToList();
+            var annotations = parser.ConsumeWhile(TokenType.Annotation).ToList();
 
-            var result = directives.Select(directive =>
+            var result = annotations.Select(annotation =>
             {
-                var result = new Regex(@"\s*%\s*").Replace(directive.Value, "");
-                return new ASTDirective(result);
+                var result = new Regex(@"\s*@\s*").Replace(annotation.Value, "");
+                
+                return new ASTAnnotation(result.Trim());
             });
 
-            if (parser.HasNext() && parser.Current.TokenType == TokenType.Directive) parser.Next();
+            if (parser.HasNext() && parser.Current.TokenType == TokenType.Annotation) parser.Next();
             return result;
         }
     }

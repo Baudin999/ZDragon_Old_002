@@ -17,6 +17,11 @@ namespace Compiler
         public Token Consume(TokenType tokenType, bool ignoreWhitespace = true);
         public IEnumerable<Token> ConsumeWhile(TokenType tokenType, bool ignoreWhitespace = true);
         public void TryConsume(TokenType tokenType);
-        public void TryConsume(TokenType tokenType, out Token t);
+        public void TryConsume(TokenType tokenType, out Token? t);
+
+        public IEnumerable<IASTNode> Parse();
     }
+
+
+    
 }

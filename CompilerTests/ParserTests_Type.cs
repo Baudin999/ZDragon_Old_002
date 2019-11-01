@@ -30,7 +30,7 @@ type Person =
             Assert.Single(t.Fields);
 
 
-            ASTTypeField field = t.Fields[0];
+            ASTTypeField field = t.Fields.First();
             Assert.Single(field.Annotations);
             Assert.True(field.Annotations[0] is ASTAnnotation);
             Assert.Equal("The First Name of the Person", field.Annotations[0].Value);
@@ -61,9 +61,11 @@ type Person =
             ASTType t = list[0] as ASTType;
             Assert.Equal("Person", t.Name);
             Assert.Empty(t.Parameters);
-            Assert.Equal(3, t.Fields.Count);
+            Assert.Equal(3, t.Fields.Count());
 
-            ASTTypeField field = t.Fields[0];
+
+            List<ASTTypeField> fields = t.Fields.ToList();
+            ASTTypeField field = fields.First();
             Assert.Equal(2, field.Annotations.Count);
             Assert.True(field.Annotations[0] is ASTAnnotation);
             Assert.Equal("The First Name of the Person", field.Annotations[0].Value);
@@ -73,12 +75,12 @@ type Person =
             Assert.Equal("String", field.Type[0].Value);
 
 
-            ASTTypeField lastNameField = t.Fields[1];
+            ASTTypeField lastNameField = fields[1];
             Assert.Equal("LastName", lastNameField.Name);
             Assert.Equal("String", lastNameField.Type[0].Value);
             Assert.Empty(lastNameField.Annotations);
 
-            ASTTypeField ageField = t.Fields[2];
+            ASTTypeField ageField = fields[2];
             Assert.Equal("Age", ageField.Name);
             Assert.Equal(new List<ASTTypeDefinition>() { new ASTTypeDefinition("Number") }, ageField.Type);
             Assert.Single(ageField.Annotations);
@@ -129,6 +131,24 @@ type Person
             Assert.Single((parseTree[0] as ASTType).Annotations);
         }
 
+
+        [Fact]
+        public void NonBodyTypes()
+        {
+            var code = @"
+type Person
+type Address
+type School =
+    Name: String;
+type Cohort
+";
+            var tokens = new Lexer().Lex(code);
+            var parseTree = new Parser(tokens).Parse().ToList();
+            Assert.NotNull(parseTree);
+
+            Assert.Equal(4, parseTree.Count);
+        }
+
         [Fact]
         public void TypeAnnotations2()
         {
@@ -146,7 +166,7 @@ type Address
 
             Assert.Equal(2, parseTree.Count);
             Assert.Single((parseTree[0] as ASTType).Annotations);
-            Assert.Equal(2, (parseTree[1] as ASTType).Annotations.Count);
+            Assert.Equal(2, (parseTree[1] as ASTType).Annotations.Count());
 
         }
 
@@ -203,7 +223,7 @@ type Person =
             Assert.Single(parseTree);
             ASTType t = (ASTType)parseTree[0];
             Assert.Single(t.Fields);
-            Assert.Equal(2, t.Fields[0].Restrictions.Count);
+            Assert.Equal(2, t.Fields.First().Restrictions.Count);
         }
 
         [Fact]
@@ -225,11 +245,32 @@ type Person =
             Assert.Single(parseTree);
             ASTType t = (ASTType)parseTree[0];
             Assert.Single(t.Fields);
-            Assert.Equal(2, t.Fields[0].Restrictions.Count);
+            Assert.Equal(2, t.Fields.First().Restrictions.Count);
 
-            ASTTypeField field = t.Fields[0];
+            ASTTypeField field = t.Fields.First();
             Assert.Equal(2, field.Restrictions.Count);
             Assert.Equal("Should not be 30", field.Restrictions[1].Annotations.First().Value);
+        }
+
+
+        [Fact]
+        public void DirectivesHaveKeyAndValue()
+        {
+            var code = @"
+% error
+% api: /some/url/{param}
+type Person
+";
+            var tokens = new Lexer().Lex(code);
+            var parser = new Parser(tokens);
+            var parseTree = parser.Parse().ToList();
+            Assert.NotNull(parseTree);
+            Assert.Single(parser.Errors.ToList());
+
+            var s = parser.Errors.First();
+
+            ASTType t = parseTree[0] as ASTType;
+            Assert.Equal(2, t.Directives.Count());
         }
     }
 

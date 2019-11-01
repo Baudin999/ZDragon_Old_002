@@ -23,7 +23,7 @@ alias Name = String;
 
             ASTAlias alias = parseTree[0] as ASTAlias;
             Assert.Equal("Name", alias.Name);
-            Assert.Equal(Helpers.ToTypeDefinition(new[] { "String" }), alias.Type);
+            Assert.Equal(Helpers.ToTypeDefinition(new[] { "String" }), alias.Type.ToList());
         }
 
         [Fact]
@@ -43,7 +43,7 @@ alias Name = String
 
             ASTAlias alias = parseTree[0] as ASTAlias;
             Assert.Equal(2, alias.Restrictions.Count());
-            
+
         }
 
         [Fact]
@@ -58,8 +58,26 @@ alias Name = List String;
             Assert.Single(parseTree);
 
             ASTAlias alias = parseTree[0] as ASTAlias;
-            Assert.Equal(Helpers.ToTypeDefinition(new[] { "List", "String" }), alias.Type);
+            Assert.Equal(Helpers.ToTypeDefinition(new[] { "List", "String" }), alias.Type.ToList());
 
+        }
+
+
+        [Fact]
+        public void AliasAnnotations()
+        {
+            var code = @"
+@ This alias represents a name
+alias Name = String;
+";
+            var tokens = new Lexer().Lex(code);
+            var parseTree = new Parser(tokens).Parse().ToList();
+            Assert.NotNull(parseTree);
+            Assert.Single(parseTree);
+            ASTAlias alias = parseTree[0] as ASTAlias;
+            Assert.Empty(alias.Restrictions);
+            Assert.Single(alias.Annotations.ToList());
+            Assert.Equal("This alias represents a name", alias.Annotations.First().Value);
         }
 
 
@@ -82,13 +100,30 @@ alias Name = String
             Assert.Single(parseTree);
 
             ASTAlias alias = parseTree[0] as ASTAlias;
-            alias.Restrictions.ForEach(restriction =>
-            {
+
+            foreach (ASTRestriction restriction in alias.Restrictions) { 
                 Assert.Single(restriction.Annotations);
-            });
+            }
 
         }
 
+        [Fact]
+        public void MaybeAlias()
+        {
 
+            var code = @"
+@ A name might be null. We will represent this as a
+@ Maybe type. 
+alias Name = Maybe String;
+";
+            var tokens = new Lexer().Lex(code);
+            var parseTree = new Parser(tokens).Parse().ToList();
+            Assert.NotNull(parseTree);
+            Assert.Single(parseTree);
+            ASTAlias alias = parseTree[0] as ASTAlias;
+            Assert.Empty(alias.Restrictions);
+            Assert.Equal(2, alias.Annotations.Count());
+            Assert.Equal(Helpers.ToTypeDefinition(new[] { "Maybe", "String" }), alias.Type);
+        }
     }
 }

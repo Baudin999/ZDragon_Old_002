@@ -11,7 +11,7 @@ namespace Compiler
         public int EndColumn { get; internal set; }
         public int EndLine { get; set; }
 
-        public string Value { get; set;  }
+        public string Value { get; set; } = "";
 
         public TokenType TokenType { get; set; }
 

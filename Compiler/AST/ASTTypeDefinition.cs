@@ -12,7 +12,7 @@ namespace Compiler.AST
             this.Value = value;
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (obj is ASTTypeDefinition)
             {
@@ -32,7 +32,7 @@ namespace Compiler.AST
 
         public static IEnumerable<ASTTypeDefinition> ParseType(IParser parser)
         {
-            parser.TryConsume(TokenType.Identifier, out Token t);
+            parser.TryConsume(TokenType.Identifier, out Token? t);
             while (!(t is null))
             {
                 yield return new ASTTypeDefinition(t.Value);

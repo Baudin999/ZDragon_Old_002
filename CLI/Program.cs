@@ -42,12 +42,12 @@ choice Gender =
         {
             var lexer = new Lexer();
             var result = lexer.Lex(Example1);
-            foreach (var r in result)
-            {
-                Console.WriteLine(r);
-            }
-
             var parseTree = new Parser(result).Parse();
+
+            foreach (var node in parseTree)
+            {
+                Console.WriteLine(node);
+            }
         }
     }
 }
