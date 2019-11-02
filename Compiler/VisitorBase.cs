@@ -36,8 +36,16 @@ namespace Compiler
                     return VisitASTRestriction(n);
                 case ASTAlias n:
                     return VisitASTAlias(n);
+                case ASTAnnotation n:
+                    return VisitASTAnnotation(n);
+                case ASTDirective n:
+                    return VisitASTDirective(n);
+                case ASTChoice n:
+                    return VisitASTChoice(n);
+                case ASTOption n:
+                    return VisitASTOption(n);
                 default:
-                    return this.VisitDefault(node);
+                    return VisitDefault(node);
             }
         }
 
@@ -49,6 +57,7 @@ namespace Compiler
         public abstract T VisitASTTypeDefinition(ASTTypeDefinition astTypeDefinition);
         public abstract T VisitASTTypeField(ASTTypeField astTypeField);
         public abstract T VisitASTRestriction(ASTRestriction astRestriction);
+        public abstract T VisitASTOption(ASTOption astOption);
 
         public abstract T VisitDefault(IASTNode node);
     }

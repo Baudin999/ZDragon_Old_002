@@ -17,8 +17,8 @@ namespace Compiler
         public override string VisitASTAlias(ASTAlias astAlias)
         {
             List<string> parts = new List<string>();
-            parts.AddRange(astAlias.Annotations.Select(a => $"@ {a.Value}"));
-            parts.AddRange(astAlias.Directives.Select(a => $"% {a.Key}: {a.Value}"));
+            parts.AddRange(astAlias.Annotations.Select(Visit));
+            parts.AddRange(astAlias.Directives.Select(Visit));
 
             string typeDef = string.Join(" ", astAlias.Type.Select(Visit));
 
@@ -35,7 +35,7 @@ namespace Compiler
 
         public override string VisitASTAnnotation(ASTAnnotation astAnnotation)
         {
-            return "";
+            return $"@ {astAnnotation.Value}";
         }
 
         public override string VisitASTChoice(ASTChoice astChoice)
@@ -45,7 +45,12 @@ namespace Compiler
 
         public override string VisitASTDirective(ASTDirective astDirective)
         {
-            return "";
+            return $"% {astDirective.Key}: {astDirective.Value}";
+        }
+
+        public override string VisitASTOption(ASTOption astOption)
+        {
+            throw new NotImplementedException();
         }
 
         public override string VisitASTRestriction(ASTRestriction astRestriction)
@@ -57,8 +62,8 @@ namespace Compiler
         public override string VisitASTType(ASTType astType)
         {
             List<string> parts = new List<string>();
-            parts.AddRange(astType.Annotations.Select(a => $"@ {a.Value}"));
-            parts.AddRange(astType.Directives.Select(a => $"% {a.Key}: {a.Value}"));
+            parts.AddRange(astType.Annotations.Select(Visit));
+            parts.AddRange(astType.Directives.Select(Visit));
 
             if (astType.Fields.Count() == 0)
             {
