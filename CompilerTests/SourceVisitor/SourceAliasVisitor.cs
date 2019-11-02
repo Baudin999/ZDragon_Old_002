@@ -7,20 +7,21 @@ using Xunit.Abstractions;
 
 namespace CompilerTests.SourceVisitor
 {
-    public class SourceTypeVisitor
+    public class SourceAliasVisitor
     {
         private readonly ITestOutputHelper output;
 
-        public SourceTypeVisitor(ITestOutputHelper output)
+        public SourceAliasVisitor(ITestOutputHelper output)
         {
             this.output = output;
         }
+
         [Fact]
         public void TestASTVisitor()
         {
             Lexer lexer = new Lexer();
             var tokenStream = lexer.Lex(@"
-type Person
+alias Name = String
 ");
             IParser parser = new Parser(tokenStream);
             IEnumerable<IASTNode> nodeTree = parser.Parse();
@@ -28,78 +29,78 @@ type Person
             VisitorSource visitor = new VisitorSource(nodeTree);
             string result = string.Join("\n\n", visitor.Start());
 
-            Assert.Equal("type Person", result);
+            Assert.Equal("alias Name = String", result);
         }
 
         [Fact]
-        public void TestAnnotationsSource()
+        public void TestAliasAnnotations()
         {
             Lexer lexer = new Lexer();
             var tokenStream = lexer.Lex(@"
-@ The Person
-@ Another annotation
-type Person
+@ This is the Name alias
+alias Name = String;
 ");
             IParser parser = new Parser(tokenStream);
             IEnumerable<IASTNode> nodeTree = parser.Parse();
 
             VisitorSource visitor = new VisitorSource(nodeTree);
             string result = string.Join("\n\n", visitor.Start());
-
-            Assert.Equal(@"@ The Person
-@ Another annotation
-type Person", result);
-        }
-
-
-        [Fact]
-        public void TestDirectivesSource()
-        {
-            Lexer lexer = new Lexer();
-            var tokenStream = lexer.Lex(@"
-% api: /root/{param}
-type Person
-");
-            IParser parser = new Parser(tokenStream);
-            IEnumerable<IASTNode> nodeTree = parser.Parse();
-
-            VisitorSource visitor = new VisitorSource(nodeTree);
-            string result = string.Join("\n\n", visitor.Start());
-
-            Assert.Equal(@"
-% api: /root/{param}
-type Person".Trim(), result);
-        }
-
-        [Fact]
-        public void TestMessedUpFieldSource()
-        {
-            Lexer lexer = new Lexer();
-            var tokenStream = lexer.Lex(@"
-type Person =
-    FirstName:
-        String ;
-    LastName: String & min 12 & max
-    30;
-");
-            IParser parser = new Parser(tokenStream);
-            IEnumerable<IASTNode> nodeTree = parser.Parse();
-
-            VisitorSource visitor = new VisitorSource(nodeTree);
-            string result = string.Join("\n\n", visitor.Start());
-
-            string resultTest = @"
-type Person =
-    FirstName: String;
-    LastName: String
-        & min 12
-        & max 30
-    ;
+            string resultExpected = @"
+@ This is the Name alias
+alias Name = String
 ".Trim();
 
-            Assert.Equal(resultTest, result);
-
-            //Assert.Equal("type Person =\n\tFirstName: String;\n\tLastName: String\n\t\t& min 12\n\t\t& max 30\n\t;".Trim(), result);
+            Assert.Equal(resultExpected, result);
         }
+
+
+        [Fact]
+        public void TestAliasDirectivesAndAnnotations()
+        {
+            Lexer lexer = new Lexer();
+            var tokenStream = lexer.Lex(@"
+@ This is the Name alias
+% xsd: nnnNaname
+alias Name = String;
+");
+            IParser parser = new Parser(tokenStream);
+            IEnumerable<IASTNode> nodeTree = parser.Parse();
+
+            VisitorSource visitor = new VisitorSource(nodeTree);
+            string result = string.Join("\n\n", visitor.Start());
+            string resultExpected = @"
+@ This is the Name alias
+% xsd: nnnNaname
+alias Name = String
+".Trim();
+
+            Assert.Equal(resultExpected, result);
+        }
+
+        [Fact]
+        public void TestAliasRestrictions()
+        {
+            Lexer lexer = new Lexer();
+            var tokenStream = lexer.Lex(@"
+@ This is the Name alias
+alias Name =
+    String & min 12 & max
+    40
+");
+            IParser parser = new Parser(tokenStream);
+            IEnumerable<IASTNode> nodeTree = parser.Parse();
+
+            VisitorSource visitor = new VisitorSource(nodeTree);
+            string result = string.Join("\n\n", visitor.Start());
+            string resultExpected = @"
+@ This is the Name alias
+alias Name = String
+    & min 12
+    & max 40
+".Trim();
+
+            Assert.Equal(resultExpected, result);
+        }
+
     }
 }

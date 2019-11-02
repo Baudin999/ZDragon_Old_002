@@ -26,8 +26,16 @@ namespace Compiler
         {
             switch (node)
             {
-                case ASTType t:
-                    return VisitASTType(t);
+                case ASTType n:
+                    return VisitASTType(n);
+                case ASTTypeField n:
+                    return VisitASTTypeField(n);
+                case ASTTypeDefinition n:
+                    return VisitASTTypeDefinition(n);
+                case ASTRestriction n:
+                    return VisitASTRestriction(n);
+                case ASTAlias n:
+                    return VisitASTAlias(n);
                 default:
                     return this.VisitDefault(node);
             }
@@ -40,6 +48,7 @@ namespace Compiler
         public abstract T VisitASTDirective(ASTDirective astDirective);
         public abstract T VisitASTTypeDefinition(ASTTypeDefinition astTypeDefinition);
         public abstract T VisitASTTypeField(ASTTypeField astTypeField);
+        public abstract T VisitASTRestriction(ASTRestriction astRestriction);
 
         public abstract T VisitDefault(IASTNode node);
     }

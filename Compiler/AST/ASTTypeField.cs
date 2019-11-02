@@ -19,7 +19,7 @@ namespace Compiler.AST
             this.Name = parser.Consume(TokenType.Identifier).Value;
             Token Separator = parser.Consume(TokenType.Separator);
             this.Type = ASTTypeDefinition.ParseType(parser).ToList();
-            this.Restrictions = ASTRestriction.CreateRestrictions(parser).ToList();
+            this.Restrictions = ASTRestriction.CreateRestrictions(parser, TokenType.KW_Type).ToList();
             parser.Consume(TokenType.EndStatement);
         }
 
