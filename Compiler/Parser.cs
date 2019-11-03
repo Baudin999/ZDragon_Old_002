@@ -21,7 +21,7 @@ namespace Compiler
 
         public List<IASTError> Errors { get; }
         public Token Current => tokenStream[position];
-        public bool HasNext() => position < length;
+        public bool HasNext() => HasPeek(); //() => (position + 1) < length;
         public Token Next() => tokenStream[position++];
         public bool HasPeek(int index = 1) => (position + index) < length;
         public Token Peek(int index = 1) => tokenStream[position + index];
@@ -29,10 +29,12 @@ namespace Compiler
 
         public IEnumerable<IASTNode> Parse()
         {
+
             List<ASTAnnotation> annotations = new List<ASTAnnotation>();
             List<ASTDirective> directives = new List<ASTDirective>();
             while (HasNext())
             {
+                
                 if (Current.TokenType == TokenType.KW_Type)
                 {
                     var (errors, t) = ASTType.Parse(this, annotations, directives);
@@ -61,6 +63,7 @@ namespace Compiler
                 }
                 else
                 {
+
                     Next();
                 }
             }
@@ -91,7 +94,16 @@ namespace Compiler
                 }
                 else
                 {
-                    throw new InvalidTokenException($"Trying to parse tokenType {tokenType}, but found {Current.TokenType}. ");
+                    throw new InvalidTokenException("Invalid Token");
+//                    this.Errors.Add(new ASTError($@"
+//Expected '{tokenType}' but found '{this.Current.TokenType}'!
+
+//This can happen due to wrong indentation. Should:
+//{this.Peek().Value}
+//be indented?
+
+//", this.Current));
+                    
                 }
             }
         }

@@ -56,7 +56,20 @@ namespace Compiler
         public override string VisitASTRestriction(ASTRestriction astRestriction)
         {
             var indent = astRestriction.Depth == 1 ? "    " : "        ";
-            return $"{indent}& {astRestriction.Key} {astRestriction.Value}";
+            var annotations = astRestriction
+                    .Annotations
+                    .Select(Visit)
+                    .Select(a => indent + a);
+            var a = string.Join("\n", annotations);
+
+            if (annotations.Count() > 0)
+            {
+                return $"\n{a}\n{indent}& {astRestriction.Key} {astRestriction.Value}";
+            }
+            else
+            {
+                return $"{indent}& {astRestriction.Key} {astRestriction.Value}";
+            }
         }
 
         public override string VisitASTType(ASTType astType)

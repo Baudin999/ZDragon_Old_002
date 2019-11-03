@@ -35,7 +35,7 @@ Example:
 % api: /some/url/{{param}}
 type Person =
     FirstName: String;
-"));
+", parser.Current));
                     result = new[] { "no-key", result[0] };
                 }
                 return new ASTDirective(result[0].Trim(), result[1].Trim());

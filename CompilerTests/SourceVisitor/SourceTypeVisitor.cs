@@ -98,8 +98,78 @@ type Person =
 ".Trim();
 
             Assert.Equal(resultTest, result);
+        }
 
-            //Assert.Equal("type Person =\n\tFirstName: String;\n\tLastName: String\n\t\t& min 12\n\t\t& max 30\n\t;".Trim(), result);
+        [Fact]
+        public void TestFieldRestrictionAnnotations()
+        {
+            Lexer lexer = new Lexer();
+            var tokenStream = lexer.Lex(@"
+type Person =
+    FirstName:
+        String ;
+    LastName: String & min 12
+    @ annotation
+    & max 30;
+");
+            IParser parser = new Parser(tokenStream);
+            IEnumerable<IASTNode> nodeTree = parser.Parse();
+
+            VisitorSource visitor = new VisitorSource(nodeTree);
+            string result = string.Join("\n\n", visitor.Start());
+
+            string resultTest = @"
+type Person =
+    FirstName: String;
+    LastName: String
+        & min 12
+
+        @ annotation
+        & max 30
+    ;
+".Trim();
+
+            Assert.Equal(resultTest, result);
+        }
+
+        [Fact]
+        public void TestMultipleTypesFormatting()
+        {
+            Lexer lexer = new Lexer();
+            var tokenStream = lexer.Lex(@"
+type Person =
+    FirstName: String;
+    LastName: String
+        & min 12
+        @ annotation
+        & max 30;
+type School
+type Other =
+    Something: String;
+");
+            IParser parser = new Parser(tokenStream);
+            IEnumerable<IASTNode> nodeTree = parser.Parse();
+
+            VisitorSource visitor = new VisitorSource(nodeTree);
+            string result = string.Join("\n\n", visitor.Start());
+
+            string resultTest = @"
+type Person =
+    FirstName: String;
+    LastName: String
+        & min 12
+
+        @ annotation
+        & max 30
+    ;
+
+type School
+
+type Other =
+    Something: String;
+".Trim();
+
+            Assert.Equal(resultTest, result);
         }
     }
 }

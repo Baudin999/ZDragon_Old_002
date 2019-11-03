@@ -1,6 +1,7 @@
 ﻿
 using System.Linq;
 using Compiler;
+using Compiler.AST;
 using Xunit;
 
 namespace CompilerTests.Errors
@@ -15,10 +16,37 @@ type Person =
 ";
             var tokens = new Lexer().Lex(code);
             var parser = new Parser(tokens);
-            var parseTree = parser.Parse().ToList();
+            _ = parser.Parse().ToList();
+            Assert.Single(parser.Errors);
+        }
+
+        [Fact]
+        public void WrongIndentation()
+        {
+            var code = @"
+type School =
+Name: String;
+";
+            var tokens = new Lexer().Lex(code);
+            var parser = new Parser(tokens);
+            _ = parser.Parse().ToList();
 
             Assert.Single(parser.Errors);
+        }
 
+        [Fact]
+        public void WrongRestrictionIndentation()
+        {
+            var code = @"
+type School =
+    Name: String
+& min 12;
+";
+            var tokens = new Lexer().Lex(code);
+            var parser = new Parser(tokens);
+            _ = parser.Parse().ToList();
+
+            Assert.Single(parser.Errors);
         }
     }
 }

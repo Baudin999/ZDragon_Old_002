@@ -56,6 +56,7 @@ namespace Compiler
         GenericParameter,
         And,
         KW_Extends,
-        Pattern
+        Pattern,
+        EndOfFile
     }
 }

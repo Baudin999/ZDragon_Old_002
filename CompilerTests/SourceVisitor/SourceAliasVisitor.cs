@@ -102,5 +102,34 @@ alias Name = String
             Assert.Equal(resultExpected, result);
         }
 
+        [Fact]
+        public void TestAliasRestrictionAnnotations()
+        {
+            Lexer lexer = new Lexer();
+            var tokenStream = lexer.Lex(@"
+alias Name = String
+    @ Minimum of 12
+    & min 12
+    @ Maximum of 40
+    & max 40
+");
+            IParser parser = new Parser(tokenStream);
+            IEnumerable<IASTNode> nodeTree = parser.Parse();
+
+            VisitorSource visitor = new VisitorSource(nodeTree);
+            string result = string.Join("\n\n", visitor.Start());
+            string resultExpected = @"
+alias Name = String
+
+    @ Minimum of 12
+    & min 12
+
+    @ Maximum of 40
+    & max 40
+".Trim();
+
+            Assert.Equal(resultExpected, result);
+        }
+
     }
 }

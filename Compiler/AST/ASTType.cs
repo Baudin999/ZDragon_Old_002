@@ -32,55 +32,86 @@ namespace Compiler.AST
 
         public static (List<ASTError>, ASTType) Parse(IParser parser, List<ASTAnnotation> annotations, List<ASTDirective> directives)
         {
-            List<ASTError> errors = new List<ASTError>();
             ASTType result = new ASTType();
-
-            result.Annotations = annotations;
-            result.Directives = directives;
-
-            parser.Next();
-            result.Name = parser.Consume(TokenType.Identifier).Value;
-            result.Parameters =
-                parser
-                    .ConsumeWhile(TokenType.GenericParameter)
-                    .Select(v => v.Value)
-                    .ToList();
-
-
-            /*
-             * If there is an 'extends' extension.
-             */
-            var extends = parser.TryConsume(TokenType.KW_Extends);
-            if (!(extends is null))
+            try
             {
-                result.Extensions =
+                List<ASTError> errors = new List<ASTError>();
+
+                result.Annotations = annotations;
+                result.Directives = directives;
+
+                parser.Next();
+                result.Name = parser.Consume(TokenType.Identifier).Value;
+                result.Parameters =
                     parser
-                        .ConsumeWhile(TokenType.Identifier)
+                        .ConsumeWhile(TokenType.GenericParameter)
                         .Select(v => v.Value)
                         .ToList();
+
+
+                /*
+                 * If there is an 'extends' extension.
+                 */
+                var extends = parser.TryConsume(TokenType.KW_Extends);
+                if (!(extends is null))
+                {
+                    result.Extensions =
+                        parser
+                            .ConsumeWhile(TokenType.Identifier)
+                            .Select(v => v.Value)
+                            .ToList();
+                }
+
+
+                /*
+                 * If there is an '=' sign we know that there will be
+                 * Fields which we can parse...
+                 */
+                var equals = parser.TryConsume(TokenType.Equal);
+                if (!(equals is null))
+                {
+                    List<ASTTypeField> fields = new List<ASTTypeField>();
+                    while (parser.TryConsume(TokenType.ContextEnded) == null)
+                    {
+                        fields.Add(new ASTTypeField(parser));
+                    }
+                    result.Fields = fields;
+                    if (fields.Count == 0)
+                    {
+
+                        if (parser.Current.TokenType == TokenType.Paragraph)
+                        {
+                            var nextPhrase = parser.Current.Value;
+                            errors.Add(new ASTError($@"
+Missing type body. If you use an '=' sign you should have at least one field.
+It might be that you are missing an indentation:
+
+type {result.Name} =
+{nextPhrase}
+
+Example:
+type {result.Name} =
+    {nextPhrase}
+", parser.Current));
+                        }
+                        else
+                        {
+                            errors.Add(new ASTError($@"
+Missing type body. If you use an '=' sign you should have at least one field.", parser.Current));
+                        }
+                    }
+                }
+
+                return (errors, result);
             }
-
-
-            /*
-             * If there is an '=' sign we know that there will be
-             * Fields which we can parse...
-             */
-            var equals = parser.TryConsume(TokenType.Equal);
-            if (!(equals is null))
+            catch (InvalidTokenException ex)
             {
-                List<ASTTypeField> fields = new List<ASTTypeField>();
-                while (parser.TryConsume(TokenType.ContextEnded) == null)
+                return (new List<ASTError>
                 {
-                    fields.Add(new ASTTypeField(parser));
-                }
-                result.Fields = fields;
-                if (fields.Count == 0)
-                {
-                    errors.Add(new ASTError($"Missing type body. If you use an '=' sign you should have at least one field."));
-                }
+                    new ASTError(ex.Message, parser.Current)
+                }, result);
             }
 
-            return (errors, result);
         }
 
     }
