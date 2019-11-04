@@ -32,4 +32,12 @@
   <ItemGroup>
     <Compile Remove="XSD\XSDMapper.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <None Update="XSD\TestSimpleAlias.xsd">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="XSD\CreateXSD.xsd">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
 </Project>

@@ -1,6 +1,7 @@
-﻿using System;
+﻿
 using System.IO;
 using System.Linq;
+using System.Xml.Schema;
 using Compiler;
 using Mapper.XSD;
 using Xunit;
@@ -47,11 +48,7 @@ type Person =
             _ = mapper.Start().ToList();
 
 
-            //Assert.NotNull(mapper);
-
-            TextWriter writer = new StringWriter();
-            mapper.Schema.Write(writer);
-            this.output.WriteLine(writer.ToString());
+            TestXSD(mapper.Schema, "./XSD/CreateXSD.xsd");
 
         }
 
@@ -69,16 +66,27 @@ alias Name = String;
             XSDMapper mapper = new XSDMapper(parseTree);
             _ = mapper.Start().ToList();
 
-
-            //var expectedResult = @"<?xml version=\"1.0\" encoding=\"utf-16\"?>\n<xs:schema xmlns:self=\"org.schema.something\" xmlns:xs=\"http://www.w3.org/2001/XMLSchema\">\n  <xs:simpleType name=\"Name\">\n    <xs:restriction base=\"xs:string\">\n      <xs:minLength value=\"1\" />\n      <xs:maxLength value=\"100\" />\n    </xs:restriction>\n  </xs:simpleType>\n</xs:schema>";
-
-            //TextWriter writer = new StringWriter();
-            //mapper.Schema.Write(writer);
-
-            //var txt = writer.ToString();
-
-            //Assert.Equal(expectedResult, writer.ToString());
-
+            TestXSD(mapper.Schema, "./XSD/TestSimpleAlias.xsd");
         }
+
+        private XmlSchema LoadXSD(string path)
+        {
+            using var stream = new StreamReader(path);
+            return XmlSchema.Read(stream, null);
+        }
+
+        private void TestXSD(XmlSchema source, string path)
+        {
+            TextWriter writer = new StringWriter();
+            source.Write(writer);
+
+            var xsd = LoadXSD(path);
+            TextWriter resultWriter = new StringWriter();
+            xsd.Write(resultWriter);
+
+            Assert.Equal(writer.ToString(), resultWriter.ToString());
+        }
+
     }
+
 }
