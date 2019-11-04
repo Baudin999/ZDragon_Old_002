@@ -1,58 +1,33 @@
-﻿using System;
-using Compiler;
-using System.Collections.Generic;
-using System.Linq;
-
-using Mapper.XSD;
+﻿
+using Microsoft.Extensions.CommandLineUtils;
+using CLI.Commands;
 
 namespace CLI
 {
-    class Program
+    public class Program
     {
-
-        static string Example1 = @"
-
-# This is a chapter
-
-And here we have a Paragraph. This is somthing we can try and
-parse in a sensible way instead of 'per' token. We should filter
-out the use of the word type.
-
-@ This is a Person annotation.
-type Person a =
-    @ The first name
-    FirstName: Name = Name ""Carlos"";
-    Gender: Gender;
-    Age: Number = 0.75;
-
-And another paragraph! These things should flow like the documentation
-you are writing!
-
-alias Name = String;
-
-
-choice Gender =
-    | ""Male""
-    | ""Female""
-
-    @ This is the same as non-binary
-    | ""Other""
-
-";
+        public Program()
+        {
+        }
 
         static void Main(string[] args)
         {
-            var lexer = new Lexer();
-            var result = lexer.Lex(Example1);
-            var parseTree = new Parser(result).Parse();
+            var app = new CommandLineApplication();
+            app.Name = "ZDragon.NET";
+            app.HelpOption("-?|-h|--help");
 
-            //foreach (var node in parseTree)
-            //{
-            //    Console.WriteLine(node);
-            //}
+            app.OnExecute(() => {
+                //Console.WriteLine("Hello World!");
+                return 0;
+            });
 
-            XSDMapper mapper = new XSDMapper(parseTree);
-            mapper.Schema.Write(Console.Out);
+
+
+            CommandsBuilder.CreateBuildCommand(app);
+            CommandsBuilder.CreateWatchCommand(app);
+
+
+            app.Execute(args);
         }
     }
 }
