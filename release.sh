@@ -5,6 +5,6 @@ for target in "${RELEASE_TARGETS[@]}"
 do
     dotnet publish CLI -c Release --runtime "$target" /p:PublishSingleFile=true -o releaseTemp
 done
-mv temp/CLI lib/ckc
-mv temp/CLI.exe lib/ckc.exe
-rm -rf temp/
+mv releaseTemp/CLI lib/ckc
+mv releaseTemp/CLI.exe lib/ckc.exe
+rm -rf releaseTemp/
