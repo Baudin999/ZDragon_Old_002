@@ -12,4 +12,14 @@ script:
   - sudo snap alias dotnet-sdk.dotnet dotnet
   - dotnet build --configuration Release
   - dotnet test
-  - ./release.sh
+deploy:
+    provider: releases
+    before_deploy: ./release.sh
+    api_key: $ZDragon_GitHub_Token
+    draft: true
+    skip_cleanup: true
+    on:
+        tags: true
+    file:
+        - "CLI/bin/Release/netcoreapp3.0/win-x64/publish/CLI.exe"
+        - "CLI/bin/Release/netcoreapp3.0/osx-x64/publish/CLI"
