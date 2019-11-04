@@ -6,6 +6,7 @@ namespace CLI
         public string Name { get; }
         public string Path { get; }
         public string BasePath { get; }
+        public string OutPath { get; }
         public DateTime LastParsed { get; private set; }
 
         public Module(string path, string basePath)
@@ -13,6 +14,7 @@ namespace CLI
             this.Path = path;
             this.BasePath = basePath;
             this.Name = CreateModuleName();
+            this.OutPath = System.IO.Path.GetFullPath($"out/{Name}", basePath);
         }
 
         public void Parse()
@@ -24,15 +26,22 @@ namespace CLI
             if (transpiler.Errors.Count == 0)
             {
                 Console.WriteLine($"Perfectly parsed: {Name}");
-                Console.WriteLine(transpiler.XsdToString());
-            }else
+                SaveResult(transpiler.XsdToString(), "Model.xsd");
+            }
+            else
             {
                 foreach (var error in transpiler.Errors)
                 {
                     Console.WriteLine(error.Message);
                 }
             }
+        }
 
+        public void SaveResult(string source, string fileName)
+        {
+            string filePath = System.IO.Path.GetFullPath(fileName, OutPath);
+            System.IO.Directory.CreateDirectory(OutPath);
+            System.IO.File.WriteAllText(filePath, source);
         }
 
         private string CreateModuleName()
