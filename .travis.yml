@@ -23,4 +23,5 @@ deploy:
     name: $NAME
     on:
         tags: true
+    file_glob: true
     file: lib/*
