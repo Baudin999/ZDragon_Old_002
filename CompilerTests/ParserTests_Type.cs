@@ -10,6 +10,20 @@ namespace CompilerTests
     public class ParserTests_Type
     {
         [Fact]
+        public void InvalidTokenExceptionOnOneLiner()
+        {
+            var code = @"
+type Person =
+    FirstName: String;";
+            var tokens = new Lexer().Lex(code);
+            var parser = new Parser(tokens);
+            var parseTree = parser.Parse();
+            Assert.NotNull(parseTree);
+            Assert.Empty(parser.Errors);
+        }
+
+
+        [Fact]
         public void BasicParserTest()
         {
             var code = @"
