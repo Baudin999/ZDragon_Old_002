@@ -18,10 +18,11 @@ before_deploy:
 deploy:
     provider: releases
     api_key: $ZDragon_GitHub_Token
-    draft: true
+    draft: false
     skip_cleanup: true
     name: $NAME
     on:
         tags: true
+        branch: master
     file_glob: true
     file: lib/*
