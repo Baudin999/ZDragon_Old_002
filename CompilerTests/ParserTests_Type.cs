@@ -32,8 +32,8 @@ type Person =
 
             ASTTypeField field = t.Fields.First();
             Assert.Single(field.Annotations);
-            Assert.True(field.Annotations[0] is ASTAnnotation);
-            Assert.Equal("The First Name of the Person", field.Annotations[0].Value);
+            Assert.True(field.Annotations.First() is ASTAnnotation);
+            Assert.Equal("The First Name of the Person", field.Annotations.First().Value);
 
             Assert.Equal("FirstName", field.Name);
             Assert.Equal(Helpers.ToTypeDefinition(new [] { "String" }), field.Type);
@@ -91,18 +91,18 @@ type Person =
 
             List<ASTTypeField> fields = t.Fields.ToList();
             ASTTypeField field = fields.First();
-            Assert.Equal(2, field.Annotations.Count);
-            Assert.True(field.Annotations[0] is ASTAnnotation);
-            Assert.Equal("The First Name of the Person", field.Annotations[0].Value);
-            Assert.Equal("A second Annotation is always cool to add", field.Annotations[1].Value);
+            Assert.Equal(2, field.Annotations.Count());
+            Assert.True(field.Annotations.First() is ASTAnnotation);
+            Assert.Equal("The First Name of the Person", field.Annotations.First().Value);
+            Assert.Equal("A second Annotation is always cool to add", field.Annotations.ToList()[1].Value);
 
             Assert.Equal("FirstName", field.Name);
-            Assert.Equal("String", field.Type[0].Value);
+            Assert.Equal("String", field.Type.First().Value);
 
 
             ASTTypeField lastNameField = fields[1];
             Assert.Equal("LastName", lastNameField.Name);
-            Assert.Equal("String", lastNameField.Type[0].Value);
+            Assert.Equal("String", lastNameField.Type.First().Value);
             Assert.Empty(lastNameField.Annotations);
 
             ASTTypeField ageField = fields[2];
@@ -248,7 +248,7 @@ type Person =
             Assert.Single(parseTree);
             ASTType t = (ASTType)parseTree[0];
             Assert.Single(t.Fields);
-            Assert.Equal(2, t.Fields.First().Restrictions.Count);
+            Assert.Equal(2, t.Fields.First().Restrictions.Count());
         }
 
         [Fact]
@@ -270,11 +270,11 @@ type Person =
             Assert.Single(parseTree);
             ASTType t = (ASTType)parseTree[0];
             Assert.Single(t.Fields);
-            Assert.Equal(2, t.Fields.First().Restrictions.Count);
+            Assert.Equal(2, t.Fields.First().Restrictions.Count());
 
             ASTTypeField field = t.Fields.First();
-            Assert.Equal(2, field.Restrictions.Count);
-            Assert.Equal("Should not be 30", field.Restrictions[1].Annotations.First().Value);
+            Assert.Equal(2, field.Restrictions.Count());
+            Assert.Equal("Should not be 30", field.Restrictions.ToList()[1].Annotations.First().Value);
         }
 
 

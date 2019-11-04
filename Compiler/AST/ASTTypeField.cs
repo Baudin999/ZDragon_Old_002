@@ -4,12 +4,12 @@ using System.Linq;
 
 namespace Compiler.AST
 {
-    public class ASTTypeField : IASTNode
+    public class ASTTypeField : IASTNode, IRestrictable, IElement
     {
         public string Name { get; private set; }
-        public List<ASTTypeDefinition> Type { get; private set; }
-        public List<ASTAnnotation> Annotations { get; private set; }
-        public List<ASTRestriction> Restrictions { get; private set; }
+        public IEnumerable<ASTTypeDefinition> Type { get; private set; } = Enumerable.Empty<ASTTypeDefinition>();
+        public IEnumerable<ASTAnnotation> Annotations { get; private set; } = Enumerable.Empty<ASTAnnotation>();
+        public IEnumerable<ASTRestriction> Restrictions { get; private set; } = Enumerable.Empty<ASTRestriction>();
 
 
         public ASTTypeField(IParser parser)

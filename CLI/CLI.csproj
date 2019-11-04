@@ -7,5 +7,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Compiler\Compiler.csproj" />
+    <ProjectReference Include="..\Mapper.XSD\Mapper.XSD.csproj" />
   </ItemGroup>
 </Project>

@@ -3,6 +3,8 @@ using Compiler;
 using System.Collections.Generic;
 using System.Linq;
 
+using Mapper.XSD;
+
 namespace CLI
 {
     class Program
@@ -44,10 +46,13 @@ choice Gender =
             var result = lexer.Lex(Example1);
             var parseTree = new Parser(result).Parse();
 
-            foreach (var node in parseTree)
-            {
-                Console.WriteLine(node);
-            }
+            //foreach (var node in parseTree)
+            //{
+            //    Console.WriteLine(node);
+            //}
+
+            XSDMapper mapper = new XSDMapper(parseTree);
+            mapper.Schema.Write(Console.Out);
         }
     }
 }

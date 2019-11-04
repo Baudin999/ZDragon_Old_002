@@ -24,29 +24,19 @@ namespace Compiler
 
         public T Visit(IASTNode node)
         {
-            switch (node)
+            return node switch
             {
-                case ASTType n:
-                    return VisitASTType(n);
-                case ASTTypeField n:
-                    return VisitASTTypeField(n);
-                case ASTTypeDefinition n:
-                    return VisitASTTypeDefinition(n);
-                case ASTRestriction n:
-                    return VisitASTRestriction(n);
-                case ASTAlias n:
-                    return VisitASTAlias(n);
-                case ASTAnnotation n:
-                    return VisitASTAnnotation(n);
-                case ASTDirective n:
-                    return VisitASTDirective(n);
-                case ASTChoice n:
-                    return VisitASTChoice(n);
-                case ASTOption n:
-                    return VisitASTOption(n);
-                default:
-                    return VisitDefault(node);
-            }
+                ASTType n => VisitASTType(n),
+                ASTTypeField n => VisitASTTypeField(n),
+                ASTTypeDefinition n => VisitASTTypeDefinition(n),
+                ASTRestriction n => VisitASTRestriction(n),
+                ASTAlias n => VisitASTAlias(n),
+                ASTAnnotation n => VisitASTAnnotation(n),
+                ASTDirective n => VisitASTDirective(n),
+                ASTChoice n => VisitASTChoice(n),
+                ASTOption n => VisitASTOption(n),
+                _ => VisitDefault(node),
+            };
         }
 
         public abstract T VisitASTType(ASTType astType);

@@ -101,7 +101,7 @@ namespace Compiler
             string typeDef = string.Join(" ", astTypeField.Type.Select(Visit));
             string restrictions = string.Join("\n", astTypeField.Restrictions.Select(Visit));
 
-            if (astTypeField.Restrictions.Count > 0)
+            if (astTypeField.Restrictions.Count() > 0)
             {
                 return $"    {astTypeField.Name}: {typeDef}\n{restrictions}\n    ;";
             } else

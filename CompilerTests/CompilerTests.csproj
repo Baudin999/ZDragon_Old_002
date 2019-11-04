@@ -27,5 +27,9 @@
   <ItemGroup>
     <Folder Include="Errors\" />
     <Folder Include="SourceVisitor\" />
+    <Folder Include="XSD\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="XSD\XSDMapper.cs" />
   </ItemGroup>
 </Project>

@@ -1,8 +1,8 @@
-﻿using System;
-using Mapper.XSD;
+﻿
+using Compiler;
 using Xunit;
 
-namespace CompilerTests
+namespace CompilerTests.XSD
 {
     public class XSDMapper
     {

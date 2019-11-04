@@ -1,5 +1,5 @@
 ﻿using System;
-namespace Mapper.XSD
+namespace Compiler
 {
     public class Pipeline : IPipeline
     {
