@@ -20,6 +20,7 @@ deploy:
     api_key: $ZDragon_GitHub_Token
     draft: true
     skip_cleanup: true
+    name: $(git describe)
     on:
         tags: true
     file:
