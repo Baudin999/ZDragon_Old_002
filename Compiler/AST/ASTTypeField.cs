@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Compiler.AST
 {
-    public class ASTTypeField : IASTNode, IRestrictable, IElement
+    public class ASTTypeField : IASTNode, IRestrictable, IElement, INamable
     {
         public string Name { get; private set; }
         public IEnumerable<ASTTypeDefinition> Type { get; private set; } = Enumerable.Empty<ASTTypeDefinition>();

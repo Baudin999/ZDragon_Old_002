@@ -69,6 +69,32 @@ alias Name = String;
             TestXSD(mapper.Schema, "./XSD/TestSimpleAlias.xsd");
         }
 
+        [Fact]
+        public void TestChoice()
+        {
+
+            var code = @"
+alias Name = String;
+
+choice Gender =
+    | ""Male""
+    | ""Female""
+    | ""Other""
+
+type Person =
+    FirstName: Name;
+    Gender: Gender;
+";
+            var tokens = new Lexer().Lex(code);
+            var parseTree = new Parser(tokens).Parse().ToList();
+            Assert.NotNull(parseTree);
+
+            XSDMapper mapper = new XSDMapper(parseTree);
+            _ = mapper.Start().ToList();
+
+            TestXSD(mapper.Schema, "./XSD/TestChoice.xsd");
+        }
+
         private XmlSchema LoadXSD(string path)
         {
             using var stream = new StreamReader(path);
@@ -90,3 +116,4 @@ alias Name = String;
     }
 
 }
+

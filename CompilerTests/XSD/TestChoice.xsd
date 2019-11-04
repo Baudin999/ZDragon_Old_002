@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-16"?>
+<xs:schema xmlns:self="org.schema.something" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:simpleType name="Name">
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1" />
+      <xs:maxLength value="100" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="Gender">
+    <xs:choice>
+      <xs:element name="Male" type="xs:string" />
+      <xs:element name="Female" type="xs:string" />
+      <xs:element name="Other" type="xs:string" />
+    </xs:choice>
+  </xs:complexType>
+  <xs:complexType name="Person">
+    <xs:all>
+      <xs:element minOccurs="1" maxOccurs="1" name="FirstName" ref="self:Name" />
+      <xs:element minOccurs="1" maxOccurs="1" name="Gender" ref="self:Gender" />
+    </xs:all>
+  </xs:complexType>
+</xs:schema>

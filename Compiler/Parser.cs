@@ -51,6 +51,12 @@ namespace Compiler
                 {
                     yield return new ASTChoice(this);
                 }
+                else if (Current.TokenType == TokenType.KW_Data)
+                {
+                    var (errors, data) = ASTData.Parse(this, annotations, directives);
+                    Errors.AddRange(errors);
+                    yield return data;
+                }
                 else if (Current.TokenType == TokenType.Annotation)
                 {
                     annotations = ASTAnnotation.Parse(this).ToList();

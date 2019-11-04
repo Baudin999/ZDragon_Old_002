@@ -9,7 +9,7 @@ namespace Mapper.XSD
 {
     public class XSDMapper : VisitorBase<XmlSchemaObject>
     {
-
+        private const string DefaultSchemaNamespace = "http://www.w3.org/2001/XMLSchema";
 
         public XmlSchema Schema { get; } = new XmlSchema();
 
@@ -62,7 +62,24 @@ namespace Mapper.XSD
 
         public override XmlSchemaObject VisitASTChoice(ASTChoice astChoice)
         {
-            throw new NotImplementedException();
+            XmlSchemaComplexType xmlSchemaComplexType = new XmlSchemaComplexType();
+            xmlSchemaComplexType.Name = astChoice.Name;
+
+            XmlSchemaChoice xmlSchemaChoice = new XmlSchemaChoice();
+
+            foreach (ASTOption option in astChoice.Options)
+            {
+                XmlSchemaElement o = new XmlSchemaElement
+                {
+                    Name = option.Value,
+                    SchemaTypeName = new System.Xml.XmlQualifiedName("string", DefaultSchemaNamespace)
+                };
+                xmlSchemaChoice.Items.Add(o);
+            }
+
+            xmlSchemaComplexType.Particle = xmlSchemaChoice;
+            this.Schema.Items.Add(xmlSchemaComplexType);
+            return xmlSchemaComplexType;
         }
 
         public override XmlSchemaObject VisitASTAnnotation(ASTAnnotation astAnnotation)
@@ -102,3 +119,12 @@ namespace Mapper.XSD
 
     }
 }
+
+/*
+<xs:complexType>
+    <xs:choice>
+      <xs:element name="employee" type="employee"/>
+      <xs:element name="member" type="member"/>
+    </xs:choice>
+  </xs:complexType>
+*/
