@@ -21,8 +21,7 @@ deploy:
     draft: true
     skip_cleanup: true
     on:
-        all-branches: true
-        # tags: true
+        tags: true
     file:
         - "CLI/bin/Release/netcoreapp3.0/win-x64/publish/CLI.exe"
         - "CLI/bin/Release/netcoreapp3.0/osx-x64/publish/CLI"
