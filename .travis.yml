@@ -13,9 +13,8 @@ script:
   - dotnet build --configuration Release
   - dotnet test
 before_deploy:
-  - dotnet publish CLI -c Release --runtime win-x64 /p:PublishSingleFile=true
-  - dotnet publish CLI -c Release --runtime osx-x64 /p:PublishSingleFile=true
-  - NAME=$(git describe)
+  - bash ./release.sh
+  - NAME=$(git describe --tag --abbrev=0)
 deploy:
     provider: releases
     api_key: $ZDragon_GitHub_Token
@@ -24,6 +23,4 @@ deploy:
     name: $NAME
     on:
         tags: true
-    file:
-        - "CLI/bin/Release/netcoreapp3.0/win-x64/publish/CLI.exe"
-        - "CLI/bin/Release/netcoreapp3.0/osx-x64/publish/CLI"
+    file: lib/*
