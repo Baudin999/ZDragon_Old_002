@@ -9,9 +9,11 @@ mkdir lib
 mv releaseTemp/CLI lib/ckc
 mv releaseTemp/CLI.exe lib/ckc.exe
 rm -rf releaseTemp/
-PREVIOUSTAG=$(git describe --abbrev=0 --tags)
+PREVIOUSTAG=$(git describe --abbrev=0 --tags $(git rev-list --tags --skip=1 --max-count=1))
 NEWTAG=$1
 # TODO change all project versions at the same time
+echo $PREVIOUSTAG
+echo $NEWTAG
 FILES=("ZDragon.NET.sln" "CLI/CLI.csproj" "Compiler/Compiler.csproj" "CompilerTests/CompilerTests.csproj" "Mapper.xsd/Mapper.xsd.csproj")
 for FILE in "${FILES[@]}"
 do
