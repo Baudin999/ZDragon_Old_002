@@ -8,12 +8,14 @@ namespace CLI
     public class Project: IDisposable
     {
         public string Path { get; }
+        public string OutPath { get; }
         public List<Module> Modules { get; } = new List<Module>();
         public Action Foo { get; private set; }
 
         public Project(string path)
         {
             this.Path = path;
+            this.OutPath = System.IO.Path.GetFullPath($"out", path);
 
             string[] allfiles = Directory.GetFiles(path, "*.car", SearchOption.AllDirectories);
             foreach (string file in allfiles)
