@@ -6,12 +6,12 @@ namespace Compiler.AST
 {
     public class ASTTypeField : IASTNode, IRestrictable, IElement, INamable
     {
-        public string Name { get; private set; }
+        public string Name { get; private set; } = "";
         public IEnumerable<ASTTypeDefinition> Type { get; private set; } = Enumerable.Empty<ASTTypeDefinition>();
         public IEnumerable<ASTAnnotation> Annotations { get; private set; } = Enumerable.Empty<ASTAnnotation>();
         public IEnumerable<ASTRestriction> Restrictions { get; private set; } = Enumerable.Empty<ASTRestriction>();
 
-
+        public ASTTypeField() { }
         public ASTTypeField(IParser parser)
         {
             this.Restrictions = new List<ASTRestriction>();
@@ -23,5 +23,15 @@ namespace Compiler.AST
             parser.Consume(TokenType.EndStatement);
         }
 
+        public ASTTypeField Clone()
+        {
+            return new ASTTypeField
+            {
+                  Name = this.Name,
+                  Type = this.Type.Select(t => new ASTTypeDefinition(t.Value)),
+                  Annotations = this.Annotations.Select(a => new ASTAnnotation(a.Value)),
+                  Restrictions = this.Restrictions.Select(r => r.Clone())
+            };
+        }
     }
 }

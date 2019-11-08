@@ -31,6 +31,7 @@ namespace Compiler
                 ASTTypeDefinition n => VisitASTTypeDefinition(n),
                 ASTRestriction n => VisitASTRestriction(n),
                 ASTAlias n => VisitASTAlias(n),
+                ASTData n => VisitASTData(n),
                 ASTAnnotation n => VisitASTAnnotation(n),
                 ASTDirective n => VisitASTDirective(n),
                 ASTChoice n => VisitASTChoice(n),
@@ -44,6 +45,7 @@ namespace Compiler
         // language
         public abstract T VisitASTType(ASTType astType);
         public abstract T VisitASTAlias(ASTAlias astAlias);
+        public abstract T VisitASTData(ASTData astData);
         public abstract T VisitASTChoice(ASTChoice astChoice);
         public abstract T VisitASTAnnotation(ASTAnnotation astAnnotation);
         public abstract T VisitASTDirective(ASTDirective astDirective);

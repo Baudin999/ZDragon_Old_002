@@ -77,24 +77,33 @@ namespace Mapper.XSD
 
         public override XmlSchemaObject VisitASTChoice(ASTChoice astChoice)
         {
-            XmlSchemaComplexType xmlSchemaComplexType = new XmlSchemaComplexType();
-            xmlSchemaComplexType.Name = astChoice.Name;
-
-            XmlSchemaChoice xmlSchemaChoice = new XmlSchemaChoice();
-
+            /*
+<xs:simpleType name="color" final="restriction" >
+    <xs:restriction base="xs:string">
+        <xs:enumeration value="green" />
+        <xs:enumeration value="red" />
+        <xs:enumeration value="blue" />
+    </xs:restriction>
+</xs:simpleType>
+             */
+            XmlSchemaSimpleType enumeration = new XmlSchemaSimpleType
+            {
+                Name = astChoice.Name
+            };
+            XmlSchemaSimpleTypeRestriction restriction = new XmlSchemaSimpleTypeRestriction();
+            restriction.BaseTypeName = new XmlQualifiedName("string", DefaultSchemaNamespace);
             foreach (ASTOption option in astChoice.Options)
             {
-                XmlSchemaElement o = new XmlSchemaElement
+                XmlSchemaEnumerationFacet facet = new XmlSchemaEnumerationFacet
                 {
-                    Name = option.Value,
-                    SchemaTypeName = new System.Xml.XmlQualifiedName("string", DefaultSchemaNamespace)
+                    Value = option.Value
                 };
-                xmlSchemaChoice.Items.Add(o);
+                restriction.Facets.Add(facet);
             }
+            enumeration.Content = restriction;
+            this.Schema.Items.Add(enumeration);
 
-            xmlSchemaComplexType.Particle = xmlSchemaChoice;
-            this.Schema.Items.Add(xmlSchemaComplexType);
-            return xmlSchemaComplexType;
+            return enumeration;
         }
 
         public override XmlSchemaObject? VisitASTAnnotation(ASTAnnotation astAnnotation)
@@ -159,14 +168,26 @@ namespace Mapper.XSD
             return new XmlNode[1] { doc.CreateTextNode(text) };
         }
 
+        public override XmlSchemaObject? VisitASTData(ASTData astData)
+        {
+            XmlSchemaComplexType xmlSchemaComplexType = new XmlSchemaComplexType();
+            xmlSchemaComplexType.Name = astData.Name;
+
+            XmlSchemaChoice xmlSchemaChoice = new XmlSchemaChoice();
+
+            foreach (ASTDataOption option in astData.Options)
+            {
+                XmlSchemaElement o = new XmlSchemaElement
+                {
+                    RefName = new System.Xml.XmlQualifiedName("self:" + option.Name)
+                };
+                xmlSchemaChoice.Items.Add(o);
+            }
+
+            xmlSchemaComplexType.Particle = xmlSchemaChoice;
+            this.Schema.Items.Add(xmlSchemaComplexType);
+            return xmlSchemaComplexType;
+        }
     }
 }
 
-/*
-<xs:complexType>
-    <xs:choice>
-      <xs:element name="employee" type="employee"/>
-      <xs:element name="member" type="member"/>
-    </xs:choice>
-  </xs:complexType>
-*/

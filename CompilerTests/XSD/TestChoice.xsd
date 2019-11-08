@@ -6,13 +6,13 @@
       <xs:maxLength value="100" />
     </xs:restriction>
   </xs:simpleType>
-  <xs:complexType name="Gender">
-    <xs:choice>
-      <xs:element name="Male" type="xs:string" />
-      <xs:element name="Female" type="xs:string" />
-      <xs:element name="Other" type="xs:string" />
-    </xs:choice>
-  </xs:complexType>
+  <xs:simpleType name="Gender">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Male" />
+      <xs:enumeration value="Female" />
+      <xs:enumeration value="Other" />
+    </xs:restriction>
+  </xs:simpleType>
   <xs:complexType name="Person">
     <xs:annotation>
       <xs:documentation />

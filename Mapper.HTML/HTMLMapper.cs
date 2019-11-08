@@ -94,6 +94,7 @@ namespace Mapper.HTML
 
         public override string VisitASTType(ASTType astType)
         {
+            var extensions = astType.Extensions.Select(e => $"[{astType.Name}] -:> [{e}]");
             var fields = astType.Fields.Select(f => $@"    {f.Name}: {string.Join(" ", f.Type.Select(t => t.Value))}").ToList();
             var fieldReferences = astType.Fields.Select(f =>
             {
@@ -118,12 +119,12 @@ namespace Mapper.HTML
                     return "";
                 }
             });
-            //{string.Join("\n", fieldReferences)}
             ErdParts.Add($@"
 [{astType.Name} |
 {string.Join("\n", fields)} |
 ]
 {string.Join("\n", typeReferences)}
+{string.Join("\n", extensions)}
 "
 );
             return "";
@@ -141,6 +142,12 @@ namespace Mapper.HTML
 
         public override string VisitDefault(IASTNode node)
         {
+            return "";
+        }
+
+        public override string VisitASTData(ASTData astData)
+        {
+            //ErdParts
             return "";
         }
     }

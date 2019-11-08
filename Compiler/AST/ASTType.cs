@@ -11,9 +11,9 @@ namespace Compiler.AST
         public IEnumerable<ASTAnnotation> Annotations { get; set; } = Enumerable.Empty<ASTAnnotation>();
         public IEnumerable<ASTDirective> Directives { get; set; } = Enumerable.Empty<ASTDirective>();
 
-        public IEnumerable<string> Parameters = Enumerable.Empty<string>();
-        public IEnumerable<string> Extensions = Enumerable.Empty<string>();
-        public IEnumerable<ASTTypeField> Fields = Enumerable.Empty<ASTTypeField>();
+        public IEnumerable<string> Parameters { get; private set; }  = Enumerable.Empty<string>();
+        public IEnumerable<string> Extensions { get; private set; } = Enumerable.Empty<string>();
+        public IEnumerable<ASTTypeField> Fields { get; private set; } = Enumerable.Empty<ASTTypeField>();
 
         public ASTType() { }
         public ASTType(
@@ -28,6 +28,12 @@ namespace Compiler.AST
             this.Fields = fields;
             this.Annotations = annotations;
             this.Directives = directives;
+        }
+
+
+        public void AddFields(IEnumerable<ASTTypeField> fields)
+        {
+            this.Fields = this.Fields.Union(fields);
         }
 
         public static (List<ASTError>, ASTType) Parse(IParser parser, List<ASTAnnotation> annotations, List<ASTDirective> directives)

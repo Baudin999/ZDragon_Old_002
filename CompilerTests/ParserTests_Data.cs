@@ -44,5 +44,25 @@ data Maybe 'a =
 
             Assert.Equal(3, newParseTree.Count);
         }
+
+        [Fact]
+        public void SimpleCustomerTest()
+        {
+            var code = @"
+data Customer =
+    | Person
+    | Organisation
+";
+            var tokens = new Lexer().Lex(code);
+            var parser = new Parser(tokens);
+            var parseTree = parser.Parse().ToList();
+            var resolver = new Resolver(parseTree);
+            var newParseTree = resolver.Resolve().ToList();
+
+            Assert.NotNull(parseTree);
+            Assert.Empty(parser.Errors);
+
+            Assert.Equal(3, newParseTree.Count);
+        }
     }
 }

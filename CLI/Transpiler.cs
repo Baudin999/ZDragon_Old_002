@@ -21,6 +21,7 @@ namespace CLI
             var tokens = new Lexer().Lex(code);
             var parser = new Parser(tokens);
             var parseTree = parser.Parse().ToList();
+            parseTree = new Resolver(parseTree).Resolve().ToList();
 
             this.Errors = parser.Errors;
 

@@ -48,6 +48,11 @@ namespace Compiler
             return "";
         }
 
+        public override string VisitASTData(ASTData astData)
+        {
+            return "";
+        }
+
         public override string VisitASTDirective(ASTDirective astDirective)
         {
             return $"% {astDirective.Key}: {astDirective.Value}";

@@ -326,10 +326,30 @@ type Customer extends Person
             var parseTree = parser.Parse().ToList();
             Assert.NotNull(parseTree);
             Assert.Empty(parser.Errors.ToList());
+        }
 
 
-            var customer = parseTree[0] as ASTType;
-            Assert.Single(customer.Fields);
+        [Fact]
+        public void ExtensionsTest()
+        {
+            var code = @"
+type Person =
+    FirstName: String;
+    LastName: String;
+
+type Customer extends Person
+";
+            var tokens = new Lexer().Lex(code);
+            var parser = new Parser(tokens);
+            var parseTree = parser.Parse().ToList();
+            var resolvedTree = new Resolver(parseTree).Resolve().ToList();
+
+            Assert.NotNull(resolvedTree);
+            Assert.Empty(parser.Errors.ToList());
+
+
+            var customer = resolvedTree[1] as ASTType;
+            Assert.Equal(2, customer.Fields.Count());
         }
     }
 

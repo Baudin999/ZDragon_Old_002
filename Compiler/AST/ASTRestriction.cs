@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Compiler.AST
 {
@@ -47,6 +48,11 @@ namespace Compiler.AST
                 annotations = ASTAnnotation.Parse(parser);
                 parser.TryConsume(TokenType.And, out t);
             }
+        }
+
+        public ASTRestriction Clone()
+        {
+            return new ASTRestriction(this.Key, this.Value, this.Annotations.Select(a => new ASTAnnotation(a.Value)), this.Token, this.Depth);
         }
     }
 }

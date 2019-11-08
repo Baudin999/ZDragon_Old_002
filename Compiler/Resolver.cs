@@ -32,8 +32,28 @@ namespace Compiler
                                 Enumerable.Empty<ASTDirective>());
                         }
                     }
+                    yield return node;
                 }
-                yield return node;
+                else if (node is ASTType)
+                {
+                    ASTType t = (ASTType)node;
+                    t.Extensions.ToList().ForEach(e =>
+                    {
+                        var extendedFrom = FindNode(e) as ASTType;
+                        if (extendedFrom is null)
+                        {
+                            throw new System.Exception($"Cannot find type {e} to extend from");
+                        }
+
+                        var clones = extendedFrom.Fields.Select(f => f.Clone()).ToList();
+                        t.AddFields(clones);
+                    });
+                    yield return t;
+                }
+                else
+                {
+                    yield return node;
+                }
             }
         }
 
