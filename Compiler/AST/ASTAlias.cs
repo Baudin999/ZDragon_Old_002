@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Compiler.AST
 {
-    public class ASTAlias : IASTNode, IRestrictable, IElement, INamable
+    public class ASTAlias : IASTNode, IRestrictable, IElement, INamable, IRootNode
     {
         public string Name { get; private set; } = "";
         public IEnumerable<ASTTypeDefinition> Type { get; private set; } = Enumerable.Empty<ASTTypeDefinition>();

@@ -12,6 +12,9 @@
     </xs:sequence>
   </xs:complexType>
   <xs:complexType name="Person">
+    <xs:annotation>
+      <xs:documentation />
+    </xs:annotation>
     <xs:all>
       <xs:element minOccurs="1" maxOccurs="1" name="FirstName" ref="self:Name" />
       <xs:element minOccurs="0" maxOccurs="1" name="LastName" nillable="true">

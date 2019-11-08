@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Compiler.AST
 {
-    public class ASTType : IASTNode, INamable
+    public class ASTType : IASTNode, INamable, IRootNode
     {
         public string Name { get; private set; } = "";
         public IEnumerable<ASTAnnotation> Annotations { get; set; } = Enumerable.Empty<ASTAnnotation>();

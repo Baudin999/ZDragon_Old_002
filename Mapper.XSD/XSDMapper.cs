@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml;
 using System.Xml.Schema;
 using Compiler;
 using Compiler.AST;
@@ -33,7 +34,20 @@ namespace Mapper.XSD
             }
 
             t.Particle = all;
+
+            var description = string.Join(" ", astType.Annotations.Select(a => a.Value));
+            XmlSchemaAnnotation schemaAnnotation = new XmlSchemaAnnotation();
+            XmlSchemaDocumentation docs = new XmlSchemaDocumentation()
+            {
+                Markup = TextToNodeArray(description)
+            };
+            schemaAnnotation.Items.Add(docs);
+            t.Annotation = schemaAnnotation;
+
             this.Schema.Items.Add(t);
+
+            ExtractElement(astType);
+
             return t;
         }
 
@@ -56,6 +70,7 @@ namespace Mapper.XSD
                 _ => Mapper.MapString(astAlias),
             };
             Schema.Items.Add(result);
+            ExtractElement(astAlias);
 
             return result;
         }
@@ -126,6 +141,24 @@ namespace Mapper.XSD
         {
             return null;
         }
+
+        private void ExtractElement<T>(T node) where T : INamable, IRootNode
+        {
+            var xsdDirective = node.Directives.FirstOrDefault(d => d.Key == "xsd");
+            if (!(xsdDirective is null))
+            {
+                XmlSchemaElement element = new XmlSchemaElement();
+                element.Name = xsdDirective.Value.Replace(" ", "_");
+                element.RefName = new System.Xml.XmlQualifiedName("self:" + (node as INamable).Name);
+                Schema.Items.Add(element);
+            }
+        }
+        private XmlNode[] TextToNodeArray(string text)
+        {
+            XmlDocument doc = new XmlDocument();
+            return new XmlNode[1] { doc.CreateTextNode(text) };
+        }
+
     }
 }
 

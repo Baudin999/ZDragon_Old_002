@@ -34,6 +34,7 @@ namespace Mapper.HTML
 <script>
     var canvas = document.getElementById('erd_canvas');
     var source = `
+#lineWidth: 1
 {string.Join("\n\n", ErdParts)}
 `;
     nomnoml.draw(canvas, source);
