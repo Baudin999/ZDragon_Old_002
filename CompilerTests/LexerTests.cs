@@ -89,7 +89,7 @@ LastName: String;
             Assert.Equal(15, result.Count());
             Assert.Equal(TokenType.ContextEnded, result[11].TokenType);
             Assert.Equal(TokenType.Paragraph, result[12].TokenType);
-            Assert.Equal("LastName: String;↓", result[12].Value);
+            Assert.Equal("LastName: String;\n", result[12].Value);
 
         }
 
