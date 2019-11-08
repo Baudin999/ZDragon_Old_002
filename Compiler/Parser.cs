@@ -21,7 +21,7 @@ namespace Compiler
 
         public List<IASTError> Errors { get; }
         public Token Current => tokenStream[position];
-        public bool HasNext() => HasPeek(); //() => (position + 1) < length;
+        public bool HasNext() => HasPeek(); 
         public Token Next() => tokenStream[position++];
         public bool HasPeek(int index = 1) => (position + index) < length;
         public Token Peek(int index = 1) => tokenStream[position + index];
@@ -29,10 +29,9 @@ namespace Compiler
 
         public IEnumerable<IASTNode> Parse()
         {
-
             List<ASTAnnotation> annotations = new List<ASTAnnotation>();
             List<ASTDirective> directives = new List<ASTDirective>();
-            while (HasNext())
+            while (HasNext() && Current.TokenType != TokenType.EndOfFile)
             {
                 
                 if (Current.TokenType == TokenType.KW_Type)
@@ -67,11 +66,21 @@ namespace Compiler
                     Errors.AddRange(errors.ToList());
                     directives = dirs.ToList();
                 }
+                else if (Current.TokenType == TokenType.Chapter)
+                {
+                    yield return new ASTChapter(Current.Value);
+                    Next();
+                }
+                else if (Current.TokenType == TokenType.Paragraph)
+                {
+                    yield return new ASTParagraph(Current.Value);
+                    Next();
+                }
                 else
                 {
 
                     Next();
-                }
+                } 
             }
             yield break;
         }

@@ -41,7 +41,10 @@ namespace Compiler
         {
             return ParseTree.FirstOrDefault(n =>
             {
-                return n is INamable && (n as INamable).Name == name;
+                // Oh my dotnet, what have you done!!
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+                return n != null && n is INamable && (n as INamable).Name == name;
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
             });
         }
     }

@@ -21,6 +21,7 @@
     <ProjectReference Include="..\Compiler\Compiler.csproj" />
     <ProjectReference Include="..\Mapper.XSD\Mapper.XSD.csproj" />
     <ProjectReference Include="..\Mapper.JSON\Mapper.JSON.csproj" />
+    <ProjectReference Include="..\Mapper.HTML\Mapper.HTML.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="TestResults\4cbd3726-c5fc-40f3-9845-7701bf053b15\coverage.cobertura.xml" />
@@ -30,6 +31,7 @@
     <Folder Include="SourceVisitor\" />
     <Folder Include="XSD\" />
     <Folder Include="JSON\" />
+    <Folder Include="HTML\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="XSD\XSDMapper.cs" />

@@ -23,6 +23,24 @@ namespace Compiler
         {
             return String.Format($"({StartColumn}, {StartLine}) ({EndColumn}, {EndLine}) {TokenType} |{Value}|");
         }
+
+        public Token Normalize() {
+            return new Token
+            {
+                StartIndex = this.StartIndex,
+                StartColumn = this.StartColumn,
+                StartLine = this.StartLine,
+
+                EndIndex = this.EndIndex,
+                EndColumn = this.EndColumn,
+                EndLine = this.EndLine,
+
+                TokenType = this.TokenType,
+
+                Value = this.Value.Replace("↓", "\n").Replace("→", "    ")
+            };
+        }
+
     }
 
     public enum TokenType

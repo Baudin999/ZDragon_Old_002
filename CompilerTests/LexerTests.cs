@@ -22,7 +22,7 @@ namespace CompilerTests
             
             Assert.NotNull(lexer);
             Assert.NotNull(result);
-            Assert.Equal(64, result.Count());
+            Assert.Equal(65, result.Count());
         }
 
         [Fact]
@@ -50,7 +50,7 @@ type Person =
     FirstName: String
 ");
             Assert.NotNull(result);
-            Assert.Equal(11, result.Count());
+            Assert.Equal(12, result.Count());
             
         }
 
@@ -61,7 +61,7 @@ type Person =
             var lexer = new Lexer();
             var result = lexer.Lex(code).ToList();
             Assert.NotNull(result);
-            Assert.Equal(3, result.Count());
+            Assert.Equal(4, result.Count());
             Assert.Equal(TokenType.ContextStarted, result[0].TokenType);
             Assert.Equal(TokenType.KW_Type, result[1].TokenType);
             Assert.Equal(TokenType.ContextEnded, result[2].TokenType);
@@ -86,7 +86,7 @@ LastName: String;
             var lexer = new Lexer();
             var result = lexer.Lex(code).ToList();
             Assert.NotNull(result);
-            Assert.Equal(14, result.Count());
+            Assert.Equal(15, result.Count());
             Assert.Equal(TokenType.ContextEnded, result[11].TokenType);
             Assert.Equal(TokenType.Paragraph, result[12].TokenType);
             Assert.Equal("LastName: String;↓", result[12].Value);
@@ -100,7 +100,7 @@ LastName: String;
             var lexer = new Lexer();
             var result = lexer.Lex(code).ToList();
             Assert.NotNull(result);
-            Assert.Single(result);
+            Assert.Equal(2, result.Count());
             Assert.Equal(TokenType.Paragraph, result[0].TokenType);
 
             /*
@@ -118,7 +118,7 @@ LastName: String;
             var lexer = new Lexer();
             var result = lexer.Lex(code).ToList();
             Assert.NotNull(result);
-            Assert.Equal(4, result.Count());
+            Assert.Equal(5, result.Count());
             Assert.Equal(TokenType.String, result[2].TokenType);
 
             /*
@@ -135,7 +135,7 @@ LastName: String;
             var lexer = new Lexer();
             var result = lexer.Lex(code).ToList();
             Assert.NotNull(result);
-            Assert.Single(result);
+            Assert.Equal(2, result.Count());
             Assert.Equal(TokenType.Paragraph, result[0].TokenType);
         }
 
@@ -147,7 +147,7 @@ LastName: String;
             var lexer = new Lexer();
             var result = lexer.Lex(code).ToList();
             Assert.NotNull(result);
-            Assert.Equal(4, result.Count());
+            Assert.Equal(5, result.Count());
             Assert.Equal(TokenType.Number, result[2].TokenType);
         }
 
@@ -158,7 +158,7 @@ LastName: String;
             var lexer = new Lexer();
             var result = lexer.Lex(code).ToList();
             Assert.NotNull(result);
-            Assert.Equal(4, result.Count());
+            Assert.Equal(5, result.Count());
             Assert.Equal(TokenType.GenericParameter, result[2].TokenType);
             Assert.Equal("'a", result[2].Value);
         }

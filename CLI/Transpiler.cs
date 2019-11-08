@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using Compiler;
 using Compiler.AST;
+using Mapper.HTML;
 using Mapper.XSD;
 
 namespace CLI
@@ -12,6 +13,7 @@ namespace CLI
     {
         public string Code { get; }
         public XSDMapper XsdMapper { get; }
+        public HtmlMapper HtmlMapper { get; }
         public List<IASTError> Errors { get; private set; } = new List<IASTError>();
         public Transpiler(string code)
         {
@@ -24,6 +26,9 @@ namespace CLI
 
             this.XsdMapper = new XSDMapper(parseTree);
             this.XsdMapper.Start().ToList();
+
+            this.HtmlMapper = new HtmlMapper(parseTree);
+            this.HtmlMapper.Start().ToList();
         }
 
 
@@ -34,6 +39,11 @@ namespace CLI
             return writer.ToString();
         }
 
-        
+        public string HtmlToString()
+        {
+            return this.HtmlMapper.ToString();
+        }
+
+
     }
 }

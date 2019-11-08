@@ -38,6 +38,11 @@ namespace Compiler
             return $"@ {astAnnotation.Value}";
         }
 
+        public override string VisitASTChapter(ASTChapter astOption)
+        {
+            throw new NotImplementedException();
+        }
+
         public override string VisitASTChoice(ASTChoice astChoice)
         {
             return "";
@@ -49,6 +54,11 @@ namespace Compiler
         }
 
         public override string VisitASTOption(ASTOption astOption)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override string VisitASTParagraph(ASTParagraph astOption)
         {
             throw new NotImplementedException();
         }

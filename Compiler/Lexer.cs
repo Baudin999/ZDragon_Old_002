@@ -154,6 +154,8 @@ namespace Compiler
                 yield return new Token() { TokenType = TokenType.ContextEnded };
                 context = false;
             }
+
+            yield return new Token() { TokenType = TokenType.EndOfFile };
         }
 
 

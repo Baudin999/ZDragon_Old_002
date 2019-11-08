@@ -10,7 +10,7 @@ namespace CLI
         public string Path { get; }
         public string OutPath { get; }
         public List<Module> Modules { get; } = new List<Module>();
-        public Action Foo { get; private set; }
+        public Action Cleanup { get; private set; }
 
         public Project(string path)
         {
@@ -22,6 +22,12 @@ namespace CLI
             {
                 Modules.Add(new Module(file, path));
             }
+            Cleanup = () => { };
+        }
+
+        public void OnClose(Action cleanup)
+        {
+            this.Cleanup = cleanup;
         }
 
 
@@ -44,7 +50,7 @@ namespace CLI
                 Filter = "*.car"
             };
 
-            this.Foo = watcher.Dispose;
+            this.Cleanup = watcher.Dispose;
 
             // Add event handlers.
             watcher.Changed += OnChanged;
@@ -59,7 +65,8 @@ namespace CLI
             Console.WriteLine("Press 'q' to quit the sample.");
             while (Console.Read() != 'q') { }
 
-            Foo();
+            watcher.Dispose();
+            Cleanup();
         }
 
 

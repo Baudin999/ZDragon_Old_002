@@ -8,6 +8,8 @@
   <ItemGroup>
     <ProjectReference Include="..\Compiler\Compiler.csproj" />
     <ProjectReference Include="..\Mapper.XSD\Mapper.XSD.csproj" />
+    <ProjectReference Include="..\Mapper.JSON\Mapper.JSON.csproj" />
+    <ProjectReference Include="..\Mapper.HTML\Mapper.HTML.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.CommandLineUtils" Version="1.1.1" />

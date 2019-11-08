@@ -27,6 +27,7 @@ namespace CLI
             {
                 Console.WriteLine($"Perfectly parsed: {Name}");
                 SaveResult(transpiler.XsdToString(), "Model.xsd");
+                SaveResult(transpiler.HtmlToString(), "index.html");
             }
             else
             {

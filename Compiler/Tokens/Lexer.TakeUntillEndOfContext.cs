@@ -27,7 +27,7 @@ namespace Compiler
                 EndLine = input.Line,
                 Value = builder.ToString(),
                 TokenType = TokenType.Paragraph
-            };
+            }.Normalize();
         }
     }
 }

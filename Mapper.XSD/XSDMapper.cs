@@ -7,7 +7,7 @@ using Compiler.AST;
 
 namespace Mapper.XSD
 {
-    public class XSDMapper : VisitorBase<XmlSchemaObject>
+    public class XSDMapper : VisitorBase<XmlSchemaObject?>
     {
         private const string DefaultSchemaNamespace = "http://www.w3.org/2001/XMLSchema";
 
@@ -82,41 +82,50 @@ namespace Mapper.XSD
             return xmlSchemaComplexType;
         }
 
-        public override XmlSchemaObject VisitASTAnnotation(ASTAnnotation astAnnotation)
+        public override XmlSchemaObject? VisitASTAnnotation(ASTAnnotation astAnnotation)
         {
-            throw new NotImplementedException();
+            return null;
         }
 
-        public override XmlSchemaObject VisitASTDirective(ASTDirective astDirective)
+        public override XmlSchemaObject? VisitASTDirective(ASTDirective astDirective)
         {
-            throw new NotImplementedException();
+            return null;
         }
 
-        public override XmlSchemaObject VisitASTTypeDefinition(ASTTypeDefinition astTypeDefinition)
+        public override XmlSchemaObject? VisitASTTypeDefinition(ASTTypeDefinition astTypeDefinition)
         {
-            throw new NotImplementedException();
+            return null;
         }
 
-        public override XmlSchemaObject VisitASTTypeField(ASTTypeField astTypeField)
+        public override XmlSchemaObject? VisitASTTypeField(ASTTypeField astTypeField)
         {
             return Mapper.Element(astTypeField);
         }
 
-        public override XmlSchemaObject VisitASTRestriction(ASTRestriction astRestriction)
+        public override XmlSchemaObject? VisitASTRestriction(ASTRestriction astRestriction)
         {
-            throw new NotImplementedException();
+            return null;
         }
 
-        public override XmlSchemaObject VisitASTOption(ASTOption astOption)
+        public override XmlSchemaObject? VisitASTOption(ASTOption astOption)
         {
-            throw new NotImplementedException();
+            return null;
         }
 
-        public override XmlSchemaObject VisitDefault(IASTNode node)
+        public override XmlSchemaObject? VisitDefault(IASTNode node)
         {
-            throw new NotImplementedException();
+            return null;
         }
 
+        public override XmlSchemaObject? VisitASTChapter(ASTChapter astOption)
+        {
+            return null;
+        }
+
+        public override XmlSchemaObject? VisitASTParagraph(ASTParagraph astOption)
+        {
+            return null;
+        }
     }
 }
 

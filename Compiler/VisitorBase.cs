@@ -35,10 +35,13 @@ namespace Compiler
                 ASTDirective n => VisitASTDirective(n),
                 ASTChoice n => VisitASTChoice(n),
                 ASTOption n => VisitASTOption(n),
+                ASTChapter n => VisitASTChapter(n),
+                ASTParagraph n => VisitASTParagraph(n),
                 _ => VisitDefault(node),
             };
         }
 
+        // language
         public abstract T VisitASTType(ASTType astType);
         public abstract T VisitASTAlias(ASTAlias astAlias);
         public abstract T VisitASTChoice(ASTChoice astChoice);
@@ -49,6 +52,11 @@ namespace Compiler
         public abstract T VisitASTRestriction(ASTRestriction astRestriction);
         public abstract T VisitASTOption(ASTOption astOption);
 
+        // markdown functions
+        public abstract T VisitASTChapter(ASTChapter astChapter);
+        public abstract T VisitASTParagraph(ASTParagraph astParagraph);
+
+        // default
         public abstract T VisitDefault(IASTNode node);
     }
 }

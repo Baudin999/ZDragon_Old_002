@@ -17,14 +17,12 @@ namespace CLI
             app.HelpOption("-?|-h|--help");
 
             app.OnExecute(() => {
-                //Console.WriteLine("Hello World!");
                 return 0;
             });
 
-
-
             CommandsBuilder.CreateBuildCommand(app);
             CommandsBuilder.CreateWatchCommand(app);
+            CommandsBuilder.CreateServeCommand(app);
 
 
             app.Execute(args);
