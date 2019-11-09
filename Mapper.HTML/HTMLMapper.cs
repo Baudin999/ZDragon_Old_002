@@ -10,35 +10,35 @@ namespace Mapper.HTML
     public class HtmlMapper : VisitorBase<string>
     {
         public List<string> Parts { get; } = new List<string>();
-        public List<string> ErdParts { get; } = new List<string>();
+        public MermaidMapper MermaidMapper { get; }
 
         public HtmlMapper(IEnumerable<IASTNode> nodeTree) : base(nodeTree)
         {
-            
+            this.MermaidMapper = new MermaidMapper(nodeTree);
+            this.MermaidMapper.Start().ToList();
         }
 
         public override string ToString()
         {
-            //System.Xml.Linq.XElement.Parse(
             return $@"
 <!DOCTYPE html>
 <html>
 <head>
+    <script src=""https://cdnjs.cloudflare.com/ajax/libs/mermaid/8.3.1/mermaid.min.js""></script>
     <script src=""https://cdnjs.cloudflare.com/ajax/libs/dagre/0.8.4/dagre.min.js""></script>
     <script src=""https://cdnjs.cloudflare.com/ajax/libs/nomnoml/0.6.1/nomnoml.js""></script>
 </head>
 <body>
-{string.Join("\n\n", Parts)}
-<canvas id=""erd_canvas""></canvas>
 
-<script>
-    var canvas = document.getElementById('erd_canvas');
-    var source = `
-#lineWidth: 1
-{string.Join("\n\n", ErdParts)}
-`;
-    nomnoml.draw(canvas, source);
-</script>
+<a href=""model.xsd"" alt=""XSD"">XSD</a>
+
+<div class=""mermaid"">
+{this.MermaidMapper.ToString()}
+</div>
+
+{ string.Join("\n\n", Parts)}
+
+<script>mermaid.initialize({{startOnLoad:true, theme: ""default""}});</script>
 
 </body>
 </html>
@@ -49,7 +49,6 @@ namespace Mapper.HTML
 
         public override string VisitASTAlias(ASTAlias astAlias)
         {
-            ErdParts.Add($"[<abstract>{astAlias.Name}]");
             return "";
         }
 
@@ -94,39 +93,39 @@ namespace Mapper.HTML
 
         public override string VisitASTType(ASTType astType)
         {
-            var extensions = astType.Extensions.Select(e => $"[{astType.Name}] -:> [{e}]");
-            var fields = astType.Fields.Select(f => $@"    {f.Name}: {string.Join(" ", f.Type.Select(t => t.Value))}").ToList();
-            var fieldReferences = astType.Fields.Select(f =>
-            {
-                var _type = f.Type.Last().Value;
-                if (_type != "String" && _type != "Number" && _type != f.Name)
-                {
-                    return $@"[{f.Name}] -> [{_type}]";
-                } else
-                {
-                    return "";
-                }
-            });
-            var typeReferences = astType.Fields.Select(f =>
-            {
-                var _type = f.Type.Last().Value;
-                if (_type != "String" && _type != "Number")
-                {
-                    return $@"[{astType.Name}] -> [{_type}]";
-                }
-                else
-                {
-                    return "";
-                }
-            });
-            ErdParts.Add($@"
-[{astType.Name} |
-{string.Join("\n", fields)} |
-]
-{string.Join("\n", typeReferences)}
-{string.Join("\n", extensions)}
-"
-);
+//            var extensions = astType.Extensions.Select(e => $"[{astType.Name}] -:> [{e}]");
+//            var fields = astType.Fields.Select(f => $@"    {f.Name}: {string.Join(" ", f.Type.Select(t => t.Value))}").ToList();
+//            var fieldReferences = astType.Fields.Select(f =>
+//            {
+//                var _type = f.Type.Last().Value;
+//                if (_type != "String" && _type != "Number" && _type != f.Name)
+//                {
+//                    return $@"[{f.Name}] -> [{_type}]";
+//                } else
+//                {
+//                    return "";
+//                }
+//            });
+//            var typeReferences = astType.Fields.Select(f =>
+//            {
+//                var _type = f.Type.Last().Value;
+//                if (_type != "String" && _type != "Number")
+//                {
+//                    return $@"[{astType.Name}] -> [{_type}]";
+//                }
+//                else
+//                {
+//                    return "";
+//                }
+//            });
+//            ErdParts.Add($@"
+//[{astType.Name} |
+//{string.Join("\n", fields)} |
+//]
+//{string.Join("\n", typeReferences)}
+//{string.Join("\n", extensions)}
+//"
+//);
             return "";
         }
 

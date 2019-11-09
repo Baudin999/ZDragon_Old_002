@@ -29,6 +29,10 @@ namespace Compiler
             if (word == "flow") type = TokenType.KW_Flow;
             if (word == "component") type = TokenType.KW_Component;
             if (word == "view") type = TokenType.KW_View;
+            if (word == "open") type = TokenType.KW_Open;
+            if (word == "importing") type = TokenType.KW_Importing;
+            if (word == "aggregate") type = TokenType.KW_Importing;
+            if (word == "entity") type = TokenType.KW_Importing;
 
             return new Token()
             {

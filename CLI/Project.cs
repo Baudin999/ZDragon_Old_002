@@ -15,7 +15,7 @@ namespace CLI
         public Project(string path)
         {
             this.Path = path;
-            this.OutPath = System.IO.Path.GetFullPath($"out", path);
+            this.OutPath = System.IO.Path.GetFullPath($"out", this.Path);
 
             string[] allfiles = Directory.GetFiles(path, "*.car", SearchOption.AllDirectories);
             foreach (string file in allfiles)

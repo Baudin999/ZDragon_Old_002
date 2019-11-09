@@ -56,6 +56,12 @@ namespace Compiler
                     Errors.AddRange(errors);
                     yield return data;
                 }
+                else if (Current.TokenType == TokenType.KW_View)
+                {
+                    var (errors, data) = ASTView.Parse(this, annotations, directives);
+                    Errors.AddRange(errors);
+                    yield return data;
+                }
                 else if (Current.TokenType == TokenType.Annotation)
                 {
                     annotations = ASTAnnotation.Parse(this).ToList();

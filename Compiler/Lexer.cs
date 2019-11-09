@@ -36,7 +36,12 @@ namespace Compiler
                 if (input.IsEqualTo("type") ||
                     input.IsEqualTo("alias") ||
                     input.IsEqualTo("data") ||
-                    input.IsEqualTo("choice"))
+                    input.IsEqualTo("choice") ||
+                    input.IsEqualTo("open") ||
+                    input.IsEqualTo("importing") ||
+                    input.IsEqualTo("view") ||
+                    input.IsEqualTo("aggregate") ||
+                    input.IsEqualTo("entity"))
                 {
                     context = true;
                     yield return new Token() { TokenType = TokenType.ContextStarted };

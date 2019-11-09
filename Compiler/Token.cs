@@ -75,6 +75,8 @@ namespace Compiler
         And,
         KW_Extends,
         Pattern,
-        EndOfFile
+        EndOfFile,
+        KW_Open,
+        KW_Importing
     }
 }
