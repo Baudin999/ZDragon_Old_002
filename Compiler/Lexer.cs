@@ -128,6 +128,18 @@ namespace Compiler
                 {
                     yield return TokenLexers.Take(input, TokenType.Separator);
                 }
+                else if (input.Current() == '(')
+                {
+                    yield return TokenLexers.Take(input, TokenType.GroupOpen);
+                }
+                else if (input.Current() == ')')
+                {
+                    yield return TokenLexers.Take(input, TokenType.GroupClosed);
+                }
+                else if (input.Current() == ',')
+                {
+                    yield return TokenLexers.Take(input, TokenType.ListSeparator);
+                }
                 else if (Char2.IsNewLine(input.Current()))
                 {
                     var newline = TokenLexers.Take(input, TokenType.NewLine);

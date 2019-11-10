@@ -13,7 +13,16 @@ namespace Mapper.HTML
 
         public override string VisitASTAlias(ASTAlias astAlias)
         {
-            return "";
+            string template = $@"
+class {astAlias.Name} {{
+&lt;&lt;Interface&gt;&gt;
+{string.Join(" ", astAlias.Type.Select(t => t.Value).ToList())}
+}}
+";
+            this.Parts.Add(template);
+
+            return template;
+
         }
 
         public override string VisitASTAnnotation(ASTAnnotation astAnnotation)
@@ -59,13 +68,13 @@ namespace Mapper.HTML
         public override string VisitASTType(ASTType astType)
         {
             var extensions = astType.Extensions.Select(e => $"{astType.Name} --|> {e}");
-            var fields = astType.Fields.Select(f => $@"+{f.Name}: {string.Join(" ", f.Type.Select(t => t.Value))}").ToList();
+            var fields = astType.Fields.Select(f => $@"{f.Name}: {string.Join(" ", f.Type.Select(t => t.Value))}").ToList();
             var typeReferences = astType.Fields.Select(f =>
             {
                 var _type = f.Type.Last().Value;
                 if (_type != "String" && _type != "Number")
                 {
-                    return $@"{astType.Name} --> {_type}";
+                    return $@"{astType.Name} --* {_type}";
                 }
                 else
                 {
@@ -105,7 +114,7 @@ class {astType.Name} {{
             return $@"
 classDiagram
 {string.Join("", Parts.ToList())}
-";
+".Trim();
         }
     }
 }

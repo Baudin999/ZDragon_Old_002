@@ -62,6 +62,12 @@ namespace Compiler
                     Errors.AddRange(errors);
                     yield return data;
                 }
+                else if (Current.TokenType == TokenType.KW_Open)
+                {
+                    var (errors, data) = ASTImport.Parse(this);
+                    Errors.AddRange(errors);
+                    yield return data;
+                }
                 else if (Current.TokenType == TokenType.Annotation)
                 {
                     annotations = ASTAnnotation.Parse(this).ToList();

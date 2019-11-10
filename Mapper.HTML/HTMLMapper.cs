@@ -32,13 +32,21 @@ namespace Mapper.HTML
 
 <a href=""model.xsd"" alt=""XSD"">XSD</a>
 
-<div class=""mermaid"">
-{this.MermaidMapper.ToString()}
+<div class=""mermaid"">{this.MermaidMapper.ToString()}
 </div>
 
 { string.Join("\n\n", Parts)}
 
-<script>mermaid.initialize({{startOnLoad:true, theme: ""default""}});</script>
+<script>
+mermaid.initialize({{
+    securityLevel: ""strict"",
+    startOnLoad:true,
+    theme: ""default"",
+    classDiagram: {{
+        useMaxWidth: false
+    }}
+}});
+</script>
 
 </body>
 </html>

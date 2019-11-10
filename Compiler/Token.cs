@@ -77,6 +77,9 @@ namespace Compiler
         Pattern,
         EndOfFile,
         KW_Open,
-        KW_Importing
+        KW_Importing,
+        GroupOpen,
+        GroupClosed,
+        ListSeparator
     }
 }
