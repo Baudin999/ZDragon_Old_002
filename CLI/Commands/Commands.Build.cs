@@ -41,9 +41,9 @@ ckc build -f ./something.car
 
                               try
                               {
-                                  var text = System.IO.File.ReadAllText(filePath);
-                                  Transpiler transpiler = new Transpiler(text);
-                                  Console.WriteLine(transpiler.XsdToString());
+                                  //var text = System.IO.File.ReadAllText(filePath);
+                                  //Transpiler transpiler = new Transpiler(text);
+                                  //Console.WriteLine(transpiler.XsdToString());
                               }
                               catch (Exception ex)
                               {

@@ -6,9 +6,9 @@ namespace Compiler.AST
 {
     public class ASTImport : IASTNode, INamable
     {
-        public string Name { get; private set; } = "";
-        public IEnumerable<string> Imports { get; private set; } = Enumerable.Empty<string>();
-
+        public string Name { get; set; } = "";
+        public IEnumerable<string> Imports { get; set; } = Enumerable.Empty<string>();
+        public ASTImport() { }
         public static (List<ASTError>, ASTImport) Parse(IParser parser)
         {
             List<ASTError> errors = new List<ASTError>();

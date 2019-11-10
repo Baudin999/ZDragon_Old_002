@@ -6,9 +6,11 @@ namespace Compiler.AST
 {
     public class ASTChoice : IASTNode, INamable
     {
-        public string Name { get; private set; }
-        public List<ASTTypeDefinition> Type { get; private set; }
-        public List<ASTOption> Options { get; }
+        public string Name { get; set; } = "";
+        public List<ASTTypeDefinition> Type { get; set; } = new List<ASTTypeDefinition>();
+        public List<ASTOption> Options { get; } = new List<ASTOption>();
+
+        public ASTChoice() { }
 
         public ASTChoice(IParser parser)
         {

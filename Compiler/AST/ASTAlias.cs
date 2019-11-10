@@ -1,20 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 
 namespace Compiler.AST
 {
     public class ASTAlias : IASTNode, IRestrictable, IElement, INamable, IRootNode
     {
-        public string Name { get; private set; } = "";
-        public IEnumerable<ASTTypeDefinition> Type { get; private set; } = Enumerable.Empty<ASTTypeDefinition>();
-        public IEnumerable<ASTRestriction> Restrictions { get; private set; } = Enumerable.Empty<ASTRestriction>();
+        public string Name { get; set; } = "";
+        public IEnumerable<ASTTypeDefinition> Type { get; set; } = Enumerable.Empty<ASTTypeDefinition>();
+        public IEnumerable<ASTRestriction> Restrictions { get; set; } = Enumerable.Empty<ASTRestriction>();
         public IEnumerable<ASTAnnotation> Annotations { get; set; } = Enumerable.Empty<ASTAnnotation>();
         public IEnumerable<ASTDirective> Directives { get; set; } = Enumerable.Empty<ASTDirective>();
 
-        public ASTAlias() {
-            
-        }
+        public ASTAlias() { }
 
         public static (List<ASTError>, ASTAlias) Parse(
                 IParser parser,

@@ -3,6 +3,7 @@ namespace Compiler.AST
 {
     public class ASTMarkdown
     {
-        public string Markdown { get; private set; } = "";
+        public string Markdown { get; set; } = "";
+        public ASTMarkdown() { }
     }
 }

@@ -7,8 +7,9 @@ namespace Compiler.AST
 {
     public class ASTDirective : IASTNode
     {
-        public string Key { get; }
-        public string Value { get; }
+        public string Key { get; set;  }
+        public string Value { get; set;  }
+        public ASTDirective() { }
         public ASTDirective(string key, string value)
         {
             this.Key = key;

@@ -6,12 +6,13 @@ namespace Compiler.AST
 {
     public class ASTRestriction : IASTNode
     {
-        public string Key { get; }
-        public string Value { get; }
-        public int Depth { get; }
-        public IEnumerable<ASTAnnotation> Annotations { get; }
-        public Token Token { get; }
+        public string Key { get; set;  }
+        public string Value { get; set;  }
+        public int Depth { get; set; }
+        public IEnumerable<ASTAnnotation> Annotations { get; set;  }
+        public Token Token { get; set; }
 
+        public ASTRestriction() { }
         public ASTRestriction(string key, string value, IEnumerable<ASTAnnotation> annotations, Token token, int depth)
         {
             this.Key = key;

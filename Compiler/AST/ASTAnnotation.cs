@@ -7,12 +7,13 @@ namespace Compiler.AST
 {
     public class ASTAnnotation : IASTNode
     {
-        public string Value { get; }
+
+        public string Value { get; set; }
+        public ASTAnnotation() { }
         public ASTAnnotation(string value)
         {
             this.Value = value;
         }
-
 
         public static IEnumerable<ASTAnnotation> Parse(IParser parser)
         {

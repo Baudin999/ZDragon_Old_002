@@ -7,13 +7,13 @@ namespace Compiler.AST
 {
     public class ASTType : IASTNode, INamable, IRootNode
     {
-        public string Name { get; private set; } = "";
+        public string Name { get; set; } = "";
         public IEnumerable<ASTAnnotation> Annotations { get; set; } = Enumerable.Empty<ASTAnnotation>();
         public IEnumerable<ASTDirective> Directives { get; set; } = Enumerable.Empty<ASTDirective>();
 
-        public IEnumerable<string> Parameters { get; private set; }  = Enumerable.Empty<string>();
-        public IEnumerable<string> Extensions { get; private set; } = Enumerable.Empty<string>();
-        public IEnumerable<ASTTypeField> Fields { get; private set; } = Enumerable.Empty<ASTTypeField>();
+        public IEnumerable<string> Parameters { get; set; }  = Enumerable.Empty<string>();
+        public IEnumerable<string> Extensions { get; set; } = Enumerable.Empty<string>();
+        public IEnumerable<ASTTypeField> Fields { get; set; } = Enumerable.Empty<ASTTypeField>();
 
         public ASTType() { }
         public ASTType(

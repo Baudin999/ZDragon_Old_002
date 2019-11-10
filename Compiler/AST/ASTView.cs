@@ -6,11 +6,11 @@ namespace Compiler.AST
 {
     public class ASTView : IASTNode, INamable
     {
-        public string Name { get; private set; } = "";
-        public IEnumerable<string> Nodes { get; private set; } = Enumerable.Empty<string>();
-        public IEnumerable<ASTAnnotation> Annotations { get; private set; } = Enumerable.Empty<ASTAnnotation>();
-        public IEnumerable<ASTDirective> Directives { get; private set; } = Enumerable.Empty<ASTDirective>();
-        
+        public string Name { get; set; } = "";
+        public IEnumerable<string> Nodes { get; set; } = Enumerable.Empty<string>();
+        public IEnumerable<ASTAnnotation> Annotations { get; set; } = Enumerable.Empty<ASTAnnotation>();
+        public IEnumerable<ASTDirective> Directives { get; set; } = Enumerable.Empty<ASTDirective>();
+        public ASTView() { }
         public static (List<ASTError>, ASTView) Parse(
                 IParser parser,
                 IEnumerable<ASTAnnotation> annotations,

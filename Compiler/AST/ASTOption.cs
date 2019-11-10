@@ -7,7 +7,7 @@ namespace Compiler.AST
     {
         public string Value { get;  }
         public IEnumerable<ASTAnnotation> Annotations { get; }
-
+        public ASTOption() { }
         public ASTOption(string value, IEnumerable<ASTAnnotation> annotations)
         {
             this.Value = value;

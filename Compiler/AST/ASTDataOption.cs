@@ -6,10 +6,10 @@ namespace Compiler.AST
 {
     public class ASTDataOption : IASTNode
     {
-        public string Name { get; private set; } = "";
-        public IEnumerable<ASTAnnotation> Annotations { get; private set; } = Enumerable.Empty<ASTAnnotation>();
-        public IEnumerable<string> Parameters { get; private set; } = Enumerable.Empty<string>();
-
+        public string Name { get; set; } = "";
+        public IEnumerable<ASTAnnotation> Annotations { get; set; } = Enumerable.Empty<ASTAnnotation>();
+        public IEnumerable<string> Parameters { get; set; } = Enumerable.Empty<string>();
+        public ASTDataOption() { }
         public static IEnumerable<ASTDataOption> Parse(IParser parser)
         {
             var annotations = ASTAnnotation.Parse(parser);

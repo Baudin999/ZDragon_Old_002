@@ -6,10 +6,10 @@ namespace Compiler.AST
 {
     public class ASTTypeField : IASTNode, IRestrictable, IElement, INamable
     {
-        public string Name { get; private set; } = "";
-        public IEnumerable<ASTTypeDefinition> Type { get; private set; } = Enumerable.Empty<ASTTypeDefinition>();
-        public IEnumerable<ASTAnnotation> Annotations { get; private set; } = Enumerable.Empty<ASTAnnotation>();
-        public IEnumerable<ASTRestriction> Restrictions { get; private set; } = Enumerable.Empty<ASTRestriction>();
+        public string Name { get; set; } = "";
+        public IEnumerable<ASTTypeDefinition> Type { get; set; } = Enumerable.Empty<ASTTypeDefinition>();
+        public IEnumerable<ASTAnnotation> Annotations { get; set; } = Enumerable.Empty<ASTAnnotation>();
+        public IEnumerable<ASTRestriction> Restrictions { get; set; } = Enumerable.Empty<ASTRestriction>();
 
         public ASTTypeField() { }
         public ASTTypeField(IParser parser)

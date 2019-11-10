@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Compiler.AST;
 
 namespace CLI
 {
@@ -20,7 +21,7 @@ namespace CLI
             string[] allfiles = Directory.GetFiles(path, "*.car", SearchOption.AllDirectories);
             foreach (string file in allfiles)
             {
-                Modules.Add(new Module(file, path));
+                Modules.Add(new Module(file, path, this));
             }
             Cleanup = () => { };
         }
@@ -30,6 +31,23 @@ namespace CLI
             this.Cleanup = cleanup;
         }
 
+
+        internal List<IASTNode> GetAstForModule(string moduleName)
+        {
+            var module = Modules.FirstOrDefault(m => m.Name == moduleName);
+            if (module is null) {
+                return new List<IASTNode>();
+            }
+            else
+            {
+                if (module.Generator is null)
+                {
+                    module.Parse();
+                    
+                }
+                return module.Generator.AST;
+            }
+        }
 
         public void Watch()
         {
@@ -88,6 +106,8 @@ namespace CLI
         {
             // Specify what is done when a file is changed, created, or deleted.
             Console.WriteLine($"File: {e.FullPath} {e.ChangeType}");
+            var module = new Module(e.FullPath, this.Path, this);
+            Modules.Add(module);
         }
 
         // Define the event handlers.

@@ -6,7 +6,8 @@ namespace Compiler.AST
 {
     public class ASTTypeDefinition : IASTNode
     {
-        public string Value { get; }
+        public string Value { get; set; }
+        public ASTTypeDefinition() { }
         public ASTTypeDefinition(string value)
         {
             this.Value = value;
