@@ -21,9 +21,32 @@ namespace CLI
             string[] allfiles = Directory.GetFiles(path, "*.car", SearchOption.AllDirectories);
             foreach (string file in allfiles)
             {
-                Modules.Add(new Module(file, path, this));
+                var module = new Module(file, path, this);
+                Modules.Add(module);
+                module.Parse();
             }
+            CreateIndexPage();
             Cleanup = () => { };
+        }
+
+        private void CreateIndexPage()
+        {
+            var moduleLinks = Modules.Select(m => $"<li><a href=\"/{m.Name}/index.html\">{m.Name}</a></li>");
+            var page = $@"
+<!DOCTYPE html>
+<html>
+<head></head>
+<body>
+
+<ul>
+{string.Join("", moduleLinks)}
+</ul>
+</body>
+</html>
+";
+            string filePath = System.IO.Path.GetFullPath("index.html", OutPath);
+            Directory.CreateDirectory(OutPath);
+            File.WriteAllText(filePath, page);
         }
 
         public void OnClose(Action cleanup)

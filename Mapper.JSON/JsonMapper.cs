@@ -9,74 +9,71 @@ namespace Mapper.JSON
 {
     public class JsonMapper
     {
-        public JsonMapper(List<IASTNode> parseTree)
-        {
+        //public JsonMapper(List<IASTNode> parseTree)
+        //{
 
-            var schemas = new List<JSchema>();
+        //    var schemas = new List<JSchema>();
 
-            foreach (var node in parseTree)
-            {
-                if (node is ASTType)
-                {
+        //    foreach (var node in parseTree)
+        //    {
+        //        if (node is ASTType)
+        //        {
 
-                    var t = node as ASTType;
-                    JSchema schema = new JSchema
-                    {
-                        Title = t.Name,
-                        Description = Annotate(t.Annotations),
-                        Type = JSchemaType.Object
-                    };
-                    JSchema properties = new JSchema { };
+        //            var t = node as ASTType;
+        //            JSchema schema = new JSchema
+        //            {
+        //                Title = t.Name,
+        //                Description = Annotate(t.Annotations),
+        //                Type = JSchemaType.Object
+        //            };
+        //            JSchema properties = new JSchema { };
 
-                    List<string> requiredFields = new List<string>();
-                    foreach (var field in t.Fields) {
-                        var _mode = field.Type.First().Value;
-                        var _type = field.Type.Last().Value;
+        //            List<string> requiredFields = new List<string>();
+        //            foreach (var field in t.Fields) {
+        //                var _mode = field.Type.First().Value;
+        //                var _type = field.Type.Last().Value;
 
-                        if (_mode != "List")
-                        {
-                            JSchemaType fieldType = ConvertToJsonType(_type);
-                            schema.Properties.Add(
-                                field.Name,
-                                new JSchema
-                                {
-                                    Description = Annotate(field.Annotations),
-                                    Type = fieldType
-                                });
-                        }
-                        else
-                        {
-                            JSchemaType fieldType = JSchemaType.Array;
-                            JSchema list = new JSchema
-                            {
-                                Description = Annotate(field.Annotations),
-                                Type = fieldType
-                            };
-                            list.Items.Add(new JSchema
-                            {
-                                Type = ConvertToJsonType(_type)
-                            });
-                            schema.Properties.Add(field.Name,list);
+        //                if (_mode != "List")
+        //                {
+        //                    JSchemaType fieldType = ConvertToJsonType(_type);
+        //                    schema.Properties.Add(
+        //                        field.Name,
+        //                        new JSchema
+        //                        {
+        //                            Description = Annotate(field.Annotations),
+        //                            Type = fieldType
+        //                        });
+        //                }
+        //                else
+        //                {
+        //                    JSchemaType fieldType = JSchemaType.Array;
+        //                    JSchema list = new JSchema
+        //                    {
+        //                        Description = Annotate(field.Annotations),
+        //                        Type = fieldType
+        //                    };
+        //                    list.Items.Add(new JSchema
+        //                    {
+        //                        Type = ConvertToJsonType(_type)
+        //                    });
+        //                    schema.Properties.Add(field.Name,list);
 
-                        }
+        //                }
 
-                        bool nullable = field.Type.First().Value == "Maybe";
-                        if (!nullable)
-                        {
-                            schema.Required.Add(field.Name);
-                        }
-                    }
+        //                bool nullable = field.Type.First().Value == "Maybe";
+        //                if (!nullable)
+        //                {
+        //                    schema.Required.Add(field.Name);
+        //                }
+        //            }
 
-                    schemas.Add(schema);                    
-                }
-            }
+        //            schemas.Add(schema);                    
+        //        }
+        //    }
 
-            
+        //}
 
-            //string schemaJson = schema.ToString();
-        }
-
-        private JSchemaType ConvertToJsonType(string sourceType)
+        internal static JSchemaType ConvertToJsonType(string sourceType)
         {
             return sourceType switch
             {
@@ -86,7 +83,7 @@ namespace Mapper.JSON
             };
         }
 
-        private string Annotate(IEnumerable<ASTAnnotation> annotations)
+        internal static string Annotate(IEnumerable<ASTAnnotation> annotations)
         {
             return string.Join("\n", annotations.Select(a => a.Value).ToList());
         }

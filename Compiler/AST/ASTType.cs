@@ -79,7 +79,7 @@ namespace Compiler.AST
                     List<ASTTypeField> fields = new List<ASTTypeField>();
                     while (parser.TryConsume(TokenType.ContextEnded) == null)
                     {
-                        fields.Add(new ASTTypeField(parser));
+                        fields.Add(ASTTypeField.Parse(parser));
                     }
                     result.Fields = fields;
                     if (fields.Count == 0)

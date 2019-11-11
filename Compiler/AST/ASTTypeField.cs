@@ -12,15 +12,17 @@ namespace Compiler.AST
         public IEnumerable<ASTRestriction> Restrictions { get; set; } = Enumerable.Empty<ASTRestriction>();
 
         public ASTTypeField() { }
-        public ASTTypeField(IParser parser)
+        public static ASTTypeField Parse(IParser parser)
         {
-            this.Restrictions = new List<ASTRestriction>();
-            this.Annotations = ASTAnnotation.Parse(parser).ToList();
-            this.Name = parser.Consume(TokenType.Identifier).Value;
+            var result = new ASTTypeField();
+            result.Restrictions = new List<ASTRestriction>();
+            result.Annotations = ASTAnnotation.Parse(parser).ToList();
+            result.Name = parser.Consume(TokenType.Identifier).Value;
             Token Separator = parser.Consume(TokenType.Separator);
-            this.Type = ASTTypeDefinition.ParseType(parser).ToList();
-            this.Restrictions = ASTRestriction.CreateRestrictions(parser, TokenType.KW_Type).ToList();
+            result.Type = ASTTypeDefinition.ParseType(parser).ToList();
+            result.Restrictions = ASTRestriction.CreateRestrictions(parser, TokenType.KW_Type).ToList();
             parser.Consume(TokenType.EndStatement);
+            return result;
         }
 
         public ASTTypeField Clone()

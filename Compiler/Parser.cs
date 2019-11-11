@@ -122,14 +122,6 @@ namespace Compiler
                 else
                 {
                     throw new InvalidTokenException("Invalid Token");
-//                    this.Errors.Add(new ASTError($@"
-//Expected '{tokenType}' but found '{this.Current.TokenType}'!
-
-//This can happen due to wrong indentation. Should:
-//{this.Peek().Value}
-//be indented?
-
-//", this.Current));
                     
                 }
             }

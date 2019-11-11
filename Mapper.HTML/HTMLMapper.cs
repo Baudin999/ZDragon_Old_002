@@ -27,6 +27,9 @@ namespace Mapper.HTML
     <script src=""https://cdnjs.cloudflare.com/ajax/libs/mermaid/8.3.1/mermaid.min.js""></script>
     <script src=""https://cdnjs.cloudflare.com/ajax/libs/dagre/0.8.4/dagre.min.js""></script>
     <script src=""https://cdnjs.cloudflare.com/ajax/libs/nomnoml/0.6.1/nomnoml.js""></script>
+    <style>
+        svg {{ width: auto!important; height: auto!important; }}
+    </style>
 </head>
 <body>
 
@@ -46,6 +49,13 @@ mermaid.initialize({{
         useMaxWidth: false
     }}
 }});
+
+setTimeout(() => {{
+    let svg = document.getElementsByTagName('svg')[0];
+    let [a, b, width, height] = svg.attributes['viewBox'].value.split(' ');
+    svg.attributes['width'].value = width;
+    svg.attributes['height'].value = height;
+}}, 30);
 </script>
 
 </body>
