@@ -22,3 +22,12 @@ for FILE in "${FILES[@]}"
 do
     sed -i '' -e "s/$PREVIOUSTAG/$NEWTAG/g" $FILE
 done
+
+git config user.email "travis@travis-ci.org"
+git config user.name "Travis CI"
+git remote rm origin
+git remote add origin https://Baudin999:"$2"@github.com/Baudin999/ZDragon.NET.git
+git add .
+git commit --message "Travis Release: $NEWTAG"
+# Use quiet to prevent leaking of tokens
+git push --quiet origin master
