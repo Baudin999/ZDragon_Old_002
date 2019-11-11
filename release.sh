@@ -17,7 +17,7 @@ PREVIOUSTAG=$(git describe --abbrev=0 --tags $(git rev-list --tags --skip=1 --ma
 NEWTAG=$1
 # Loop through files where the old version has to be replaced with the new version
 # Technically, the paths to csproj files could be read out from the .sln, but this would make adding custom files (such as the README) more difficult
-FILES=("ZDragon.NET.sln" "CLI/CLI.csproj" "Compiler/Compiler.csproj" "CompilerTests/CompilerTests.csproj" "Mapper.xsd/Mapper.xsd.csproj")
+FILES=("ZDragon.NET.sln" "CLI/CLI.csproj" "Compiler/Compiler.csproj" "CompilerTests/CompilerTests.csproj" "Mapper.xsd/Mapper.xsd.csproj" "README.md" "Mapper.HTML/Mapper.HTML.csproj" "Mapper.JSON/Mapper.JSON.csproj")
 for FILE in "${FILES[@]}"
 do
     sed -i '' -e "s/$PREVIOUSTAG/$NEWTAG/g" $FILE
