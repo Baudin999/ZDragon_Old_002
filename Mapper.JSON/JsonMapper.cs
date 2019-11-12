@@ -36,7 +36,10 @@ namespace Mapper.JSON
         public Dictionary<string, string> ToFileNameAndContentDict()
         {
             var d = new Dictionary<string, string>();
-            this.Schemas.ToList().ForEach(s => d.Add(s.Key, s.Value.ToString()));
+            this.Schemas.ToList().ForEach(s => {
+                Console.WriteLine(s.Key);
+                d.Add(s.Key, s.Value.ToString());
+            });
             return d;
         }
         

@@ -21,11 +21,6 @@ namespace Mapper.HTML
         public string ToHtmlString(Dictionary<string, string> links)
         {
 
-            links.ToList().ForEach(l =>
-            {
-                Console.WriteLine(l.Key);
-            });
-
             return $@"
 <!DOCTYPE html>
 <html>
@@ -39,8 +34,10 @@ namespace Mapper.HTML
 </head>
 <body>
 
-<a href=""model.xsd"" alt=""XSD"">XSD</a>
-{string.Join("\n", links.Select(l => $"<a href=\"{l.Value}\">{l.Key}</a>").ToList())}
+<ul>
+<li><a href=""model.xsd"" alt=""XSD"">XSD</a></li>
+{string.Join("\n", links.Select(l => $"<li><a href=\"{l.Value}\">{l.Key}</a></li>").ToList())}
+</ul>
 
 <div class=""mermaid"">{this.MermaidMapper.ToString()}
 </div>

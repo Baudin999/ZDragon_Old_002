@@ -102,6 +102,9 @@ namespace CLI
             // Begin watching.
             watcher.EnableRaisingEvents = true;
 
+            Console.WriteLine("Press 'q' to quit the sample.");
+            while (Console.Read() != 'q') { }
+
             watcher.Dispose();
             Cleanup();
         }

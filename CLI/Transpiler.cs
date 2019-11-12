@@ -47,9 +47,18 @@ namespace CLI
 
         public string HtmlToString()
         {
-            return this.HtmlMapper.ToHtmlString(this.JsonMapper.ToFileNameAndContentDict());
+            Dictionary<string, string> links = new Dictionary<string, string>();
+            this.JsonMapper.Schemas.ToList().ForEach(s => links.Add(s.Key, s.Key));
+            return this.HtmlMapper.ToHtmlString(links);
         }
 
+        /// <summary>
+        /// Transforms the
+        /// Dictionary of string, JSchema to a
+        /// Dictionary of string, string
+        /// These items can then be saved to the file system.
+        /// </summary>
+        /// <returns></returns>
         public Dictionary<string, string> JsonToString()
         {
             return this.JsonMapper.ToFileNameAndContentDict();

@@ -34,11 +34,11 @@ namespace CLI
             if (Transpiler.Errors.Count == 0)
             {
                 Console.WriteLine($"Perfectly parsed: {Name}");
-                SaveResult(Transpiler.XsdToString(), "Model.xsd");
-                SaveResult(Transpiler.HtmlToString(), "index.html");
+                SaveResult("Model.xsd", Transpiler.XsdToString());
+                SaveResult("index.html", Transpiler.HtmlToString());
                 foreach (var (key, value) in Transpiler.JsonToString())
                 {
-                    SaveResult(value, key);
+                    SaveResult(key, value);
                 }
             }
             else
@@ -50,7 +50,7 @@ namespace CLI
             }
         }
 
-        public void SaveResult(string source, string fileName)
+        public void SaveResult(string fileName, string source)
         {
             string filePath = System.IO.Path.GetFullPath(fileName, OutPath);
             System.IO.Directory.CreateDirectory(OutPath);
