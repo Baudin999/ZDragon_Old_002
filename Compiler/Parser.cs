@@ -38,35 +38,47 @@ namespace Compiler
                 {
                     var (errors, t) = ASTType.Parse(this, annotations, directives);
                     Errors.AddRange(errors);
+                    annotations = new List<ASTAnnotation>();
+                    directives = new List<ASTDirective>();
                     yield return t;
                 }
                 else if (Current.TokenType == TokenType.KW_Alias)
                 {
                     var (errors, alias) = ASTAlias.Parse(this, annotations, directives);
                     Errors.AddRange(errors);
+                    annotations = new List<ASTAnnotation>();
+                    directives = new List<ASTDirective>();
                     yield return alias;
                 }
                 else if (Current.TokenType == TokenType.KW_Choice)
                 {
                     yield return new ASTChoice(this);
+                    annotations = new List<ASTAnnotation>();
+                    directives = new List<ASTDirective>();
                 }
                 else if (Current.TokenType == TokenType.KW_Data)
                 {
                     var (errors, data) = ASTData.Parse(this, annotations, directives);
                     Errors.AddRange(errors);
                     yield return data;
+                    annotations = new List<ASTAnnotation>();
+                    directives = new List<ASTDirective>();
                 }
                 else if (Current.TokenType == TokenType.KW_View)
                 {
                     var (errors, data) = ASTView.Parse(this, annotations, directives);
                     Errors.AddRange(errors);
                     yield return data;
+                    annotations = new List<ASTAnnotation>();
+                    directives = new List<ASTDirective>();
                 }
                 else if (Current.TokenType == TokenType.KW_Open)
                 {
                     var (errors, data) = ASTImport.Parse(this);
                     Errors.AddRange(errors);
                     yield return data;
+                    annotations = new List<ASTAnnotation>();
+                    directives = new List<ASTDirective>();
                 }
                 else if (Current.TokenType == TokenType.Annotation)
                 {

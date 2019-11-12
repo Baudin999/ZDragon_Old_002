@@ -24,9 +24,8 @@ namespace Mapper.JSON
                 {
                     var astType = (ASTType)node;
                     var apiDirective = astType.Directives.FirstOrDefault(d => d.Key == "api");
-                    if (apiDirective != null)
+                    if (!(apiDirective is null))
                     {
-                        Console.WriteLine($"{astType.Name}: {apiDirective.Key}");
                         this.Schemas.Add($"{astType.Name}.schema.json",
                             ASTTypeToJSchema.Create(astType, this.Nodes));
                     }
@@ -34,10 +33,10 @@ namespace Mapper.JSON
             }
         }
 
-        public Dictionary<string, string> ToFileContent()
+        public Dictionary<string, string> ToFileNameAndContentDict()
         {
             var d = new Dictionary<string, string>();
-            this.Schemas.Select(s => new KeyValuePair<string, string>(s.Key, s.Value.ToString())).ToList();
+            this.Schemas.ToList().ForEach(s => d.Add(s.Key, s.Value.ToString()));
             return d;
         }
         

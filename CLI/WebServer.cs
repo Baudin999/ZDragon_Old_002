@@ -15,7 +15,6 @@ namespace CLI
     {
         public static Task Start(string rootPath)
         {
-
             return Task.Run(() =>
             {
                 var webHost = WebHost
@@ -44,15 +43,15 @@ namespace CLI
         {
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                Process.Start(new ProcessStartInfo("cmd", $"/c start {url.Replace("&", "^&")}")); // Works ok on windows and escape need for cmd.exe
+                Process.Start(new ProcessStartInfo("cmd", $"/c start {url.Replace("&", "^&")}"));
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
-                Process.Start("xdg-open", url);  // Works ok on linux
+                Process.Start("xdg-open", url);
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
-                Process.Start("open", url); // Not tested
+                Process.Start("open", url); 
             }
             else
             {

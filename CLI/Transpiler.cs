@@ -47,12 +47,12 @@ namespace CLI
 
         public string HtmlToString()
         {
-            return this.HtmlMapper.ToHtmlString(this.JsonMapper.ToFileContent());
+            return this.HtmlMapper.ToHtmlString(this.JsonMapper.ToFileNameAndContentDict());
         }
 
         public Dictionary<string, string> JsonToString()
         {
-            return this.JsonMapper.ToFileContent();
+            return this.JsonMapper.ToFileNameAndContentDict();
         }
 
 

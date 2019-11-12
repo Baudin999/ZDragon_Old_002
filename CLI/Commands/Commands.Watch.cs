@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Threading.Tasks;
 using Microsoft.Extensions.CommandLineUtils;
 
@@ -26,13 +27,13 @@ namespace CLI.Commands
 
                       command.OnExecute(() =>
                       {
-
-                          if (fileOption.Value() is null)
+                          string directory = fileOption.HasValue() switch
                           {
-                              throw new Exception("Should specify a project root directory.");
-                          }
+                              false => Directory.GetCurrentDirectory(),
+                              true => fileOption.Value()
+                          };
 
-                          var project = new Project(fileOption.Value());
+                          var project = new Project(directory);
 
                           Task webserverTask = null;
                           if (serve.HasValue())
@@ -42,15 +43,15 @@ namespace CLI.Commands
 
                           project.Watch();
 
-                        // Wait for the user to quit the program.
-                        Console.WriteLine("Press 'q' to quit the sample.");
+                          // Wait for the user to quit the program.
+                          Console.WriteLine("Press 'q' to quit the sample.");
                           while (Console.Read() != 'q') { }
+
                           project.Dispose();
+
                           return 0;
                       });
                   });
         }
-
-        
     }
 }

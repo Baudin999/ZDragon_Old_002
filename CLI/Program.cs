@@ -6,10 +6,6 @@ namespace CLI
 {
     public class Program
     {
-        public Program()
-        {
-        }
-
         static void Main(string[] args)
         {
             var app = new CommandLineApplication();
@@ -23,7 +19,6 @@ namespace CLI
             CommandsBuilder.CreateBuildCommand(app);
             CommandsBuilder.CreateWatchCommand(app);
             CommandsBuilder.CreateServeCommand(app);
-
 
             app.Execute(args);
         }
