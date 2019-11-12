@@ -15,8 +15,8 @@ namespace CLI.Commands
                       command.HelpOption("-?|-h|--help");
 
                       var fileOption = command.Option(
-                            "-f|--file <filePath>",
-                            "The path to the file which should be built.",
+                            "-d|--dir <directory>",
+                            "The directory of your zdragon project.",
                             CommandOptionType.SingleValue);
 
                       var serve = command.Option(

@@ -30,20 +30,21 @@ namespace Compiler.AST
             while (!(t is null))
             {
                 var word = parser.Consume(TokenType.Word);
+                var key = word.Value.Trim();
                 var numberValue = parser.TryConsume(TokenType.Number);
                 var stringValue = parser.TryConsume(TokenType.String);
                 var patternValue = parser.TryConsume(TokenType.Pattern);
                 if (numberValue != null)
                 {
-                    yield return new ASTRestriction(word.Value, numberValue.Value, annotations, numberValue, depth);
+                    yield return new ASTRestriction(key, numberValue.Value, annotations, numberValue, depth);
                 }
                 else if (stringValue != null)
                 {
-                    yield return new ASTRestriction(word.Value, stringValue.Value, annotations, stringValue, depth);
+                    yield return new ASTRestriction(key, stringValue.Value, annotations, stringValue, depth);
                 }
                 else if (patternValue != null)
                 {
-                    yield return new ASTRestriction(word.Value, patternValue.Value, annotations, patternValue, depth);
+                    yield return new ASTRestriction(key, patternValue.Value, annotations, patternValue, depth);
                 }
 
                 annotations = ASTAnnotation.Parse(parser);

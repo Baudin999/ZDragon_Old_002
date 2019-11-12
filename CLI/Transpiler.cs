@@ -5,6 +5,7 @@ using System.Linq;
 using Compiler;
 using Compiler.AST;
 using Mapper.HTML;
+using Mapper.JSON;
 using Mapper.XSD;
 
 namespace CLI
@@ -16,6 +17,7 @@ namespace CLI
         public ASTGenerator Generator { get; }
         public XSDMapper XsdMapper { get; }
         public HtmlMapper HtmlMapper { get; }
+        public JsonMapper JsonMapper { get; }
         public List<IASTError> Errors { get { return this.Generator.Errors; } }
         public List<IASTNode> Imports { get; private set; } = new List<IASTNode>();
 
@@ -31,6 +33,9 @@ namespace CLI
 
             this.HtmlMapper = new HtmlMapper(this.Generator.AST.Concat(this.Imports).ToList());
             this.HtmlMapper.Start().ToList();
+
+            this.JsonMapper = new JsonMapper(this.Generator.AST.Concat(this.Imports).ToList());
+            this.JsonMapper.Start();
         }
 
         public string XsdToString()
@@ -42,7 +47,12 @@ namespace CLI
 
         public string HtmlToString()
         {
-            return this.HtmlMapper.ToString();
+            return this.HtmlMapper.ToHtmlString(this.JsonMapper.ToFileContent());
+        }
+
+        public Dictionary<string, string> JsonToString()
+        {
+            return this.JsonMapper.ToFileContent();
         }
 
 

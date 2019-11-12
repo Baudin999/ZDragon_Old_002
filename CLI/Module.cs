@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Compiler;
 
 namespace CLI
@@ -35,6 +36,10 @@ namespace CLI
                 Console.WriteLine($"Perfectly parsed: {Name}");
                 SaveResult(Transpiler.XsdToString(), "Model.xsd");
                 SaveResult(Transpiler.HtmlToString(), "index.html");
+                foreach (var (key, value) in Transpiler.JsonToString())
+                {
+                    SaveResult(value, key);
+                }
             }
             else
             {
@@ -70,6 +75,16 @@ Path:       {Path}
 Dir:        {BasePath}
 LastParsed: {LastParsed}
 ";
+        }
+
+    }
+
+    public static class DictionaryHelpers
+    {
+        public static void Deconstruct<T1, T2>(this KeyValuePair<T1, T2> tuple, out T1 key, out T2 value)
+        {
+            key = tuple.Key;
+            value = tuple.Value;
         }
 
     }

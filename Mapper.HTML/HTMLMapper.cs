@@ -18,8 +18,14 @@ namespace Mapper.HTML
             this.MermaidMapper.Start().ToList();
         }
 
-        public override string ToString()
+        public string ToHtmlString(Dictionary<string, string> links)
         {
+
+            links.ToList().ForEach(l =>
+            {
+                Console.WriteLine(l.Key);
+            });
+
             return $@"
 <!DOCTYPE html>
 <html>
@@ -34,6 +40,7 @@ namespace Mapper.HTML
 <body>
 
 <a href=""model.xsd"" alt=""XSD"">XSD</a>
+{string.Join("\n", links.Select(l => $"<a href=\"{l.Value}\">{l.Key}</a>").ToList())}
 
 <div class=""mermaid"">{this.MermaidMapper.ToString()}
 </div>

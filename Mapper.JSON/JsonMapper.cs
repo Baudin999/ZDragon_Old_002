@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.Json;
 using Compiler.AST;
 using Newtonsoft.Json.Schema;
 
@@ -9,77 +8,47 @@ namespace Mapper.JSON
 {
     public class JsonMapper
     {
-        //public JsonMapper(List<IASTNode> parseTree)
-        //{
+        public IEnumerable<IASTNode> Nodes { get; }
+        public Dictionary<string, JSchema> Schemas { get; } = new Dictionary<string, JSchema>();
 
-        //    var schemas = new List<JSchema>();
+        public JsonMapper(IEnumerable<IASTNode> nodes)
+        {
+            this.Nodes = nodes;
+        }
 
-        //    foreach (var node in parseTree)
-        //    {
-        //        if (node is ASTType)
-        //        {
+        public void Start()
+        {
+            foreach (var node in this.Nodes)
+            {
+                if (node is ASTType && ((ASTType)node).Directives.Any())
+                {
+                    var astType = (ASTType)node;
+                    var apiDirective = astType.Directives.FirstOrDefault(d => d.Key == "api");
+                    if (apiDirective != null)
+                    {
+                        Console.WriteLine($"{astType.Name}: {apiDirective.Key}");
+                        this.Schemas.Add($"{astType.Name}.schema.json",
+                            ASTTypeToJSchema.Create(astType, this.Nodes));
+                    }
+                }
+            }
+        }
 
-        //            var t = node as ASTType;
-        //            JSchema schema = new JSchema
-        //            {
-        //                Title = t.Name,
-        //                Description = Annotate(t.Annotations),
-        //                Type = JSchemaType.Object
-        //            };
-        //            JSchema properties = new JSchema { };
+        public Dictionary<string, string> ToFileContent()
+        {
+            var d = new Dictionary<string, string>();
+            this.Schemas.Select(s => new KeyValuePair<string, string>(s.Key, s.Value.ToString())).ToList();
+            return d;
+        }
+        
 
-        //            List<string> requiredFields = new List<string>();
-        //            foreach (var field in t.Fields) {
-        //                var _mode = field.Type.First().Value;
-        //                var _type = field.Type.Last().Value;
-
-        //                if (_mode != "List")
-        //                {
-        //                    JSchemaType fieldType = ConvertToJsonType(_type);
-        //                    schema.Properties.Add(
-        //                        field.Name,
-        //                        new JSchema
-        //                        {
-        //                            Description = Annotate(field.Annotations),
-        //                            Type = fieldType
-        //                        });
-        //                }
-        //                else
-        //                {
-        //                    JSchemaType fieldType = JSchemaType.Array;
-        //                    JSchema list = new JSchema
-        //                    {
-        //                        Description = Annotate(field.Annotations),
-        //                        Type = fieldType
-        //                    };
-        //                    list.Items.Add(new JSchema
-        //                    {
-        //                        Type = ConvertToJsonType(_type)
-        //                    });
-        //                    schema.Properties.Add(field.Name,list);
-
-        //                }
-
-        //                bool nullable = field.Type.First().Value == "Maybe";
-        //                if (!nullable)
-        //                {
-        //                    schema.Required.Add(field.Name);
-        //                }
-        //            }
-
-        //            schemas.Add(schema);                    
-        //        }
-        //    }
-
-        //}
-
-        internal static JSchemaType ConvertToJsonType(string sourceType)
+        internal static JSchema ConvertToJsonType(string sourceType)
         {
             return sourceType switch
             {
-                "String" => JSchemaType.String,
-                "Number" => JSchemaType.Number,
-                _ => JSchemaType.String
+                "String" => new JSchema { Type = JSchemaType.String },
+                "Number" => new JSchema { Type = JSchemaType.Number },
+                _ => new JSchema { Type = JSchemaType.String }
             };
         }
 
