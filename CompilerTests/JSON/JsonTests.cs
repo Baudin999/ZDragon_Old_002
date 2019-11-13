@@ -1,8 +1,6 @@
-﻿using System;
-using Xunit;
+﻿using Compiler;
 using Mapper.JSON;
-using Compiler;
-using System.Linq;
+using Xunit;
 
 namespace CompilerTests.JSON
 {
@@ -18,6 +16,10 @@ alias Name = String
 
 alias Names = List Name
 
+type Address =
+    Street: String;
+
+% api: /person
 type Person =
     @ The First Name of the Person
     FirstName: Name;
@@ -28,13 +30,16 @@ type Person =
         & max 30
     ;
     Names: Names;
+    Address: Address;
 
 ";
-            var tokens = new Lexer().Lex(code);
-            var parser = new Parser(tokens);
-            var parseTree = parser.Parse().ToList();
+            ASTGenerator generator = new ASTGenerator(code);
+            JsonMapper mapper = new JsonMapper(generator.AST);
+            mapper.Start();
 
-            JsonMapper c = new JsonMapper(parseTree);
+
+            Assert.Single(mapper.Schemas);
+            
         }
     }
     
