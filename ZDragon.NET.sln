@@ -15,6 +15,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.gitignore = .gitignore
 		.travis.yml = .travis.yml
 		zdragon_release.sh = zdragon_release.sh
+		release.sh = release.sh
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mapper.XSD", "Mapper.XSD\Mapper.XSD.csproj", "{CC0033CB-E0DD-435D-B3E6-84C2A33DFBFC}"
@@ -56,5 +57,8 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{5AFE6847-C9C1-40C5-810C-4C12B4569C11} = {BE20F938-359D-49B2-A33B-4CDF07792C55}
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		version = 0.0.1
 	EndGlobalSection
 EndGlobal
