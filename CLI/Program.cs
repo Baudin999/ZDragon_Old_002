@@ -1,6 +1,7 @@
 ﻿
 using Microsoft.Extensions.CommandLineUtils;
 using CLI.Commands;
+using System.IO;
 
 namespace CLI
 {
@@ -12,15 +13,23 @@ namespace CLI
             app.Name = "ZDragon.NET";
             app.HelpOption("-?|-h|--help");
 
-            app.OnExecute(() => {
+            app.OnExecute(() =>
+            {
                 return 0;
             });
 
             CommandsBuilder.CreateBuildCommand(app);
             CommandsBuilder.CreateWatchCommand(app);
             CommandsBuilder.CreateServeCommand(app);
-
-            app.Execute(args);
+            try
+            {
+                app.Execute(args);
+            }
+            catch (CommandParsingException commandParsingException)
+            {
+                app.Error.WriteLine("Error: " + commandParsingException.Message);
+                app.ShowHelp();
+            }
         }
     }
 }
