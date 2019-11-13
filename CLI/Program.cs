@@ -9,8 +9,9 @@ namespace CLI
         static void Main(string[] args)
         {
             var app = new CommandLineApplication();
-            app.Name = "ZDragon.NET";
+            app.Name = "ckc";
             app.HelpOption("-?|-h|--help");
+            app.VersionOption("-v|--version", "0.0.1"); //TODO dynamic solution
 
             app.OnExecute(() =>
             {
