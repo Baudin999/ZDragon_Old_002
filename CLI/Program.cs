@@ -1,7 +1,6 @@
 ﻿
 using Microsoft.Extensions.CommandLineUtils;
 using CLI.Commands;
-using System.IO;
 
 namespace CLI
 {
