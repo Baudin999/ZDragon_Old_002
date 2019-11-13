@@ -95,6 +95,25 @@ namespace CLI
                         })
                         .ToList();
                     this.Imports.AddRange(copies);
+                } else
+                {
+                    var importedNodes = import.Imports.Select(import =>
+                    {
+                        return ast.FirstOrDefault(a =>
+                        {
+                            return a switch
+                            {
+                                ASTType n => n.Name == import,
+                                ASTAlias n => n.Name == import,
+                                ASTData n => n.Name == import,
+                                ASTChoice n => n.Name == import,
+                                _ => false
+                            };
+                        });                    
+                    })
+                    .ToList()
+                    .FindAll(n => !(n is null));
+                    this.Imports.AddRange(importedNodes);
                 }
             });
         }
