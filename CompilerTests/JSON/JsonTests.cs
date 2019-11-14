@@ -39,8 +39,55 @@ type Person =
 
 
             Assert.Single(mapper.Schemas);
-            
+
+        }
+
+
+        [Fact]
+        public void TestChoiceJson()
+        {
+            var code = @"
+
+
+% api: /person
+type Person =
+    Gender: Gender;
+
+choice Gender =
+    | ""Male""
+    | ""Female""
+    | ""Other""
+";
+            ASTGenerator generator = new ASTGenerator(code);
+            JsonMapper mapper = new JsonMapper(generator.AST);
+            mapper.Start();
+
+
+            Assert.Single(mapper.Schemas);
+
+        }
+
+        [Fact]
+        public void TestDataJson()
+        {
+            var code = @"
+type School =
+    Name: String;
+
+% api: /person
+data Response =
+    | Person
+    | Animal
+    | Customer
+    | School
+";
+            ASTGenerator generator = new ASTGenerator(code);
+            JsonMapper mapper = new JsonMapper(generator.AST);
+            mapper.Start();
+
+
+            Assert.Single(mapper.Schemas);
+
         }
     }
-    
 }

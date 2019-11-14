@@ -15,26 +15,22 @@ namespace Mapper.JSON
         public JSchema Create(ASTType astType, IEnumerable<IASTNode> nodes)
         {
             this.Nodes = nodes.ToList();
-            JSchema schema = new JSchema
-            {
-                SchemaVersion = new Uri("http://json-schema.org/draft-07/schema#"),
-                Title = astType.Name,
-                Description = JsonMapper.Annotate(astType.Annotations),
-                Type = JSchemaType.Object
-            };
-
-            astType.Fields.ToList().ForEach(field =>
-            {
-                schema.Properties.Add(field.Name, MapTypeField(field));
-
-                if (field.Type.First().Value != "Maybe")
-                {
-                    schema.Required.Add(field.Name);
-                }
-            });
-
+            var schema = MapAstNode(astType.Name);
+            schema.SchemaVersion = new Uri("http://json-schema.org/draft-07/schema#");
+            schema.Title = astType.Name;
+            schema.Description = JsonMapper.Annotate(astType.Annotations);
             schema.ExtensionData.Add("references", References);
+            return schema;
+        }
 
+        public JSchema Create(ASTData astData, IEnumerable<IASTNode> nodes)
+        {
+            this.Nodes = nodes.ToList();
+            var schema = MapAstNode(astData.Name);
+            schema.SchemaVersion = new Uri("http://json-schema.org/draft-07/schema#");
+            schema.Title = astData.Name;
+            schema.Description = JsonMapper.Annotate(astData.Annotations);
+            schema.ExtensionData.Add("references", References);
             return schema;
         }
 
@@ -56,29 +52,13 @@ namespace Mapper.JSON
             return schema;
         }
 
-        private JSchema MapBasicType(string _type)
-        {
-            return _type switch
-            {
-                "String" => new JSchema { Type = JSchemaType.String },
-                "Number" => new JSchema { Type = JSchemaType.Number },
-                "Boolean" => new JSchema { Type = JSchemaType.Boolean },
-                "Date" => new JSchema { Type = JSchemaType.String, Format = "date" },
-                "Time" => new JSchema { Type = JSchemaType.String, Format = "time" },
-                "DateTime" => new JSchema { Type = JSchemaType.String, Format = "date-time" },
-                _ => new JSchema { Type = JSchemaType.String }
-            };
-        }
-
         private JSchema MapASTType(ASTType astType)
         {
-
-            // TODO: Check if the type already exists on the references list.
-
             JSchema schema = new JSchema
             {
                 Description = JsonMapper.Annotate(astType.Annotations),
-                Type = JSchemaType.Object
+                Type = JSchemaType.Object,
+                Title = astType.Name
             };
 
             astType.Fields.ToList().ForEach(field =>
@@ -90,7 +70,6 @@ namespace Mapper.JSON
                     schema.Required.Add(field.Name);
                 }
             });
-            AddReference(astType.Name, schema);
             return schema;
         }
 
@@ -99,7 +78,35 @@ namespace Mapper.JSON
             var _mod = astAlias.Type.First().Value;
             var _type = astAlias.Type.Last().Value;
             var result = MapDefinition(_mod, _type);
-            AddReference(astAlias.Name, result);
+            result.Title = astAlias.Name;
+            return result;
+        }
+
+        private JSchema MapASTChoice(ASTChoice astChoice)
+        {
+            var result = new JSchema
+            {
+                Title = astChoice.Name
+            };
+            astChoice.Options.ToList().ForEach(option =>
+            {
+                result.Enum.Add(option.Value);
+            });
+            result.Title = astChoice.Name;
+            return result;
+        }
+
+        private JSchema MapASTData(ASTData astData)
+        {
+            var result = new JSchema
+            {
+                Title = astData.Name
+            };
+            astData.Options.ToList().ForEach(option =>
+            {
+                var temp = MapAstNode(option.Name);
+                result.AnyOf.Add(temp);
+            });
             return result;
         }
 
@@ -119,14 +126,7 @@ namespace Mapper.JSON
             }
             else if (_mod == "List" && !isBasicType)
             {
-                var refNode = JsonMapper.Find(Nodes, _type);
-                var temp = refNode switch
-                {
-                    ASTType n => MapASTType(n),
-                    ASTAlias n => MapASTAlias(n),
-                    _ => throw new NotImplementedException("Not implemented.")
-                };
-
+                var temp = MapAstNode(_type);
                 result = new JSchema
                 {
                     Type = JSchemaType.Array,
@@ -139,95 +139,38 @@ namespace Mapper.JSON
             }
             else
             {
-                var refNode = JsonMapper.Find(Nodes, _type);
-                result = refNode switch
-                {
-                    ASTType n => MapASTType(n),
-                    ASTAlias n => MapASTAlias(n),
-                    _ => throw new NotImplementedException("Not implemented.")
-                };
+                result = MapAstNode(_type);
             }
             return result;
         }
+
+        private JSchema MapAstNode(string name)
+        {
+            var refNode = JsonMapper.Find(Nodes, name);
+            var result = refNode switch
+            {
+                ASTType n => MapASTType(n),
+                ASTAlias n => MapASTAlias(n),
+                ASTChoice n => MapASTChoice(n),
+                ASTData n => MapASTData(n),
+                _ => throw new NotImplementedException("Not implemented.")
+            };
+            AddReference(name, result);
+            return result;
+        }
+
+        private JSchema MapBasicType(string _type)
+        {
+            return _type switch
+            {
+                "String" => new JSchema { Type = JSchemaType.String },
+                "Number" => new JSchema { Type = JSchemaType.Number },
+                "Boolean" => new JSchema { Type = JSchemaType.Boolean },
+                "Date" => new JSchema { Type = JSchemaType.String, Format = "date" },
+                "Time" => new JSchema { Type = JSchemaType.String, Format = "time" },
+                "DateTime" => new JSchema { Type = JSchemaType.String, Format = "date-time" },
+                _ => new JSchema { Type = JSchemaType.String }
+            };
+        }
     }
 }
-
-
-/*
-astType.Fields.ToList().ForEach(field =>
-            {
-                var _mod = field.Type.First().Value;
-                var _type = field.Type.Last().Value;
-
-                if (_mod == "List")
-                {
-                    if (JsonMapper.IsBasicType(_type))
-                    {
-                        var subSchema = new JSchema
-                        {
-                            Title = astType.Name,
-                            Type = JSchemaType.Array
-                        };
-                        subSchema.Items.Add(JsonMapper.ConvertToJsonType(_type));
-                        schema.Properties.Add(field.Name, subSchema);
-                    } else
-                    {
-                        var referenceNode = JsonMapper.Find(nodes, _type);
-                        if (!(referenceNode is null))
-                        {
-                            if (referenceNode is ASTType)
-                            {
-                                var refJson = ASTTypeToJSchema.Create((ASTType)referenceNode, nodes);
-                                var subSchema = new JSchema
-                                {
-                                    Title = field.Name,
-                                    Type = JSchemaType.Array
-                                };
-                                subSchema.Items.Add(refJson);
-                                schema.Properties.Add(_type, subSchema);
-                                references.Add(_type, subSchema);
-                            }
-                            else if (referenceNode is ASTAlias)
-                            {
-                                var refJson = ASTAliasToJSchema.Create((ASTAlias)referenceNode, nodes);
-                                schema.Properties.Add(_type, refJson);
-                                references.Add(_type, refJson);
-                            }
-                        }
-                    }
-                }
-                else
-                {
-                    if (JsonMapper.IsBasicType(_type))
-                    {
-                        schema.Properties.Add(field.Name, JsonMapper.ConvertToJsonType(_type));
-                    }
-                    else
-                    {
-                        var referenceNode = JsonMapper.Find(nodes, _type);
-                        if (!(referenceNode is null))
-                        {
-                            if (referenceNode is ASTType)
-                            {
-                                var refJson = ASTTypeToJSchema.Create((ASTType)referenceNode, nodes);
-                                schema.Properties.Add(_type, refJson);
-                                references.Add(_type, refJson);
-                            }
-                            else if (referenceNode is ASTAlias)
-                            {
-                                var refJson = ASTAliasToJSchema.Create((ASTAlias)referenceNode, nodes);
-                                schema.Properties.Add(_type, refJson);
-                                references.Add(_type, refJson);
-                            }
-                        }
-                    }
-                }
-
-
-                if (_mod != "Maybe")
-                {
-                    schema.Required.Add(field.Name);
-                }
-            });
-
-    */
