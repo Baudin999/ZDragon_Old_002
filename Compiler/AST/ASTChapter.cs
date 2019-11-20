@@ -1,7 +1,7 @@
 ﻿using System;
 namespace Compiler.AST
 {
-    public class ASTChapter : IASTNode, IASTMardownNode
+    public class ASTChapter : IASTNode, IASTMardownNode, ICloneable
     {
         public string Content { get; set; }
         public ASTChapter() { }
@@ -10,5 +10,9 @@ namespace Compiler.AST
             this.Content = content;
         }
 
+        public object Clone()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

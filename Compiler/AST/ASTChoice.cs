@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Compiler.AST
 {
-    public class ASTChoice : IASTNode, INamable
+    public class ASTChoice : IASTNode, INamable, ICloneable
     {
         public string Name { get; set; } = "";
         public List<ASTTypeDefinition> Type { get; set; } = new List<ASTTypeDefinition>();
@@ -24,5 +24,15 @@ namespace Compiler.AST
             parser.Consume(TokenType.ContextEnded);
         }
 
+        public object Clone()
+        {
+            return new ASTChoice
+            {
+                Name = (string)this.Name.Clone(),
+                Type = ObjectCopier.CopyList<ASTTypeDefinition>(this.Type),
+                // Cannot clone options due to read-only flag
+                //Options = ObjectCopier.CopyList<ASTOption>(this.Options)
+            };
+        }
     }
 }

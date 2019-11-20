@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Text.Json.Serialization;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Compiler
 {
@@ -11,7 +13,7 @@ namespace Compiler
 
     public static class ObjectCopier
     {
-        public static T Clone<T>(T source) where T: new()
+        public static T Clone<T>(T source) where T : new()
         {
             if (Object.ReferenceEquals(source, null))
             {
@@ -20,6 +22,11 @@ namespace Compiler
 
             var s = JsonSerializer.Serialize(source);
             return JsonSerializer.Deserialize<T>(s);
+        }
+
+        public static List<T> CopyList<T>(List<T> source) where T : ICloneable
+        {
+            return new List<T>(source.Select(i => i.Clone()).Cast<T>());
         }
     }
 }

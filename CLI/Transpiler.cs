@@ -86,10 +86,10 @@ namespace CLI
                         .Select(a => {
                             return a switch
                             {
-                                ASTType t => ObjectCopier.Clone(t) as IASTNode,
-                                ASTAlias t => ObjectCopier.Clone(t) as IASTNode,
-                                ASTData t => ObjectCopier.Clone(t) as IASTNode,
-                                ASTChoice t => ObjectCopier.Clone(t) as IASTNode,
+                                ASTType t => t.Clone() as IASTNode,
+                                ASTAlias t => t.Clone() as IASTNode,
+                                ASTData t => t.Clone() as IASTNode,
+                                ASTChoice t => t.Clone() as IASTNode,
                                 _ => throw new Exception("Can only serialize real AST nodes.")
                             };
                         })

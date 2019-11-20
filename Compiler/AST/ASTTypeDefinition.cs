@@ -4,7 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace Compiler.AST
 {
-    public class ASTTypeDefinition : IASTNode
+    public class ASTTypeDefinition : IASTNode, ICloneable
     {
         public string Value { get; set; }
         public ASTTypeDefinition() { }
@@ -39,6 +39,11 @@ namespace Compiler.AST
                 yield return new ASTTypeDefinition(t.Value);
                 parser.TryConsume(TokenType.Identifier, out t);
             }
+        }
+
+        public object Clone()
+        {
+            return new ASTTypeDefinition((string)this.Value.Clone());
         }
     }
 }

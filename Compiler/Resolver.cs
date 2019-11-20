@@ -45,7 +45,7 @@ namespace Compiler
                             throw new System.Exception($"Cannot find type {e} to extend from");
                         }
 
-                        var clones = extendedFrom.Fields.Select(f => f.Clone()).ToList();
+                        var clones = extendedFrom.Fields.Select(f => (ASTTypeField)f.Clone()).ToList();
                         t.AddFields(clones);
                     });
                     yield return t;
