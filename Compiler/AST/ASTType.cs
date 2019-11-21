@@ -68,7 +68,7 @@ namespace Compiler.AST
                             .ToList();
                 }
 
-
+                
                 /*
                  * If there is an '=' sign we know that there will be
                  * Fields which we can parse...

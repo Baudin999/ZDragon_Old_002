@@ -1,0 +1,68 @@
+﻿<?xml version="1.0" encoding="utf-16"?>
+<xs:schema xmlns:self="org.schema.something" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:complexType name="Addressable">
+    <xs:annotation>
+      <xs:documentation />
+    </xs:annotation>
+    <xs:all>
+      <xs:element minOccurs="1" maxOccurs="1" name="Addresses">
+        <xs:complexType name="Addresses">
+          <xs:sequence minOccurs="0" maxOccurs="10">
+            <xs:element>
+              <xs:simpleType name="Addresses">
+                <xs:restriction base="xs:string">
+                  <xs:minLength value="1" />
+                  <xs:maxLength value="100" />
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:all>
+  </xs:complexType>
+  <xs:complexType name="Person">
+    <xs:annotation>
+      <xs:documentation />
+    </xs:annotation>
+    <xs:all>
+      <xs:element minOccurs="1" maxOccurs="1" name="FirstName">
+        <xs:simpleType name="FirstName">
+          <xs:restriction base="xs:string">
+            <xs:minLength value="12" />
+            <xs:maxLength value="32" />
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+    </xs:all>
+  </xs:complexType>
+  <xs:complexType name="Customer">
+    <xs:annotation>
+      <xs:documentation />
+    </xs:annotation>
+    <xs:all>
+      <xs:element minOccurs="1" maxOccurs="1" name="Addresses">
+        <xs:complexType name="Addresses">
+          <xs:sequence minOccurs="0" maxOccurs="10">
+            <xs:element>
+              <xs:simpleType name="Addresses">
+                <xs:restriction base="xs:string">
+                  <xs:minLength value="1" />
+                  <xs:maxLength value="100" />
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element minOccurs="1" maxOccurs="1" name="FirstName">
+        <xs:simpleType name="FirstName">
+          <xs:restriction base="xs:string">
+            <xs:minLength value="12" />
+            <xs:maxLength value="32" />
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+    </xs:all>
+  </xs:complexType>
+</xs:schema>

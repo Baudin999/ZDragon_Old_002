@@ -95,6 +95,96 @@ type Person =
             TestXSD(mapper.Schema, "./XSD/TestChoice.xsd");
         }
 
+        [Fact]
+        public void TestDateXSD()
+        {
+            var code = @"
+
+alias Then = Date;
+
+type Start =
+    Now: Date;
+    Something: Then;
+";
+            var generator = new ASTGenerator(code);
+            XSDMapper mapper = new XSDMapper(generator.AST);
+            _ = mapper.Start().ToList();
+
+            TestXSD(mapper.Schema, "./XSD/TestDateXSD.xsd");
+        }
+
+        [Fact]
+        public void TestBooleanXSD()
+        {
+            var code = @"
+
+alias Naha = Boolean;
+
+type Start =
+    Yup: Boolean;
+    Something: Naha;
+";
+            var generator = new ASTGenerator(code);
+            XSDMapper mapper = new XSDMapper(generator.AST);
+            _ = mapper.Start().ToList();
+
+            TestXSD(mapper.Schema, "./XSD/TestBooleanXSD.xsd");
+        }
+
+        [Fact]
+        public void TestPluckedFieldsXSD()
+        {
+            var code = @"
+type Addressable =
+    Addresses: List String;
+
+type Person =
+    @ The firstName of a person
+    FirstName: String
+        & min 12
+        & max 32;
+
+type Customer extends Person =
+    pluck Addressable.Addresses;
+";
+            var generator = new ASTGenerator(code);
+            XSDMapper mapper = new XSDMapper(generator.AST);
+            _ = mapper.Start().ToList();
+
+            TestXSD(mapper.Schema, "./XSD/TestPluckedFieldsXSD.xsd");
+        }
+
+        [Fact]
+        public void TestEveryFieldType()
+        {
+            var code = @"
+type Root =
+    F1: Number;
+    F2: String;
+    F3: Boolean;
+    F4: Date;
+    F5: Time;
+    F6: DateTime;
+    F7: Maybe Number;
+    F8: Maybe String;
+    F9: Maybe Boolean;
+    F10: Maybe Date;
+    F11: Maybe Time;
+    F12: Maybe DateTime;
+    F13: List Number;
+    F14: List String;
+    F15: List Boolean;
+    F16: List Date;
+    F17: List Time;
+    F18: List DateTime;
+";
+            var generator = new ASTGenerator(code);
+            XSDMapper mapper = new XSDMapper(generator.AST);
+            _ = mapper.Start().ToList();
+
+            TestXSD(mapper.Schema, "./XSD/TestEveryFieldType.xsd");
+        }
+
         private XmlSchema LoadXSD(string path)
         {
             using var stream = new StreamReader(path);
@@ -112,6 +202,8 @@ type Person =
 
             Assert.Equal(writer.ToString(), resultWriter.ToString());
         }
+
+
 
     }
 

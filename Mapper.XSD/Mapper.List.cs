@@ -21,17 +21,33 @@ namespace Mapper.XSD
             string _type = e.Type.Last().Value;
 
             XmlSchemaElement element = new XmlSchemaElement();
-            if (_type == "String")
+            switch (_type)
             {
-                element.SchemaType = Mapper.MapString(e);
-            } else if (_type == "Number")
-            {
-                element.SchemaType = Mapper.MapNumber(e);
+                case "String":
+                    element.SchemaType = Mapper.MapString(e);
+                    break;
+                case "Number":
+                    element.SchemaType = Mapper.MapNumber(e);
+                    element.Name = null;
+                    break;
+                case "Boolean":
+                    element.SchemaType = Mapper.MapBoolean(e);
+                    break;
+                case "DateTime":
+                    element.SchemaType = Mapper.MapDateTime(e);
+                    break;
+                case "Date":
+                    element.SchemaType = Mapper.MapDate(e);
+                    break;
+                case "Time":
+                    element.SchemaType = Mapper.MapTime(e);
+                    break;
+                default:
+                    element.RefName = new System.Xml.XmlQualifiedName("self:" + _type);
+                    break;
             }
-            else
-            {
-                element.RefName = new System.Xml.XmlQualifiedName("self:" + _type);
-            }
+
+            element.Name = null;
             sequence.Items.Add(element);
             complexType.Particle = sequence;
             return complexType;

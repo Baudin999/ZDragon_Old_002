@@ -1,1 +1,19 @@
-﻿<?xml version="1.0" encoding="UTF-8" ?>
+﻿<?xml version="1.0" encoding="utf-16"?>
+<xs:schema xmlns:self="org.schema.something" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:simpleType name="Then">
+    <xs:restriction base="xs:date" />
+  </xs:simpleType>
+  <xs:complexType name="Start">
+    <xs:annotation>
+      <xs:documentation />
+    </xs:annotation>
+    <xs:all>
+      <xs:element minOccurs="1" maxOccurs="1" name="Now">
+        <xs:simpleType name="Now">
+          <xs:restriction base="xs:date" />
+        </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="1" maxOccurs="1" name="Something" ref="self:Then" />
+    </xs:all>
+  </xs:complexType>
+</xs:schema>

@@ -31,6 +31,26 @@ namespace Mapper.XSD
                 XmlSchemaType simpleType = Mapper.MapNumber(e);
                 element.SchemaType = simpleType;
             }
+            else if (_type == "Boolean")
+            {
+                XmlSchemaType simpleType = Mapper.MapBoolean(e);
+                element.SchemaType = simpleType;
+            }
+            else if (_type == "DateTime")
+            {
+                XmlSchemaType simpleType = Mapper.MapDateTime(e);
+                element.SchemaType = simpleType;
+            }
+            else if (_type == "Date")
+            {
+                XmlSchemaType simpleType = Mapper.MapDate(e);
+                element.SchemaType = simpleType;
+            }
+            else if (_type == "Time")
+            {
+                XmlSchemaType simpleType = Mapper.MapTime(e);
+                element.SchemaType = simpleType;
+            }
             else
             {
                 element.RefName = new System.Xml.XmlQualifiedName("self:" + _type);

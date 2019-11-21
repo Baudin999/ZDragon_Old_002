@@ -17,14 +17,20 @@ namespace Mapper.XSD
 
             var min = e.Restrictions.FirstOrDefault(r => r.Key == "min");
             var max = e.Restrictions.FirstOrDefault(r => r.Key == "max");
-            
-            XmlSchemaMinLengthFacet mMin = new XmlSchemaMinLengthFacet();
-            mMin.Value = min is null ? "1" : min.Value;
-            restriction.Facets.Add(mMin);
 
-            XmlSchemaMaxLengthFacet mMax = new XmlSchemaMaxLengthFacet();
-            mMax.Value = max is null ? "100" : max.Value;
-            restriction.Facets.Add(mMax);
+            if (min != null)
+            {
+                XmlSchemaMinLengthFacet mMin = new XmlSchemaMinLengthFacet();
+                mMin.Value = min is null ? "1" : min.Value;
+                restriction.Facets.Add(mMin);
+            }
+
+            if (max != null)
+            {
+                XmlSchemaMaxLengthFacet mMax = new XmlSchemaMaxLengthFacet();
+                mMax.Value = max is null ? "100" : max.Value;
+                restriction.Facets.Add(mMax);
+            }
 
             simpleType.Content = restriction;
             return simpleType;

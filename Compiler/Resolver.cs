@@ -48,6 +48,16 @@ namespace Compiler
                         var clones = extendedFrom.Fields.Select(f => f.Clone()).ToList();
                         t.AddFields(clones);
                     });
+
+                    t.Fields = t.Fields.ToList().Select(f =>
+                    {
+                        return f switch
+                        {
+                            ASTPluckedField field => PluckField(field),
+                            ASTTypeField field => field,
+                            _ => throw new InvalidTokenException("Not a field type")
+                        };
+                    });
                     yield return t;
                 }
                 else
@@ -66,6 +76,29 @@ namespace Compiler
                 return n != null && n is INamable && (n as INamable).Name == name;
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
             });
+        }
+
+        private ASTTypeField PluckField(ASTPluckedField field)
+        {
+
+            var _ref = field.Type.First();
+            var _field = field.Type.Last();
+            var referencedNode = FindNode(_ref.Value);
+            var referencedField = (referencedNode as ASTType)?.Fields.FirstOrDefault(_f => _f.Name == _field.Value);
+
+            if (!(referencedField is null))
+            {
+                var clone = ObjectCopier.Clone(referencedField);
+
+                field.Restrictions.ToList().ForEach(r =>
+                {
+                    clone.SetRestriction(r.Key, r.Value, r);
+                });
+
+                return clone;
+            }
+
+            throw new InvalidTokenException("Not a referenced field to pluck from.");
         }
     }
 }

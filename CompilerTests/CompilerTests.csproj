@@ -26,6 +26,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Remove="TestResults\4cbd3726-c5fc-40f3-9845-7701bf053b15\coverage.cobertura.xml" />
+    <None Remove="XSD\TestBooleanXSD %28copy%29.xsd" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Errors\" />
@@ -45,6 +46,18 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="XSD\TestChoice.xsd">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="XSD\TestDateXSD.xsd">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="XSD\TestBooleanXSD.xsd">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="XSD\TestPluckedFieldsXSD.xsd">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="XSD\TestEveryFieldType.xsd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

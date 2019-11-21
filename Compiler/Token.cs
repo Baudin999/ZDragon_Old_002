@@ -80,6 +80,8 @@ namespace Compiler
         KW_Importing,
         GroupOpen,
         GroupClosed,
-        ListSeparator
+        ListSeparator,
+        PluckedField,
+        KW_Pluck
     }
 }

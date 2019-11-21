@@ -33,6 +33,7 @@ namespace Compiler
             if (word == "importing") type = TokenType.KW_Importing;
             if (word == "aggregate") type = TokenType.KW_Importing;
             if (word == "entity") type = TokenType.KW_Importing;
+            if (word == "pluck") type = TokenType.KW_Pluck;
 
             return new Token()
             {

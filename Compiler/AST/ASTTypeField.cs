@@ -12,13 +12,24 @@ namespace Compiler.AST
         public IEnumerable<ASTRestriction> Restrictions { get; set; } = Enumerable.Empty<ASTRestriction>();
 
         public ASTTypeField() { }
+
         public static ASTTypeField Parse(IParser parser)
         {
             var result = new ASTTypeField();
             result.Restrictions = new List<ASTRestriction>();
             result.Annotations = ASTAnnotation.Parse(parser).ToList();
-            result.Name = parser.Consume(TokenType.Identifier).Value;
-            Token Separator = parser.Consume(TokenType.Separator);
+
+            var pluck = parser.TryConsume(TokenType.KW_Pluck);
+            if (!(pluck is null))
+            {
+                result = new ASTPluckedField();//.Parse(parser);
+            }
+            else
+            {
+                result.Name = parser.Consume(TokenType.Identifier).Value;
+                Token Separator = parser.Consume(TokenType.Separator);
+            }
+
             result.Type = ASTTypeDefinition.ParseType(parser).ToList();
             result.Restrictions = ASTRestriction.CreateRestrictions(parser, TokenType.KW_Type).ToList();
             parser.Consume(TokenType.EndStatement);
@@ -29,11 +40,26 @@ namespace Compiler.AST
         {
             return new ASTTypeField
             {
-                  Name = this.Name,
-                  Type = this.Type.Select(t => new ASTTypeDefinition(t.Value)),
-                  Annotations = this.Annotations.Select(a => new ASTAnnotation(a.Value)),
-                  Restrictions = this.Restrictions.Select(r => r.Clone())
+                Name = Name,
+                Type = this.Type.Select(t => new ASTTypeDefinition(t.Value)),
+                Annotations = this.Annotations.Select(a => new ASTAnnotation(a.Value)),
+                Restrictions = this.Restrictions.Select(r => r.Clone())
             };
         }
+
+        public void SetRestriction(string key, string value, ASTRestriction original)
+        {
+            var originalRestriction = Restrictions.FirstOrDefault(r => r.Key == key);
+            if (!(originalRestriction is null))
+            {
+                originalRestriction.Value = value;
+            }
+            else
+            {
+                Restrictions = Restrictions.Concat(new ASTRestriction[] { original });
+            }
+        }
     }
+
+    public class ASTPluckedField : ASTTypeField { }
 }

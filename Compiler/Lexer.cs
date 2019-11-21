@@ -36,7 +36,6 @@ namespace Compiler
                     input.IsEqualTo("data") ||
                     input.IsEqualTo("choice") ||
                     input.IsEqualTo("open") ||
-                    input.IsEqualTo("importing") ||
                     input.IsEqualTo("view") ||
                     input.IsEqualTo("aggregate") ||
                     input.IsEqualTo("entity"))
@@ -44,10 +43,12 @@ namespace Compiler
                     context = true;
                     yield return new Token() { TokenType = TokenType.ContextStarted };
                     yield return TokenLexers.Word(input);
-                } else if (input.IsEqualTo("extends"))
+                } else if (input.IsEqualTo("extends") ||
+                    input.IsEqualTo("importing") ||
+                    input.IsEqualTo("pluck"))
                 {
                     yield return TokenLexers.Word(input);
-                }
+                } 
                 else if (!context && Char.IsLetter(input.Current()))
                 {
                     yield return TokenLexers.TakeUntillEndOfContext(input);

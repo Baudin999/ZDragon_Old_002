@@ -1,1 +1,19 @@
-﻿<?xml version="1.0" encoding="UTF-8" ?>
+﻿<?xml version="1.0" encoding="utf-16"?>
+<xs:schema xmlns:self="org.schema.something" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:simpleType name="Naha">
+    <xs:restriction base="xs:boolean" />
+  </xs:simpleType>
+  <xs:complexType name="Start">
+    <xs:annotation>
+      <xs:documentation />
+    </xs:annotation>
+    <xs:all>
+      <xs:element minOccurs="1" maxOccurs="1" name="Yup">
+        <xs:simpleType name="Yup">
+          <xs:restriction base="xs:boolean"></xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="1" maxOccurs="1" name="Something" ref="self:Naha" />
+    </xs:all>
+  </xs:complexType>
+</xs:schema>

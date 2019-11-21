@@ -27,10 +27,7 @@
       </xs:element>
       <xs:element minOccurs="1" maxOccurs="1" name="Age">
         <xs:simpleType name="Age">
-          <xs:restriction base="xs:decimal">
-            <xs:minLength value="1" />
-            <xs:maxLength value="100" />
-          </xs:restriction>
+          <xs:restriction base="xs:decimal" />
         </xs:simpleType>
       </xs:element>
       <xs:element minOccurs="1" maxOccurs="1" name="Tags">
