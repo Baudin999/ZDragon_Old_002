@@ -1,6 +1,9 @@
 ﻿
 using Microsoft.Extensions.CommandLineUtils;
 using CLI.Commands;
+using System.Reflection;
+using System.IO;
+using System;
 
 namespace CLI
 {
@@ -8,6 +11,7 @@ namespace CLI
     {
         static void Main(string[] args)
         {
+
             var app = new CommandLineApplication();
             app.Name = "ckc";
             app.HelpOption("-?|-h|--help");
@@ -31,5 +35,21 @@ namespace CLI
                 app.ShowHelp();
             }
         }
+
+        public static void ReadStuff()
+        {
+            var assembly = Assembly.GetExecutingAssembly();
+            var resourceName = "CLI.Assets.style.css";
+
+            using (Stream stream = assembly.GetManifestResourceStream(resourceName))
+            using (StreamReader reader = new StreamReader(stream))
+            {
+                string result = reader.ReadToEnd();
+                Console.WriteLine(result);
+            }
+
+        }
     }
+
+
 }
