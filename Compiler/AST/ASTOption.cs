@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Compiler.AST
 {
-    public class ASTOption : IASTNode
+    public class ASTOption : IASTNode, ICloneable
     {
         public string Value { get;  }
         public IEnumerable<ASTAnnotation> Annotations { get; }
@@ -26,6 +27,13 @@ namespace Compiler.AST
                 annotations = ASTAnnotation.Parse(parser);
                 parser.TryConsume(TokenType.Or, out t);
             }
+        }
+
+        public object Clone()
+        {
+            return new ASTOption(
+                (string)this.Value.Clone(),
+                ObjectCloner.CloneList(this.Annotations.ToList()));
         }
     }
 }

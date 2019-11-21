@@ -32,7 +32,5 @@ namespace Compiler.AST
 
             return (errors, result);
         }
-
-        
     }
 }

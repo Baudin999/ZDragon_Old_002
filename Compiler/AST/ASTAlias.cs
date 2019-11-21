@@ -5,7 +5,7 @@ using System.Runtime.Serialization;
 
 namespace Compiler.AST
 {
-    public class ASTAlias : IASTNode, IRestrictable, IElement, INamable, IRootNode
+    public class ASTAlias : IASTNode, IRestrictable, IElement, INamable, IRootNode, ICloneable
     {
         public string Name { get; set; } = "";
         public IEnumerable<ASTTypeDefinition> Type { get; set; } = Enumerable.Empty<ASTTypeDefinition>();
@@ -39,5 +39,16 @@ namespace Compiler.AST
             return (errors, result);
         }
 
+        public object Clone()
+        {
+            return new ASTAlias
+            {
+                Name = (string)this.Name.Clone(),
+                Type = ObjectCloner.CloneList(this.Type.ToList()),
+                Restrictions = ObjectCloner.CloneList(this.Restrictions.ToList()),
+                Annotations = ObjectCloner.CloneList(this.Annotations.ToList()),
+                Directives = ObjectCloner.CloneList(this.Directives.ToList())
+            };
+        }
     }
 }

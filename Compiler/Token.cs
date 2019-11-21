@@ -1,7 +1,7 @@
 ﻿using System;
 namespace Compiler
 {
-    public class Token
+    public class Token : ICloneable
     {
         public int StartIndex { get; set; }
         public int StartColumn { get; internal set; }
@@ -24,7 +24,8 @@ namespace Compiler
             return String.Format($"({StartColumn}, {StartLine}) ({EndColumn}, {EndLine}) {TokenType} |{Value}|");
         }
 
-        public Token Normalize() {
+        public Token Normalize()
+        {
             return new Token
             {
                 StartIndex = this.StartIndex,
@@ -41,6 +42,25 @@ namespace Compiler
             };
         }
 
+        public object Clone()
+        {
+            var token = new Token
+            {
+                Value = (string)this.Value.Clone(),
+                // Performing a lookup will ensure copy by value
+                TokenType = (TokenType)((int)this.TokenType),
+
+                // int's are never copied by reference, no need to clone
+                StartColumn = this.StartColumn,
+                StartIndex = this.StartIndex,
+                StartLine = this.StartLine,
+                EndColumn = this.EndColumn,
+                EndIndex = this.EndIndex,
+                EndLine = this.EndLine
+            };
+
+            return token;
+        }
     }
 
     public enum TokenType

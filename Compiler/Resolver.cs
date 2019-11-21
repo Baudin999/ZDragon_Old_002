@@ -45,7 +45,7 @@ namespace Compiler
                             throw new System.Exception($"Cannot find type {e} to extend from");
                         }
 
-                        var clones = extendedFrom.Fields.Select(f => f.Clone()).ToList();
+                        var clones = extendedFrom.Fields.Select(f => (ASTTypeField)f.Clone()).ToList();
                         t.AddFields(clones);
                     });
 
@@ -88,8 +88,7 @@ namespace Compiler
 
             if (!(referencedField is null))
             {
-                var clone = ObjectCopier.Clone(referencedField);
-
+                var clone = (ASTTypeField)referencedField.Clone();
                 field.Restrictions.ToList().ForEach(r =>
                 {
                     clone.SetRestriction(r.Key, r.Value, r);

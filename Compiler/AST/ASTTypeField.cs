@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Compiler.AST
 {
-    public class ASTTypeField : IASTNode, IRestrictable, IElement, INamable
+    public class ASTTypeField : IASTNode, IRestrictable, IElement, INamable, ICloneable
     {
         public string Name { get; set; } = "";
         public IEnumerable<ASTTypeDefinition> Type { get; set; } = Enumerable.Empty<ASTTypeDefinition>();
@@ -36,14 +36,14 @@ namespace Compiler.AST
             return result;
         }
 
-        public ASTTypeField Clone()
+        public object Clone()
         {
             return new ASTTypeField
             {
-                Name = Name,
+                Name = this.Name,
                 Type = this.Type.Select(t => new ASTTypeDefinition(t.Value)),
-                Annotations = this.Annotations.Select(a => new ASTAnnotation(a.Value)),
-                Restrictions = this.Restrictions.Select(r => r.Clone())
+                Annotations = ObjectCloner.CloneList(this.Annotations.ToList()),
+                Restrictions = ObjectCloner.CloneList(this.Restrictions.ToList())
             };
         }
 

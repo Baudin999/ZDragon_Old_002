@@ -9,6 +9,5 @@ namespace Compiler.AST
         {
             this.Content = content;
         }
-
     }
 }
