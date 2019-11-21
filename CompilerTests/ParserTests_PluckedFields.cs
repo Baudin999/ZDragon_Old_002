@@ -136,7 +136,10 @@ type Customer =
             Assert.NotNull(g.ParseTree);
             Assert.Empty(g.Parser.Errors.ToList());
 
-            var person = (ASTType)g.AST.Last();
+            var person = (ASTType)g.AST.First();
+            Assert.Single(person.Fields);
+            var p_firstName = person.Fields.First();
+            Assert.Equal(2, p_firstName.Restrictions.Count());
             
 
             var customer = (ASTType)g.AST.Last();
