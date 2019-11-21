@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Compiler.AST
 {
-    public class ASTAnnotation : IASTNode
+    public class ASTAnnotation : IASTNode, ICloneable
     {
 
         public string Value { get; set; }
@@ -28,6 +28,11 @@ namespace Compiler.AST
 
             if (parser.HasNext() && parser.Current.TokenType == TokenType.Annotation) parser.Next();
             return result;
+        }
+
+        public object Clone()
+        {
+            return new ASTAnnotation((string)this.Value.Clone());
         }
     }
 }

@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Compiler.AST
 {
-    public class ASTRestriction : IASTNode
+    public class ASTRestriction : IASTNode, ICloneable
     {
         public string Key { get; set;  }
         public string Value { get; set;  }
@@ -52,9 +52,9 @@ namespace Compiler.AST
             }
         }
 
-        public ASTRestriction Clone()
+        public object Clone()
         {
-            return new ASTRestriction(this.Key, this.Value, this.Annotations.Select(a => new ASTAnnotation(a.Value)), this.Token, this.Depth);
+            return new ASTRestriction((string)this.Key.Clone(), (string)this.Value.Clone(),ObjectCopier.CopyList<ASTAnnotation>(this.Annotations.ToList()) , (Compiler.Token)this.Token.Clone(), this.Depth);
         }
     }
 }

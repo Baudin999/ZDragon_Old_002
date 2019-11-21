@@ -2,14 +2,15 @@
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Linq;
+using System;
 
 namespace Compiler.AST
 {
-    public class ASTDirective : IASTNode
+    public class ASTDirective : IASTNode, ICloneable
     {
         public string Key { get; set;  }
         public string Value { get; set;  }
-        public ASTDirective() { }
+        public ASTDirective(object v) { }
         public ASTDirective(string key, string value)
         {
             this.Key = key;
@@ -44,6 +45,11 @@ type Person =
 
             if (parser.HasNext() && parser.Current.TokenType == TokenType.Directive) parser.Next();
             return (errors, result);
+        }
+
+        public object Clone()
+        {
+            return new ASTDirective((string)this.Key.Clone(), (string)this.Value.Clone());
         }
     }
 }

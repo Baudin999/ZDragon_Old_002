@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Compiler.AST
 {
-    public class ASTData : IASTNode, INamable
+    public class ASTData : IASTNode, INamable, ICloneable
     {
         public string Name { get; set; } = "";
         public IEnumerable<string> Parameters { get; set; } = Enumerable.Empty<string>();
@@ -39,6 +39,16 @@ namespace Compiler.AST
             return (errors, result);
         }
 
-        
+        public object Clone()
+        {
+            return new ASTData
+            {
+                Name = (string)this.Name.Clone(),
+                Parameters = ObjectCopier.CopyList<string>(this.Parameters.ToList()),
+                Annotations = ObjectCopier.CopyList<ASTAnnotation>(this.Annotations.ToList()),
+                Directives = ObjectCopier.CopyList<ASTDirective>(this.Directives.ToList()),
+                Options = ObjectCopier.CopyList<ASTDataOption>(this.Options.ToList())
+            };
+        }
     }
 }

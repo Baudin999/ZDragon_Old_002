@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Compiler.AST
 {
-    public class ASTDataOption : IASTNode
+    public class ASTDataOption : IASTNode, ICloneable
     {
         public string Name { get; set; } = "";
         public IEnumerable<ASTAnnotation> Annotations { get; set; } = Enumerable.Empty<ASTAnnotation>();
@@ -30,6 +30,16 @@ namespace Compiler.AST
                 annotations = ASTAnnotation.Parse(parser);
                 parser.TryConsume(TokenType.Or, out t);
             }
+        }
+
+        public object Clone()
+        {
+            return new ASTDataOption
+            {
+                Name = (string)this.Name.Clone(),
+                Parameters = ObjectCopier.CopyList<string>(this.Parameters.ToList()),
+                Annotations = ObjectCopier.CopyList<ASTAnnotation>(this.Annotations.ToList()),
+            };
         }
     }
 }

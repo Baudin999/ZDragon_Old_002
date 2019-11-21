@@ -120,5 +120,17 @@ Missing type body. If you use an '=' sign you should have at least one field.", 
 
         }
 
+        public object Clone()
+        {
+            return new ASTType
+            {
+                Name = (string)this.Name.Clone(),
+                Annotations = ObjectCopier.CopyList<ASTAnnotation>(this.Annotations.ToList()),
+                Directives = ObjectCopier.CopyList<ASTDirective>(this.Directives.ToList()),
+                Parameters = ObjectCopier.CopyList<String>(this.Parameters.ToList()),
+                Extensions = ObjectCopier.CopyList<String>(this.Extensions.ToList()),
+                Fields = ObjectCopier.CopyList<ASTTypeField>(this.Fields.ToList())
+            };
+        }
     }
 }
