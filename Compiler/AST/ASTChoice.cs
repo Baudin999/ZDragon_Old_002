@@ -12,7 +12,14 @@ namespace Compiler.AST
 
         public ASTChoice() { }
 
-        public ASTChoice(IParser parser)
+        public ASTChoice(string name, List<ASTTypeDefinition> type, List<ASTOption> options)
+        {
+            this.Name = name;
+            this.Type = type;
+            this.Options = options;
+        }
+
+        public static (List<ASTError>, ASTChoice) Parse(IParser parser)
         {
             if (parser.HasNext()) parser.Next();
             var nameId = parser.Consume(TokenType.Identifier);
@@ -22,6 +29,8 @@ namespace Compiler.AST
             this.Options = ASTOption.Parse(parser).ToList();
             parser.TryConsume(TokenType.EndStatement);
             parser.Consume(TokenType.ContextEnded);
+            var result = new ASTChoice(nameId.Value, ASTTypeDefinition.ParseType(parser).ToList(), ASTOption.Parse(parser).ToList());
+            return (new List<ASTError>(), result);
         }
 
         public object Clone()

@@ -4,9 +4,9 @@ using System.Linq;
 
 namespace Compiler
 {
-    public static class ObjectCopier
+    public static class ObjectCloner
     {
-        public static List<T> CopyList<T>(List<T> source) where T : ICloneable
+        public static List<T> CloneList<T>(List<T> source) where T : ICloneable
         {
             return new List<T>(source.Select(i => i.Clone()).Cast<T>());
         }
