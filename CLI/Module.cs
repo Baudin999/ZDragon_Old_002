@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Compiler;
+using Compiler.AST;
 
 namespace CLI
 {
@@ -11,6 +13,7 @@ namespace CLI
         public string BasePath { get; }
         public string OutPath { get; }
         public Project Project { get; }
+        public List<string> References { get; private set; } = new List<string>();
         public Transpiler Transpiler { get; private set; }
         public ASTGenerator Generator { get; private set; }
         public DateTime LastParsed { get; private set; }
@@ -26,31 +29,44 @@ namespace CLI
 
         public void Parse()
         {
-            var text = System.IO.File.ReadAllText(Path) + "\n";
-            this.Transpiler = new Transpiler(text, this.Project);
-            this.Generator = Transpiler.Generator;
+            var code = ReadModuleText();
+            this.Generator = new ASTGenerator(code);
             this.LastParsed = DateTime.Now;
+            this.Transpiler = new Transpiler(this.Generator, this.Project);
 
-            if (Transpiler.Errors.Count == 0)
-            {
-                Console.WriteLine($"Perfectly parsed: {Name}");
-                SaveResult("Model.xsd", Transpiler.XsdToString());
-                SaveResult("index.html", Transpiler.HtmlToString());
-                foreach (var (key, value) in Transpiler.JsonToString())
-                {
-                    SaveResult(key, value);
-                }
-            }
-            else
-            {
-                foreach (var error in Transpiler.Errors)
-                {
-                    Console.WriteLine(error.Message);
-                }
-            }
+            References = Generator.AST.FindAll(n => n is ASTImport).Select(i => ((ASTImport)i).Name).ToList(); 
         }
 
-        public void SaveResult(string fileName, string source)
+        public void SaveModuleOutput()
+        {
+            this.Transpiler.StartMappings();
+            Console.WriteLine($"Perfectly parsed: {Name}");
+            SaveResult("Model.xsd", Transpiler.XsdToString());
+            SaveResult("index.html", Transpiler.HtmlToString());
+            foreach (var (key, value) in Transpiler.JsonToString())
+            {
+                SaveResult(key, value);
+            }
+
+            // We would now also want to resolve the other modules
+            // which depend upon this module so that they are automatically
+            // regenerated and their output changed.
+            this.Project
+                .Modules
+                .FindAll(m => m.References.FirstOrDefault(r => r == this.Name) != null)
+                .ForEach(m =>
+                    {
+                        m.Parse();
+                        m.SaveModuleOutput();
+                    });
+        }
+
+        private string ReadModuleText()
+        {
+            return System.IO.File.ReadAllText(Path) + "\n";
+        }
+
+        private void SaveResult(string fileName, string source)
         {
             string filePath = System.IO.Path.GetFullPath(fileName, OutPath);
             System.IO.Directory.CreateDirectory(OutPath);

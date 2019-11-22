@@ -72,7 +72,12 @@ class {astAlias.Name} {{
             var typeReferences = astType.Fields.Select(f =>
             {
                 var _type = f.Type.Last().Value;
-                if (_type != "String" && _type != "Number")
+                if (_type != "String"
+                    && _type != "Number"
+                    && _type != "Boolean"
+                    && _type != "Date"
+                    && _type != "DateTime"
+                    && _type != "Time")
                 {
                     return $@"{astType.Name} --* {_type}";
                 }
@@ -81,16 +86,29 @@ class {astAlias.Name} {{
                     return "";
                 }
             });
-            string template = $@"
+
+            if (astType.Fields.Count() > 0)
+            {
+                string template = $@"
 class {astType.Name} {{
 {string.Join("\n", fields)}
 }}
 {string.Join("\n", extensions)}
 {string.Join("\n", typeReferences)}
 ";
-            this.Parts.Add(template);
+                this.Parts.Add(template);
+                return template;
+            }
+            else
+            {
+                string template = $@"
+class {astType.Name}
+{string.Join("\n", extensions)}
+";
+                Parts.Add(template);
+                return template;
+            }
 
-            return template;
         }
 
         public override string VisitASTTypeDefinition(ASTTypeDefinition astTypeDefinition)

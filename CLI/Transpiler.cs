@@ -13,29 +13,18 @@ namespace CLI
     public class Transpiler
     {
         public Project Project { get; }
-        public string Code { get; }
+        public string Code => Generator.Code;
         public ASTGenerator Generator { get; }
-        public XSDMapper XsdMapper { get; }
-        public HtmlMapper HtmlMapper { get; }
-        public JsonMapper JsonMapper { get; }
+        public XSDMapper XsdMapper { get; private set; }
+        public HtmlMapper HtmlMapper { get; private set; }
+        public JsonMapper JsonMapper { get; private set; }
         public List<IASTError> Errors { get { return this.Generator.Errors; } }
         public List<IASTNode> Imports { get; private set; } = new List<IASTNode>();
 
-        public Transpiler(string code, Project project)
+        public Transpiler(ASTGenerator generator, Project project)
         {
+            this.Generator = generator;
             this.Project = project;
-            this.Code = code;
-            this.Generator = new ASTGenerator(code);
-            this.ResolveImports();
-
-            this.XsdMapper = new XSDMapper(this.Generator.AST.Concat(this.Imports).ToList());
-            this.XsdMapper.Start().ToList();
-
-            this.HtmlMapper = new HtmlMapper(this.Generator.AST.Concat(this.Imports).ToList());
-            this.HtmlMapper.Start().ToList();
-
-            this.JsonMapper = new JsonMapper(this.Generator.AST.Concat(this.Imports).ToList());
-            this.JsonMapper.Start();
         }
 
         public string XsdToString()
@@ -52,25 +41,25 @@ namespace CLI
             return this.HtmlMapper.ToHtmlString(links);
         }
 
-        /// <summary>
-        /// Transforms the
-        /// Dictionary of string, JSchema to a
-        /// Dictionary of string, string
-        /// These items can then be saved to the file system.
-        /// </summary>
-        /// <returns></returns>
         public Dictionary<string, string> JsonToString()
         {
             return this.JsonMapper.ToFileNameAndContentDict();
         }
 
 
-        /// <summary>
-        /// Resolve the imports of this module. Here we'll
-        /// link multiple files together. This is not part
-        /// of the compiler, but part of the project system.
-        /// TODO: verify this approach!
-        /// </summary>
+        public void StartMappings()
+        {
+            this.ResolveImports();
+            this.XsdMapper = new XSDMapper(this.Generator.AST.Concat(this.Imports).ToList());
+            this.XsdMapper.Start().ToList();
+
+            this.HtmlMapper = new HtmlMapper(this.Generator.AST.Concat(this.Imports).ToList());
+            this.HtmlMapper.Start().ToList();
+
+            this.JsonMapper = new JsonMapper(this.Generator.AST.Concat(this.Imports).ToList());
+            this.JsonMapper.Start();
+        }
+
         private void ResolveImports()
         {
             this.Imports = new List<IASTNode>();

@@ -6,3 +6,23 @@
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
+
+
+/* Mermaid Styling */
+
+.mermaid .classGroup {
+  -webkit-filter: drop-shadow(3px 3px 2px rgba(0, 0, 0, 0.7));
+  filter: drop-shadow(3px 3px 2px rgba(0, 0, 0, 0.7));
+}
+.mermaid .classGroup rect {
+  fill: #fdf6e3 !important;
+  stroke: gray !important;
+}
+.mermaid .classGroup text {
+  fill: gray !important;
+}
+
+.mermaid .classGroup line {
+  fill: gray !important;
+  stroke: gray !important;
+}

@@ -15,6 +15,7 @@ namespace Compiler
 
         public IEnumerable<IASTNode> Resolve()
         {
+            List<ASTError> errors = new List<ASTError>();
             foreach (IASTNode node in ParseTree)
             {
                 if (node is ASTData)
@@ -42,11 +43,13 @@ namespace Compiler
                         var extendedFrom = FindNode(e) as ASTType;
                         if (extendedFrom is null)
                         {
-                            throw new System.Exception($"Cannot find type {e} to extend from");
+                            //throw new System.Exception($"Cannot find type {e} to extend from");
                         }
-
-                        var clones = extendedFrom.Fields.Select(f => (ASTTypeField)f.Clone()).ToList();
-                        t.AddFields(clones);
+                        else
+                        {
+                            var clones = extendedFrom.Fields.Select(f => (ASTTypeField)f.Clone()).ToList();
+                            t.AddFields(clones);
+                        }
                     });
 
                     t.Fields = t.Fields.ToList().Select(f =>
@@ -86,7 +89,7 @@ namespace Compiler
             var referencedNode = FindNode(_ref.Value);
             var referencedField = (referencedNode as ASTType)?.Fields.FirstOrDefault(_f => _f.Name == _field.Value);
 
-            if (!(referencedField is null))
+            if (referencedField != null)
             {
                 var clone = (ASTTypeField)referencedField.Clone();
                 field.Restrictions.ToList().ForEach(r =>
@@ -97,7 +100,9 @@ namespace Compiler
                 return clone;
             }
 
-            throw new InvalidTokenException("Not a referenced field to pluck from.");
+            return field;
+
+            //throw new InvalidTokenException("Not a referenced field to pluck from.");
         }
     }
 }

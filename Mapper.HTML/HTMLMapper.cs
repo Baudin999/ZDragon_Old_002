@@ -31,8 +31,11 @@ namespace Mapper.HTML
     <style>
         svg {{ width: auto!important; height: auto!important; }}
     </style>
-</head>
+    <link rel='stylesheet' type='text/css' href='/style.css' />
+  </head>
 <body>
+
+<a href='/index.html'>Home</a>
 
 <ul>
 <li><a href=""model.xsd"" alt=""XSD"">XSD</a></li>
@@ -60,6 +63,10 @@ setTimeout(() => {{
     svg.attributes['width'].value = width;
     svg.attributes['height'].value = height;
 }}, 30);
+
+console.log(`
+{this.MermaidMapper.ToString()}
+`);
 </script>
 
 </body>
@@ -115,39 +122,6 @@ setTimeout(() => {{
 
         public override string VisitASTType(ASTType astType)
         {
-//            var extensions = astType.Extensions.Select(e => $"[{astType.Name}] -:> [{e}]");
-//            var fields = astType.Fields.Select(f => $@"    {f.Name}: {string.Join(" ", f.Type.Select(t => t.Value))}").ToList();
-//            var fieldReferences = astType.Fields.Select(f =>
-//            {
-//                var _type = f.Type.Last().Value;
-//                if (_type != "String" && _type != "Number" && _type != f.Name)
-//                {
-//                    return $@"[{f.Name}] -> [{_type}]";
-//                } else
-//                {
-//                    return "";
-//                }
-//            });
-//            var typeReferences = astType.Fields.Select(f =>
-//            {
-//                var _type = f.Type.Last().Value;
-//                if (_type != "String" && _type != "Number")
-//                {
-//                    return $@"[{astType.Name}] -> [{_type}]";
-//                }
-//                else
-//                {
-//                    return "";
-//                }
-//            });
-//            ErdParts.Add($@"
-//[{astType.Name} |
-//{string.Join("\n", fields)} |
-//]
-//{string.Join("\n", typeReferences)}
-//{string.Join("\n", extensions)}
-//"
-//);
             return "";
         }
 

@@ -7,7 +7,7 @@ namespace Compiler
 {
     public class ASTGenerator
     {
-
+        public string Code { get; set; }
         public IEnumerable<Token> Tokens { get; }
         public Parser Parser { get; }
         public List<IASTNode> ParseTree { get; }
@@ -16,6 +16,7 @@ namespace Compiler
 
         public ASTGenerator(string code)
         {
+            this.Code = code; 
             this.Tokens = new Lexer().Lex(code);
             this.Parser = new Parser(this.Tokens);
             this.ParseTree = this.Parser.Parse().ToList();

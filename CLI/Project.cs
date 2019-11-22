@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using Compiler.AST;
 
 namespace CLI
 {
-    public class Project: IDisposable
+    public class Project : IDisposable
     {
         public string Path { get; }
         public string OutPath { get; }
@@ -17,6 +18,7 @@ namespace CLI
         {
             this.Path = path;
             this.OutPath = System.IO.Path.GetFullPath($"out", this.Path);
+            Directory.CreateDirectory(OutPath);
 
             string[] allfiles = Directory.GetFiles(path, "*.car", SearchOption.AllDirectories);
             foreach (string file in allfiles)
@@ -25,7 +27,10 @@ namespace CLI
                 Modules.Add(module);
                 module.Parse();
             }
+
+            Modules.ForEach(m => m.SaveModuleOutput());
             CreateIndexPage();
+            CreateAssets();
             Cleanup = () => { };
         }
 
@@ -45,8 +50,13 @@ namespace CLI
 </html>
 ";
             string filePath = System.IO.Path.GetFullPath("index.html", OutPath);
-            Directory.CreateDirectory(OutPath);
+
             File.WriteAllText(filePath, page);
+        }
+
+        private void CreateAssets()
+        {
+            Helpers.ReadAndWriteAsset("CLI.Assets.style.css", System.IO.Path.GetFullPath("style.css", OutPath));
         }
 
         public void OnClose(Action cleanup)
@@ -54,11 +64,11 @@ namespace CLI
             this.Cleanup = cleanup;
         }
 
-
         internal List<IASTNode> GetAstForModule(string moduleName)
         {
             var module = Modules.FirstOrDefault(m => m.Name == moduleName);
-            if (module is null) {
+            if (module is null)
+            {
                 return new List<IASTNode>();
             }
             else
@@ -66,7 +76,7 @@ namespace CLI
                 if (module.Generator is null)
                 {
                     module.Parse();
-                    
+
                 }
                 return module.Generator.AST;
             }
@@ -113,41 +123,104 @@ namespace CLI
         // Define the event handlers.
         private void OnChanged(object source, FileSystemEventArgs e)
         {
-            var module = Modules.FirstOrDefault(m => m.Path == e.FullPath);
-            if (module is null)
+            try
             {
-                Console.WriteLine("Non Module changed, something went wrong, please restart your project.");
-                return;
-            }
+                var module = Modules.FirstOrDefault(m => m.Path == e.FullPath);
+                if (module is null)
+                {
+                    Console.WriteLine("Non Module changed, something went wrong, please restart your project.");
+                    return;
+                }
 
-            module.Parse();
+                module.Parse();
+                module.SaveModuleOutput();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
 
-        // Define the event handlers.
         private void OnCreate(object source, FileSystemEventArgs e)
         {
-            // Specify what is done when a file is changed, created, or deleted.
-            Console.WriteLine($"File: {e.FullPath} {e.ChangeType}");
-            var module = new Module(e.FullPath, this.Path, this);
-            Modules.Add(module);
+            try
+            {
+                Console.WriteLine($"File: {e.FullPath} {e.ChangeType}");
+                var module = new Module(e.FullPath, this.Path, this);
+                Modules.Add(module);
+                module.Parse();
+                module.SaveModuleOutput();
+                CreateIndexPage();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
 
-        // Define the event handlers.
-        private void OnDelete (object source, FileSystemEventArgs e)
+        private void OnDelete(object source, FileSystemEventArgs e)
         {
-            // Specify what is done when a file is changed, created, or deleted.
-            Console.WriteLine($"File: {e.FullPath} {e.ChangeType}");
+            try
+            {
+                Console.WriteLine($"File: {e.FullPath} {e.ChangeType}");
+                Modules.Remove(Modules.Find(m => m.Path == e.FullPath));
+                CreateIndexPage();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
 
         private void OnRenamed(object source, RenamedEventArgs e)
         {
-            // Specify what is done when a file is renamed.
-            Console.WriteLine($"File: {e.OldFullPath} renamed to {e.FullPath}");
+            try
+            {
+                Console.WriteLine($"File: {e.OldFullPath} renamed to {e.FullPath}");
+                Modules.Remove(Modules.Find(m => m.Path == e.OldFullPath));
+
+                var module = new Module(e.FullPath, this.Path, this);
+                Modules.Add(module);
+                module.Parse();
+                module.SaveModuleOutput();
+                CreateIndexPage();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
 
         public void Dispose()
         {
-            
+
+        }
+
+        private class Helpers
+        {
+            public static string ReadAsset(string name)
+            {
+                var assembly = Assembly.GetExecutingAssembly();
+                var resourceName = name;
+
+                using (Stream stream = assembly.GetManifestResourceStream(resourceName))
+                using (StreamReader reader = new StreamReader(stream))
+                {
+                    string result = reader.ReadToEnd();
+                    return result;
+                }
+            }
+
+            public static void WriteAsset(string path, string content)
+            {
+                File.WriteAllText(path, content);
+            }
+
+            public static void ReadAndWriteAsset(string assetName, string outPath)
+            {
+                Helpers.WriteAsset(outPath, Helpers.ReadAsset(assetName));
+            }
         }
     }
+
 }

@@ -36,19 +36,6 @@ namespace CLI
             }
         }
 
-        public static void ReadStuff()
-        {
-            var assembly = Assembly.GetExecutingAssembly();
-            var resourceName = "CLI.Assets.style.css";
-
-            using (Stream stream = assembly.GetManifestResourceStream(resourceName))
-            using (StreamReader reader = new StreamReader(stream))
-            {
-                string result = reader.ReadToEnd();
-                Console.WriteLine(result);
-            }
-
-        }
     }
 
 
