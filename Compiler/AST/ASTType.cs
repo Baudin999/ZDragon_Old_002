@@ -38,10 +38,10 @@ namespace Compiler.AST
 
         public static (List<ASTError>, ASTType) Parse(IParser parser, List<ASTAnnotation> annotations, List<ASTDirective> directives)
         {
-            ASTType result = new ASTType();
+            var result = new ASTType();
             try
             {
-                List<ASTError> errors = new List<ASTError>();
+                var errors = new List<ASTError>();
 
                 result.Annotations = annotations;
                 result.Directives = directives;
@@ -76,7 +76,7 @@ namespace Compiler.AST
                 var equals = parser.TryConsume(TokenType.Equal);
                 if (!(equals is null))
                 {
-                    List<ASTTypeField> fields = new List<ASTTypeField>();
+                    var fields = new List<ASTTypeField>();
                     while (parser.TryConsume(TokenType.ContextEnded) == null)
                     {
                         fields.Add(ASTTypeField.Parse(parser));
@@ -120,7 +120,7 @@ Missing type body. If you use an '=' sign you should have at least one field.", 
 
         }
 
-        public object Clone()
+        public ASTType Clone()
         {
             return new ASTType
             {

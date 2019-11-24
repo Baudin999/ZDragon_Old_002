@@ -22,7 +22,7 @@ namespace Compiler.AST
             var pluck = parser.TryConsume(TokenType.KW_Pluck);
             if (!(pluck is null))
             {
-                result = new ASTPluckedField();//.Parse(parser);
+                result = new ASTPluckedField();
             }
             else
             {
@@ -52,7 +52,7 @@ namespace Compiler.AST
             var originalRestriction = Restrictions.FirstOrDefault(r => r.Key == key);
             if (!(originalRestriction is null))
             {
-                originalRestriction.Value = value;
+                originalRestriction.ChangeValue(value);
             }
             else
             {

@@ -6,13 +6,12 @@ namespace Compiler.AST
 {
     public class ASTRestriction : IASTNode, ICloneable
     {
-        public string Key { get; set;  }
-        public string Value { get; set;  }
-        public int Depth { get; set; }
-        public IEnumerable<ASTAnnotation> Annotations { get; set;  }
-        public Token Token { get; set; }
+        public string Key { get;  }
+        public string Value { get; private set; }
+        public int Depth { get; }
+        public IEnumerable<ASTAnnotation> Annotations { get;  }
+        public Token Token { get; }
 
-        public ASTRestriction() { }
         public ASTRestriction(string key, string value, IEnumerable<ASTAnnotation> annotations, Token token, int depth)
         {
             this.Key = key;
@@ -22,9 +21,15 @@ namespace Compiler.AST
             this.Depth = depth;
         }
 
+        public ASTRestriction ChangeValue(string value)
+        {
+            this.Value = value;
+            return this;
+        }
+
         public static IEnumerable<ASTRestriction> CreateRestrictions(IParser parser, TokenType root)
         {
-            int depth = root == TokenType.KW_Alias ? 1 : 2;
+            var depth = root == TokenType.KW_Alias ? 1 : 2;
             var annotations = ASTAnnotation.Parse(parser);
             parser.TryConsume(TokenType.And, out Token? t);
             while (!(t is null))

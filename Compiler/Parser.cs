@@ -169,6 +169,27 @@ namespace Compiler
             }
         }
 
+        public IEnumerable<Token> ConsumeWhile(TokenType first, TokenType second, bool ignoreWhitespace = true)
+        {
+            while (true)
+            {
+                if (this.Current.TokenType == first || this.Current.TokenType == second)
+                {
+                    var result = this.Current;
+                    if (this.HasNext()) this.Next();
+                    yield return result;
+                }
+                else if (HasNext() && (this.Current.TokenType == TokenType.Indent || this.Current.TokenType == TokenType.NewLine))
+                {
+                    this.Next();
+                }
+                else
+                {
+                    break;
+                }
+            }
+        }
+
         public Token Or(TokenType first, TokenType second)
         {
             return TryConsume(first) ?? TryConsume(second) ?? throw new InvalidTokenException($@"

@@ -20,8 +20,10 @@ namespace Compiler
             this.Tokens = new Lexer().Lex(code);
             this.Parser = new Parser(this.Tokens);
             this.ParseTree = this.Parser.Parse().ToList();
-            this.Errors = this.Parser.Errors;
-            this.AST = new Resolver(this.ParseTree).Resolve().ToList();
+            var (errors, nodes) = new Resolver(this.ParseTree).Resolve();
+            this.AST = nodes.ToList();
+            this.Errors = this.Parser.Errors.Concat(errors).ToList();
+
         }
 
     }

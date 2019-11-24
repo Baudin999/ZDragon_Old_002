@@ -17,6 +17,7 @@ namespace Compiler
         public Token Consume(TokenType tokenType, bool ignoreWhitespace = true);
         public Token Or(TokenType first, TokenType second);
         public IEnumerable<Token> ConsumeWhile(TokenType tokenType, bool ignoreWhitespace = true);
+        public IEnumerable<Token> ConsumeWhile(TokenType first, TokenType second, bool ignoreWhitespace = true);
         public Token? TryConsume(TokenType tokenType);
         public Token? TryConsume(TokenType tokenType, out Token? t);
 
