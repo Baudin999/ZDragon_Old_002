@@ -91,11 +91,15 @@ namespace Compiler
         {
             get
             {
+#pragma warning disable CS8653 // A default expression introduces a null value for a type parameter.
+                T t = default;
+#pragma warning restore CS8653 // A default expression introduces a null value for a type parameter.
+
                 return Type.GetTypeCode(typeof(T)) switch
                 {
-                    TypeCode.String => (T)Convert.ChangeType(String.Empty, typeof(T)),
+                    TypeCode.String => (T)Convert.ChangeType(string.Empty, typeof(T)),
                     TypeCode.Int16 => (T)Convert.ChangeType(0, typeof(T)),
-                    _ => default(T)
+                    _ => t
                 };
             }
         }

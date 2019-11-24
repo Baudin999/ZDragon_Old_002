@@ -8,9 +8,9 @@ namespace Compiler.AST
 {
     public class ASTDirective : IASTNode, ICloneable
     {
-        public string Key { get; set;  }
-        public string Value { get; set;  }
-        public ASTDirective(object v) { }
+        public string Key { get; }
+        public string Value { get; }
+        //public ASTDirective(object v) { }
         public ASTDirective(string key, string value)
         {
             this.Key = key;
@@ -20,7 +20,7 @@ namespace Compiler.AST
 
         public static (List<ASTError>, List<ASTDirective>) Parse(IParser parser)
         {
-            List<ASTError> errors = new List<ASTError>();
+            var errors = new List<ASTError>();
             var directives = parser.ConsumeWhile(TokenType.Directive);
 
             var result = directives.Select(directive =>

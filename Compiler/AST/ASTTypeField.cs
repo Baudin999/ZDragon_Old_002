@@ -52,7 +52,7 @@ namespace Compiler.AST
             var originalRestriction = Restrictions.FirstOrDefault(r => r.Key == key);
             if (!(originalRestriction is null))
             {
-                originalRestriction.Value = value;
+                originalRestriction.ChangeValue(value);
             }
             else
             {

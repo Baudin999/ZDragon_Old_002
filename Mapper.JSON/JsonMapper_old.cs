@@ -16,19 +16,17 @@ namespace Mapper.JSON
 
             foreach (var node in parseTree)
             {
-                if (node is ASTType)
+                if (node is ASTType t)
                 {
-
-                    var t = node as ASTType;
-                    JSchema schema = new JSchema
+                    var schema = new JSchema
                     {
                         Title = t.Name,
                         Description = Annotate(t.Annotations),
                         Type = JSchemaType.Object
                     };
-                    JSchema properties = new JSchema { };
+                    var properties = new JSchema { };
 
-                    List<string> requiredFields = new List<string>();
+                    var requiredFields = new List<string>();
                     foreach (var field in t.Fields) {
                         var _mode = field.Type.First().Value;
                         var _type = field.Type.Last().Value;
@@ -47,7 +45,7 @@ namespace Mapper.JSON
                         else
                         {
                             JSchemaType fieldType = JSchemaType.Array;
-                            JSchema list = new JSchema
+                            var list = new JSchema
                             {
                                 Description = Annotate(field.Annotations),
                                 Type = fieldType
@@ -60,7 +58,7 @@ namespace Mapper.JSON
 
                         }
 
-                        bool nullable = field.Type.First().Value == "Maybe";
+                        var nullable = field.Type.First().Value == "Maybe";
                         if (!nullable)
                         {
                             schema.Required.Add(field.Name);

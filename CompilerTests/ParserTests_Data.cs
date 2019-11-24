@@ -7,21 +7,19 @@ namespace CompilerTests
 {
     public class ParserTests_Data
     {
-        [Fact]
-        public void InvalidTokenExceptionOnOneLiner()
+        [Fact(DisplayName = "Generic Data Type")]
+        public void GenericDataType()
         {
             var code = @"
 data Maybe 'a =
     | Just 'a
     | Nothing
 ";
-            var tokens = new Lexer().Lex(code);
-            var parser = new Parser(tokens);
-            var parseTree = parser.Parse().ToList();
+            var g = new ASTGenerator(code);
 
-            Assert.NotNull(parseTree);
-            Assert.Empty(parser.Errors);
-            Assert.Single(parseTree);
+            Assert.NotNull(g.ParseTree);
+            Assert.Empty(g.Errors);
+            Assert.Equal(3, g.AST.Count());
         }
 
 
@@ -33,16 +31,12 @@ data Maybe 'a =
     | Just 'a
     | Nothing
 ";
-            var tokens = new Lexer().Lex(code);
-            var parser = new Parser(tokens);
-            var parseTree = parser.Parse().ToList();
-            var resolver = new Resolver(parseTree);
-            var newParseTree = resolver.Resolve().ToList();
+            
+            var g = new ASTGenerator(code);
 
-            Assert.NotNull(parseTree);
-            Assert.Empty(parser.Errors);
-
-            Assert.Equal(3, newParseTree.Count);
+            Assert.NotNull(g.ParseTree);
+            Assert.Empty(g.Errors);
+            Assert.Equal(3, g.AST.Count);
         }
 
         [Fact]
@@ -53,16 +47,11 @@ data Customer =
     | Person
     | Organisation
 ";
-            var tokens = new Lexer().Lex(code);
-            var parser = new Parser(tokens);
-            var parseTree = parser.Parse().ToList();
-            var resolver = new Resolver(parseTree);
-            var newParseTree = resolver.Resolve().ToList();
+            var g = new ASTGenerator(code);
 
-            Assert.NotNull(parseTree);
-            Assert.Empty(parser.Errors);
-
-            Assert.Equal(3, newParseTree.Count);
+            Assert.NotNull(g.ParseTree);
+            Assert.Empty(g.Errors);
+            Assert.Equal(3, g.AST.Count);
         }
     }
 }

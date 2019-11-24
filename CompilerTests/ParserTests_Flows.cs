@@ -36,7 +36,7 @@ flow ""Get Student"" =
             Assert.Equal("String", param1.Types.First().Value);
 
             var param2 = step.Parameters.Last();
-            Assert.Equal(1, param2.Types.Count());
+            Assert.Single(param2.Types);
             Assert.Equal("String", param2.Types.First().Value);
         }
 

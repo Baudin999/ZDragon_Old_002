@@ -93,5 +93,20 @@ alias ConcreteFoo = Foo String Number;
             Assert.Equal("Number", base2.Type.First().Value);
             Assert.Equal("String", base3.Type.First().Value);
         }
+
+        [Fact(DisplayName = "Error when not resolving everything")]
+        public void ErrorResolveSimple01()
+        {
+            var code = @"
+type Foo 'a 'b =
+    Field1: 'a;
+    Field2: 'b;
+
+alias ConcreteFoo = Foo String;
+";
+
+            var g = new ASTGenerator(code);
+            Assert.Single(g.Errors);
+        }
     }
 }
