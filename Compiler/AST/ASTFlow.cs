@@ -8,9 +8,9 @@ namespace Compiler.AST
     public class ASTFlow : IASTNode
     {
         public string Name { get; }
-        public IEnumerable<ASTFlowStep> Steps { get; } = Enumerable.Empty<ASTFlowStep>();
+        public IEnumerable<IFlowStep> Steps { get; } = Enumerable.Empty<IFlowStep>();
 
-        public ASTFlow(string name, IEnumerable<ASTFlowStep> steps)
+        public ASTFlow(string name, IEnumerable<IFlowStep> steps)
         {
             this.Name = name;
             this.Steps = steps;
@@ -23,12 +23,11 @@ namespace Compiler.AST
             parser.Next();
             var name = parser.Or(TokenType.Identifier, TokenType.String);
             var equals = parser.TryConsume(TokenType.Equal);
-            var steps = new List<ASTFlowStep>();
+            var steps = new List<IFlowStep>();
             if (!(equals is null))
             {
                 while (parser.TryConsume(TokenType.ContextEnded) == null)
                 {
-                    parser.ConsumeWhile(TokenType.KW_Compose);
                     var (_errors, step) = ASTFlowStep.Parse(parser);
                     steps.Add(step);
                     errors.AddRange(_errors);

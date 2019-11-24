@@ -27,7 +27,7 @@ flow ""Get Student"" =
             Assert.Equal("Get Student", flow.Name);
             Assert.Single(flow.Steps);
 
-            var step = flow.Steps.First();
+            var step = (ASTFlowStep)flow.Steps.First();
             Assert.Equal("API", step.From);
             Assert.Equal("Database", step.To);
 
@@ -58,7 +58,7 @@ flow GetStudents =
             Assert.Equal("GetStudents", flow.Name);
             Assert.Single(flow.Steps);
 
-            var step = flow.Steps.First();
+            var step = (ASTFlowStep)flow.Steps.First();
             Assert.Equal("API", step.From);
             Assert.Equal("Database", step.To);
 
@@ -92,7 +92,28 @@ flow GetStudents =
             Assert.Equal("GetStudents", flow.Name);
             Assert.Equal(3, flow.Steps.Count());
 
-            Assert.Equal("Some Database", flow.Steps.Last().To);
+            Assert.Equal("Some Database", ((ASTFlowStep)flow.Steps.Last()).To);
+        }
+
+
+        [Fact(DisplayName = "Flow Composition 01")]
+        public void FlowComposition01()
+        {
+            var code = @"
+flow GetStudents =
+
+    compose
+        API -> Service :: FilterParams -> List Student;
+        Service -> Database :: FilterParams -> List Student;
+    ;
+
+    API -> ""Some Database"" :: String -> List Number;
+
+";
+            var g = new ASTGenerator(code);
+            var flow = (ASTFlow)g.AST[0];
+
+            Assert.Equal(2, flow.Steps.Count());
         }
     }
 
