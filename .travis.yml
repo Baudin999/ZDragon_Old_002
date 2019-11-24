@@ -15,7 +15,7 @@ script:
   - dotnet test
 before_deploy:
   - NAME=$(git describe --tag --abbrev=0)
-  - bash ./release.sh $NAME $ZDragon_GitHub_Token
+  - bash ./release_simple.sh $NAME $ZDragon_GitHub_Token
 # Create github release when a tag is added to the master branch
 deploy:
     provider: releases
