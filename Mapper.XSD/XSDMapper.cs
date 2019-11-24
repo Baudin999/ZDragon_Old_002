@@ -21,13 +21,13 @@ namespace Mapper.XSD
 
         public override XmlSchemaObject VisitASTType(ASTType astType)
         {
-            XmlSchemaComplexType t = new XmlSchemaComplexType
+            var t = new XmlSchemaComplexType
             {
                 Name = astType.Name
             };
 
             var fields = astType.Fields.Select(Visit);
-            XmlSchemaAll all = new XmlSchemaAll();
+            var all = new XmlSchemaAll();
             foreach (var field in fields)
             {
                 all.Items.Add(field);
@@ -36,8 +36,8 @@ namespace Mapper.XSD
             t.Particle = all;
 
             var description = string.Join(" ", astType.Annotations.Select(a => a.Value));
-            XmlSchemaAnnotation schemaAnnotation = new XmlSchemaAnnotation();
-            XmlSchemaDocumentation docs = new XmlSchemaDocumentation()
+            var schemaAnnotation = new XmlSchemaAnnotation();
+            var docs = new XmlSchemaDocumentation()
             {
                 Markup = TextToNodeArray(description)
             };
@@ -53,8 +53,8 @@ namespace Mapper.XSD
 
         public override XmlSchemaObject VisitASTAlias(ASTAlias astAlias)
         {
-            string _modifier = astAlias.Type.First().Value;
-            string _type = astAlias.Type.Last().Value;
+            var _modifier = astAlias.Type.First().Value;
+            var _type = astAlias.Type.Last().Value;
             
             if (_modifier == "List")
             {
@@ -90,15 +90,15 @@ namespace Mapper.XSD
     </xs:restriction>
 </xs:simpleType>
              */
-            XmlSchemaSimpleType enumeration = new XmlSchemaSimpleType
+            var enumeration = new XmlSchemaSimpleType
             {
                 Name = astChoice.Name
             };
-            XmlSchemaSimpleTypeRestriction restriction = new XmlSchemaSimpleTypeRestriction();
+            var restriction = new XmlSchemaSimpleTypeRestriction();
             restriction.BaseTypeName = new XmlQualifiedName("string", DefaultSchemaNamespace);
             foreach (ASTOption option in astChoice.Options)
             {
-                XmlSchemaEnumerationFacet facet = new XmlSchemaEnumerationFacet
+                var facet = new XmlSchemaEnumerationFacet
                 {
                     Value = option.Value
                 };
@@ -160,7 +160,7 @@ namespace Mapper.XSD
             var xsdDirective = node.Directives.FirstOrDefault(d => d.Key == "xsd");
             if (!(xsdDirective is null))
             {
-                XmlSchemaElement element = new XmlSchemaElement();
+                var element = new XmlSchemaElement();
                 element.Name = xsdDirective.Value.Replace(" ", "_");
                 element.RefName = new System.Xml.XmlQualifiedName("self:" + (node as INamable).Name);
                 Schema.Items.Add(element);
@@ -168,20 +168,20 @@ namespace Mapper.XSD
         }
         private XmlNode[] TextToNodeArray(string text)
         {
-            XmlDocument doc = new XmlDocument();
+            var doc = new XmlDocument();
             return new XmlNode[1] { doc.CreateTextNode(text) };
         }
 
         public override XmlSchemaObject? VisitASTData(ASTData astData)
         {
-            XmlSchemaComplexType xmlSchemaComplexType = new XmlSchemaComplexType();
+            var xmlSchemaComplexType = new XmlSchemaComplexType();
             xmlSchemaComplexType.Name = astData.Name;
 
-            XmlSchemaChoice xmlSchemaChoice = new XmlSchemaChoice();
+            var xmlSchemaChoice = new XmlSchemaChoice();
 
             foreach (ASTDataOption option in astData.Options)
             {
-                XmlSchemaElement o = new XmlSchemaElement
+                var o = new XmlSchemaElement
                 {
                     RefName = new System.Xml.XmlQualifiedName("self:" + option.Name)
                 };
@@ -191,6 +191,11 @@ namespace Mapper.XSD
             xmlSchemaComplexType.Particle = xmlSchemaChoice;
             this.Schema.Items.Add(xmlSchemaComplexType);
             return xmlSchemaComplexType;
+        }
+
+        public override XmlSchemaObject? VisitASTFlow(ASTFlow astFlow)
+        {
+            return null;
         }
     }
 }

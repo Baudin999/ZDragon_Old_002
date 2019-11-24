@@ -57,6 +57,7 @@ namespace CLI
         private void CreateAssets()
         {
             Helpers.ReadAndWriteAsset("CLI.Assets.style.css", System.IO.Path.GetFullPath("style.css", OutPath));
+            Helpers.ReadAndWriteAsset("CLI.Assets.mermaid.min.js", System.IO.Path.GetFullPath("mermaid.min.js", OutPath));
         }
 
         public void OnClose(Action cleanup)

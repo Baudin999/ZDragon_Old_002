@@ -28,11 +28,10 @@ namespace Compiler.AST
             var nameId = parser.Consume(TokenType.Identifier);
             result.Name = nameId.Value;
             parser.Consume(TokenType.Equal);
-            result.Type = ASTTypeDefinition.ParseType(parser).ToList();
+            result.Type = ASTTypeDefinition.Parse(parser).ToList();
             result.Options = ASTOption.Parse(parser).ToList();
             parser.TryConsume(TokenType.EndStatement);
             parser.Consume(TokenType.ContextEnded);
-            //var result = new ASTChoice(nameId.Value, ASTTypeDefinition.ParseType(parser).ToList(), ASTOption.Parse(parser).ToList());
             return (new List<ASTError>(), result);
         }
 

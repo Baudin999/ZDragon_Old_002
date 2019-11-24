@@ -19,8 +19,8 @@ namespace Compiler.AST
                 IEnumerable<ASTAnnotation> annotations,
                 IEnumerable<ASTDirective> directives)
         {
-            List<ASTError> errors = new List<ASTError>();
-            ASTData result = new ASTData
+            var errors = new List<ASTError>();
+            var result = new ASTData
             {
                 Annotations = annotations,
                 Directives = directives

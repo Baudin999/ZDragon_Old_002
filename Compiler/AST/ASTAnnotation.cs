@@ -8,7 +8,7 @@ namespace Compiler.AST
     public class ASTAnnotation : IASTNode, ICloneable
     {
 
-        public string Value { get; set; }
+        public string Value { get; private set; } = "";
         public ASTAnnotation() { }
         public ASTAnnotation(string value)
         {
@@ -21,8 +21,7 @@ namespace Compiler.AST
 
             var result = annotations.Select(annotation =>
             {
-                var result = new Regex(@"\s*@\s*").Replace(annotation.Value, "");
-                
+                string result = new Regex(@"\s*@\s*").Replace(annotation.Value, "");
                 return new ASTAnnotation(result.Trim());
             });
 

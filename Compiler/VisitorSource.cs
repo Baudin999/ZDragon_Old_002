@@ -16,18 +16,18 @@ namespace Compiler
 
         public override string VisitASTAlias(ASTAlias astAlias)
         {
-            List<string> parts = new List<string>();
+            var parts = new List<string>();
             parts.AddRange(astAlias.Annotations.Select(Visit));
             parts.AddRange(astAlias.Directives.Select(Visit));
 
-            string typeDef = string.Join(" ", astAlias.Type.Select(Visit));
+            var typeDef = string.Join(" ", astAlias.Type.Select(Visit));
 
             if (astAlias.Restrictions.Count() == 0)
             {
                 parts.Add($@"alias {astAlias.Name} = {typeDef}");
             } else
             {
-                string restrictions = string.Join("\n", astAlias.Restrictions.Select(Visit));
+                var restrictions = string.Join("\n", astAlias.Restrictions.Select(Visit));
                 parts.Add($"alias {astAlias.Name} = {typeDef}\n{restrictions}");
             }
             return string.Join("\n", parts.ToArray());
@@ -57,6 +57,8 @@ namespace Compiler
         {
             return $"% {astDirective.Key}: {astDirective.Value}";
         }
+
+        public override string VisitASTFlow(ASTFlow astFlow) => throw new NotImplementedException();
 
         public override string VisitASTOption(ASTOption astOption)
         {
@@ -89,7 +91,7 @@ namespace Compiler
 
         public override string VisitASTType(ASTType astType)
         {
-            List<string> parts = new List<string>();
+            var parts = new List<string>();
             parts.AddRange(astType.Annotations.Select(Visit));
             parts.AddRange(astType.Directives.Select(Visit));
 
@@ -113,8 +115,8 @@ namespace Compiler
 
         public override string VisitASTTypeField(ASTTypeField astTypeField)
         {
-            string typeDef = string.Join(" ", astTypeField.Type.Select(Visit));
-            string restrictions = string.Join("\n", astTypeField.Restrictions.Select(Visit));
+            var typeDef = string.Join(" ", astTypeField.Type.Select(Visit));
+            var restrictions = string.Join("\n", astTypeField.Restrictions.Select(Visit));
 
             if (astTypeField.Restrictions.Count() > 0)
             {

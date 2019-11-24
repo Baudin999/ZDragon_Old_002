@@ -26,8 +26,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Remove="Assets\style.css" />
+    <None Remove="Assets\mermaid.min.js" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Assets\style.css" />
+    <EmbeddedResource Include="Assets\mermaid.min.js" />
   </ItemGroup>
 </Project>

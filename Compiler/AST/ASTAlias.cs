@@ -31,7 +31,7 @@ namespace Compiler.AST
             var nameId = parser.Consume(TokenType.Identifier);
             result.Name = nameId.Value;
             parser.Consume(TokenType.Equal);
-            result.Type = ASTTypeDefinition.ParseType(parser).ToList();
+            result.Type = ASTTypeDefinition.Parse(parser).ToList();
             result.Restrictions = ASTRestriction.CreateRestrictions(parser, TokenType.KW_Alias).ToList();
             parser.TryConsume(TokenType.EndStatement);
             parser.Consume(TokenType.ContextEnded);

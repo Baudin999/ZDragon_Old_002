@@ -102,6 +102,10 @@ namespace Compiler
         GroupClosed,
         ListSeparator,
         PluckedField,
-        KW_Pluck
+        KW_Pluck,
+        Operator,
+        Op_Next,
+        Op_Def,
+        KW_Compose
     }
 }
