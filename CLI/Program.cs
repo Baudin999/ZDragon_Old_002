@@ -20,7 +20,7 @@ namespace CLI
             var app = new CommandLineApplication();
             app.Name = "ckc";
             app.HelpOption("-?|-h|--help");
-            app.VersionOption("-v|--version", "0.0.3"); //TODO dynamic solution
+            app.VersionOption("-v|--version", "v2.0.1-beta"); //TODO dynamic solution
 
             app.OnExecute(() =>
             {
