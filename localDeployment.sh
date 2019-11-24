@@ -11,6 +11,10 @@ if [ -z "$(git status --porcelain)" ]; then
 		do
 			sed -i '' -e "s/$EXISTINGTAG/$NEWTAG/g" $FILE
 		done
+		git checkout master
+		git add .
+		git commit -m "Release $NEWTAG"
+		git push origin master
 else 
 	# uncommited changes
 	echo "You have uncommited changes. Stash, commit or remove them. Aborting."
