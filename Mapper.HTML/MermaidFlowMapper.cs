@@ -17,7 +17,7 @@ namespace Mapper.HTML
 
         public string StepToString(IFlowStep flowstep)
         {
-            if (flowstep is ASTFlowStep step)
+            if (flowstep is ASTFlowStep step && step.From != step.To)
             {
                 var result = step.Parameters.Last();
                 var from = string.Join(" -> ", step.Parameters.SkipLast(1).Select(d => j(d.Types)).ToList());
@@ -25,7 +25,15 @@ namespace Mapper.HTML
     {step.From} ->> {step.To} : {from}
     {step.To} -->> {step.From} : {string.Join(" ", result.Types.Select(t => t.Value))}
 ".Trim();
-            } else if (flowstep is ASTFlowStepComposition c_step)
+            }
+            if (flowstep is ASTFlowStep step2 && step2.From == step2.To)
+            {
+                var from = string.Join(" -> ", step2.Parameters.Select(d => j(d.Types)).ToList());
+                return $@"
+    {step2.From} ->> {step2.To} : {from}
+".Trim();
+            }
+            else if (flowstep is ASTFlowStepComposition c_step)
             {
                 var froms = c_step
                         .Steps
@@ -47,7 +55,16 @@ namespace Mapper.HTML
                          })
                         .ToList();
                 return string.Join("\n", froms.Concat(tos));
-            } else
+            }
+            else if (flowstep is ASTFlowStepLoop l_step)
+            {
+                return $@"
+loop {l_step.Condition}
+    {StepToString(l_step.Step)}
+end
+";
+            }
+            else
             {
                 return "";
             }

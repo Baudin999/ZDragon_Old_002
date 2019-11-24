@@ -25,10 +25,13 @@ namespace Compiler.AST
         {
             Func<string, string> t = (string s) => s.Replace("\"", "");
 
-            var composition = parser.TryConsume(TokenType.KW_Compose);
-            if (!(composition is null))
+            if (!(parser.TryConsume(TokenType.KW_Compose) is null))
             {
                 return ASTFlowStepComposition.Parse(parser);
+            }
+            else if (!(parser.TryConsume(TokenType.KW_Loop) is null))
+            {
+                return ASTFlowStepLoop.Parse(parser);
             }
             else
             {
@@ -63,7 +66,6 @@ namespace Compiler.AST
 
         public static (List<ASTError>, IFlowStep) Parse(IParser parser)
         {
-            parser.Next();
             var errors = new List<ASTError>();
             var steps = new List<IFlowStep>();
 
@@ -75,6 +77,27 @@ namespace Compiler.AST
             }
 
             return (new List<ASTError>(), new ASTFlowStepComposition(steps));
+        }
+    }
+
+
+    public class ASTFlowStepLoop : IFlowStep
+    {
+        public string Condition { get;  }
+        public IFlowStep Step { get; }
+        public ASTFlowStepLoop(string condition, IFlowStep step)
+        {
+            this.Condition = condition;
+            this.Step = step;
+        }
+
+        public static (List<ASTError>, IFlowStep) Parse(IParser parser)
+        {
+            var condition = parser.Consume(TokenType.String);
+            var (_errors, step) = ASTFlowStep.Parse(parser);
+            parser.Consume(TokenType.EndStatement);
+
+            return (_errors, new ASTFlowStepLoop(condition.Value.Replace("\"", ""), step));
         }
     }
 

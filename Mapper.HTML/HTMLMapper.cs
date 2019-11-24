@@ -50,7 +50,8 @@ mermaid.initialize({{
     startOnLoad:true,
     classDiagram: {{
         useMaxWidth: false
-    }}
+    }},
+    sequence: {{ actorMargin: 300 }}
 }});
 
 setTimeout(() => {{
