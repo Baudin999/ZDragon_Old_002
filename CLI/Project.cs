@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using CLI.Signals;
 using Compiler.AST;
 
 namespace CLI
@@ -112,12 +113,11 @@ namespace CLI
 
             // Begin watching.
             watcher.EnableRaisingEvents = true;
-
-            Console.WriteLine("Press 'q' to quit the sample.");
-            while (Console.Read() != 'q') { }
-
-            watcher.Dispose();
-            Cleanup();
+            SignalSingleton.ExitSignal.Subscribe(() =>
+            {
+                watcher.Dispose();
+                Cleanup();
+            });
         }
 
 

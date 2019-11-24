@@ -11,6 +11,11 @@ namespace CLI
     {
         static void Main(string[] args)
         {
+            // Override the arguments to allow debug/breakpoints with arguments
+            //args = new string[3];
+            //args[0] = "watch";
+            //args[1] = "-d";
+            //args[2] = @"C:\Users\Lucas\source\repos\zdragon.net\releaseTemp\";
 
             var app = new CommandLineApplication();
             app.Name = "ckc";
