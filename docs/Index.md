@@ -17,3 +17,5 @@ you! ZDragon is a documentation language with some small features from
 real programming languages. Let me be clear. ZDragon is *not* a Turing
 complete programming language. Nor does it try to be one. ZDragon lets
 you write down your thought and it will spit out models and diagrams.
+
+[The Language](./Language.md)
