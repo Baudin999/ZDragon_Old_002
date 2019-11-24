@@ -15,12 +15,12 @@ namespace Compiler
 
         public IEnumerable<IASTNode> Resolve()
         {
-            List<ASTError> errors = new List<ASTError>();
+            var errors = new List<ASTError>();
             foreach (IASTNode node in ParseTree)
             {
                 if (node is ASTData)
                 {
-                    foreach (ASTDataOption option in ((ASTData)node).Options)
+                    foreach (var option in ((ASTData)node).Options)
                     {
                         var existingNode = FindNode(option.Name);
                         if (existingNode is null)
@@ -35,14 +35,47 @@ namespace Compiler
                     }
                     yield return node;
                 }
-                else if (node is ASTType)
+                else if (node is ASTAlias alias)
                 {
-                    ASTType t = (ASTType)node;
+                    // here we'll resolve generic aliasses
+                    var _mod = alias.Type.First().Value;
+                    if (_mod == "List" || _mod == "Maybe" || alias.Type.Count() == 1)
+                    {
+                        yield return alias;
+                    } else
+                    {
+                        // it's a generic type!
+                        var clone = (FindNode(_mod) as ASTType)?.Clone();
+                        if (clone is null)
+                        {
+                            errors.Add(new ASTError("Cannot resolve generic type", null));
+                        }
+                       else
+                        {
+                            clone.Name = alias.Name;
+                            clone.Fields.ToList().ForEach(field =>
+                            {
+                                field.Type = field.Type.Select(t =>
+                                {
+                                    if (t.IsGeneric)
+                                    {
+                                        var index = clone.Parameters.ToList().IndexOf(t.Value) + 1;
+                                        return alias.Type.ElementAt(index);
+                                    }
+                                    else return t;
+                                }).ToList();
+                            });
+                            yield return clone;
+                        }
+                    }
+                }
+                else if (node is ASTType t)
+                {
                     t.Extensions.ToList().ForEach(e =>
                     {
-                        var extendedFrom = FindNode(e) as ASTType;
-                        if (extendedFrom is null)
+                        if (!(FindNode(e) is ASTType extendedFrom))
                         {
+                            // TODO: Handle error gracefully.
                             //throw new System.Exception($"Cannot find type {e} to extend from");
                         }
                         else

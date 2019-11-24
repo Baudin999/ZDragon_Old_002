@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 
 namespace Compiler.AST
 {
     public class ASTTypeDefinition : IASTNode, ICloneable
     {
         public string Value { get; set; }
-        public ASTTypeDefinition() { }
+        public bool IsGeneric => this.Value.StartsWith("'", StringComparison.Ordinal);
         public ASTTypeDefinition(string value)
         {
             this.Value = value;
@@ -33,12 +34,10 @@ namespace Compiler.AST
 
         public static IEnumerable<ASTTypeDefinition> Parse(IParser parser)
         {
-            parser.TryConsume(TokenType.Identifier, out Token? t);
-            while (!(t is null))
-            {
-                yield return new ASTTypeDefinition(t.Value);
-                parser.TryConsume(TokenType.Identifier, out t);
-            }
+            return parser
+                .ConsumeWhile(TokenType.Identifier, TokenType.GenericParameter)
+                .Select(t => new ASTTypeDefinition(t.Value))
+                .ToList();
         }
 
         public object Clone()

@@ -22,7 +22,7 @@ namespace Compiler.AST
             var pluck = parser.TryConsume(TokenType.KW_Pluck);
             if (!(pluck is null))
             {
-                result = new ASTPluckedField();//.Parse(parser);
+                result = new ASTPluckedField();
             }
             else
             {
