@@ -1,6 +1,5 @@
 NEWTAG=$1
-#EXISTINGTAG=$(git describe --tag --abbrev=0)
-EXISTINGTAG=$2
+EXISTINGTAG=$(git describe --tag --abbrev=0)
 if [ -z "$(git status --porcelain)" ]; then 
 	# clean working dir
 		FILES=("ZDragon.NET.sln" "CLI/CLI.csproj" "Compiler/Compiler.csproj" "CompilerTests/CompilerTests.csproj" "Mapper.XSD/Mapper.XSD.csproj" "README.md"
