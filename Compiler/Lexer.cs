@@ -25,9 +25,9 @@ namespace Compiler
 
         public IEnumerable<Token> Lex(string code)
         {
-            string preparedSource = PrepareSource(code);
+            var preparedSource = PrepareSource(code);
             var input = new Input(preparedSource);
-            bool context = false;
+            var context = false;
 
             while (input.HasNext())
             {
@@ -47,6 +47,7 @@ namespace Compiler
                 } else if (input.IsEqualTo("extends") ||
                     input.IsEqualTo("importing") ||
                     input.IsEqualTo("compose") ||
+                    input.IsEqualTo("loop") ||
                     input.IsEqualTo("pluck"))
                 {
                     yield return TokenLexers.Word(input);

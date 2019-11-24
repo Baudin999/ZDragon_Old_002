@@ -115,6 +115,30 @@ flow GetStudents =
 
             Assert.Equal(2, flow.Steps.Count());
         }
+
+        [Fact(DisplayName = "Flow Loops 01")]
+        public void FlowLoops01()
+        {
+            var code = @"
+flow GetStudents =
+
+    compose
+        API -> Service :: FilterParams -> List Student;
+        Service -> Database :: FilterParams -> List Student;
+    ;
+
+    loop ""Run this until x = x + 1""
+        API -> ""Some Database"" :: String -> List Number;
+    ;
+
+";
+            var g = new ASTGenerator(code);
+            var flow = (ASTFlow)g.AST[0];
+
+            Assert.Equal(2, flow.Steps.Count());
+            Assert.True(flow.Steps.First() is ASTFlowStepComposition);
+            Assert.True(flow.Steps.Last() is ASTFlowStepLoop);
+        }
     }
 
 }

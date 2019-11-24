@@ -47,7 +47,16 @@ namespace Mapper.HTML
                          })
                         .ToList();
                 return string.Join("\n", froms.Concat(tos));
-            } else
+            }
+            else if (flowstep is ASTFlowStepLoop l_step)
+            {
+                return $@"
+loop {l_step.Condition}
+    {StepToString(l_step.Step)}
+end
+";
+            }
+            else
             {
                 return "";
             }

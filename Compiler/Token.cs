@@ -106,6 +106,7 @@ namespace Compiler
         Operator,
         Op_Next,
         Op_Def,
-        KW_Compose
+        KW_Compose,
+        KW_Loop
     }
 }

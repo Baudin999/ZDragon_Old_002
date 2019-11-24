@@ -34,6 +34,7 @@ namespace Compiler
             if (word == "entity") type = TokenType.KW_Importing;
             if (word == "pluck") type = TokenType.KW_Pluck;
             if (word == "compose") type = TokenType.KW_Compose;
+            if (word == "loop") type = TokenType.KW_Loop;
 
             return new Token()
             {
