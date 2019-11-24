@@ -1,28 +1,30 @@
-
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CLI", "CLI\CLI.csproj", "{14F5497C-BA36-4183-8BCE-F426FCEDB58B}"
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29411.108
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CLI", "CLI\CLI.csproj", "{14F5497C-BA36-4183-8BCE-F426FCEDB58B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Compiler", "Compiler\Compiler.csproj", "{95AB3300-95BD-4E69-9E1B-CD281EA76F28}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Compiler", "Compiler\Compiler.csproj", "{95AB3300-95BD-4E69-9E1B-CD281EA76F28}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{BE20F938-359D-49B2-A33B-4CDF07792C55}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CompilerTests", "CompilerTests\CompilerTests.csproj", "{5AFE6847-C9C1-40C5-810C-4C12B4569C11}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CompilerTests", "CompilerTests\CompilerTests.csproj", "{5AFE6847-C9C1-40C5-810C-4C12B4569C11}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{CE53B498-276B-408B-BB34-4D950C54F4BA}"
 	ProjectSection(SolutionItems) = preProject
-		README.md = README.md
 		.gitignore = .gitignore
 		.travis.yml = .travis.yml
-		zdragon_release.sh = zdragon_release.sh
+		localDeployment.sh = localDeployment.sh
+		README.md = README.md
 		release.sh = release.sh
+		zdragon_release.sh = zdragon_release.sh
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mapper.XSD", "Mapper.XSD\Mapper.XSD.csproj", "{CC0033CB-E0DD-435D-B3E6-84C2A33DFBFC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mapper.XSD", "Mapper.XSD\Mapper.XSD.csproj", "{CC0033CB-E0DD-435D-B3E6-84C2A33DFBFC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mapper.JSON", "Mapper.JSON\Mapper.JSON.csproj", "{49F4178D-D276-41A7-979C-E4AD5F6AB14E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mapper.JSON", "Mapper.JSON\Mapper.JSON.csproj", "{49F4178D-D276-41A7-979C-E4AD5F6AB14E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mapper.HTML", "Mapper.HTML\Mapper.HTML.csproj", "{FAEF3166-4534-43E0-ADCE-2E7AFC3C48AB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mapper.HTML", "Mapper.HTML\Mapper.HTML.csproj", "{FAEF3166-4534-43E0-ADCE-2E7AFC3C48AB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -55,10 +57,16 @@ Global
 		{FAEF3166-4534-43E0-ADCE-2E7AFC3C48AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FAEF3166-4534-43E0-ADCE-2E7AFC3C48AB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{5AFE6847-C9C1-40C5-810C-4C12B4569C11} = {BE20F938-359D-49B2-A33B-4CDF07792C55}
 	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8116935A-49F4-42D7-A3EE-1ECB9EBBED9E}
+	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
-		version = 0.0.1
+		version = v2.0.1-beta
 	EndGlobalSection
 EndGlobal
