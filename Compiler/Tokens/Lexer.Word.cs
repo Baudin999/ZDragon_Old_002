@@ -10,8 +10,7 @@ namespace Compiler
             var start = input.Position;
             var startColumn = input.Column;
             var startLine = input.Line;
-
-            StringBuilder builder = new StringBuilder();
+            var builder = NewMethod();
             while ((char.IsLetter(input.Current()) || char.IsNumber(input.Current())) || input.Current() == '_')
             {
                 builder.Append(input.Current());
@@ -34,6 +33,7 @@ namespace Compiler
             if (word == "aggregate") type = TokenType.KW_Importing;
             if (word == "entity") type = TokenType.KW_Importing;
             if (word == "pluck") type = TokenType.KW_Pluck;
+            if (word == "compose") type = TokenType.KW_Compose;
 
             return new Token()
             {
@@ -47,5 +47,7 @@ namespace Compiler
                 TokenType = type
             };
         }
+
+        private static StringBuilder NewMethod() => new StringBuilder();
     }
 }

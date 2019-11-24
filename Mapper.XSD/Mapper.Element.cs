@@ -11,7 +11,7 @@ namespace Mapper.XSD
             string _modifier = e.Type.First().Value;
             string _type = e.Type.Last().Value;
 
-            XmlSchemaElement element = new XmlSchemaElement();
+            var element = new XmlSchemaElement();
             element.Name = e.Name;
             element.IsNillable = _modifier == "Maybe";
             element.MinOccurs = _modifier == "Maybe" ? 0 : 1;

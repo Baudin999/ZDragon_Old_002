@@ -25,12 +25,7 @@ namespace Mapper.HTML
 <!DOCTYPE html>
 <html>
 <head>
-    <script src=""https://cdnjs.cloudflare.com/ajax/libs/mermaid/8.3.1/mermaid.min.js""></script>
-    <script src=""https://cdnjs.cloudflare.com/ajax/libs/dagre/0.8.4/dagre.min.js""></script>
-    <script src=""https://cdnjs.cloudflare.com/ajax/libs/nomnoml/0.6.1/nomnoml.js""></script>
-    <style>
-        svg {{ width: auto!important; height: auto!important; }}
-    </style>
+    <script src=""/mermaid.min.js""></script>
     <link rel='stylesheet' type='text/css' href='/style.css' />
   </head>
 <body>
@@ -49,9 +44,7 @@ namespace Mapper.HTML
 
 <script>
 mermaid.initialize({{
-    securityLevel: ""strict"",
     startOnLoad:true,
-    theme: ""default"",
     classDiagram: {{
         useMaxWidth: false
     }}
@@ -88,7 +81,7 @@ console.log(`
 
         public override string VisitASTChapter(ASTChapter astChapter)
         {
-            string result = Markdown.ToHtml(astChapter.Content);
+            var result = Markdown.ToHtml(astChapter.Content);
             Parts.Add(result);
             return result;
         }
@@ -108,9 +101,17 @@ console.log(`
             return "";
         }
 
+        public override string VisitASTFlow(ASTFlow astFlow)
+        {
+            var result = new MermaidFlowMapper(astFlow).ToString();
+            this.Parts.Add(result);
+            Console.WriteLine(result);
+            return result;
+        }
+
         public override string VisitASTParagraph(ASTParagraph astParagraph)
         {
-            string result = Markdown.ToHtml(astParagraph.Content);
+            var result = Markdown.ToHtml(astParagraph.Content);
             Parts.Add(result);
             return result;
         }

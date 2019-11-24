@@ -29,8 +29,8 @@ namespace Compiler
 
         public IEnumerable<IASTNode> Parse()
         {
-            List<ASTAnnotation> annotations = new List<ASTAnnotation>();
-            List<ASTDirective> directives = new List<ASTDirective>();
+            var annotations = new List<ASTAnnotation>();
+            var directives = new List<ASTDirective>();
             while (HasNext() && Current.TokenType != TokenType.EndOfFile)
             {
                 
@@ -76,6 +76,14 @@ namespace Compiler
                 else if (Current.TokenType == TokenType.KW_Open)
                 {
                     var (errors, data) = ASTImport.Parse(this);
+                    Errors.AddRange(errors);
+                    yield return data;
+                    annotations = new List<ASTAnnotation>();
+                    directives = new List<ASTDirective>();
+                }
+                else if (Current.TokenType == TokenType.KW_Flow)
+                {
+                    var (errors, data) = ASTFlow.Parse(this);
                     Errors.AddRange(errors);
                     yield return data;
                     annotations = new List<ASTAnnotation>();
@@ -159,6 +167,14 @@ namespace Compiler
                     break;
                 }
             }
+        }
+
+        public Token Or(TokenType first, TokenType second)
+        {
+            return TryConsume(first) ?? TryConsume(second) ?? throw new InvalidTokenException($@"
+Expected either {first} or {second} but encoutered {this.Current.TokenType}.
+{Current.ToString()}
+");
         }
 
         public Token? TryConsume(TokenType tokenType)

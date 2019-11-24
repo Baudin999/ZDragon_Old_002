@@ -31,7 +31,7 @@ namespace Compiler.AST
         }
 
 
-        public static IEnumerable<ASTTypeDefinition> ParseType(IParser parser)
+        public static IEnumerable<ASTTypeDefinition> Parse(IParser parser)
         {
             parser.TryConsume(TokenType.Identifier, out Token? t);
             while (!(t is null))

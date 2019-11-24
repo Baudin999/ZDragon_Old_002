@@ -30,7 +30,7 @@ namespace Compiler.AST
                 Token Separator = parser.Consume(TokenType.Separator);
             }
 
-            result.Type = ASTTypeDefinition.ParseType(parser).ToList();
+            result.Type = ASTTypeDefinition.Parse(parser).ToList();
             result.Restrictions = ASTRestriction.CreateRestrictions(parser, TokenType.KW_Type).ToList();
             parser.Consume(TokenType.EndStatement);
             return result;

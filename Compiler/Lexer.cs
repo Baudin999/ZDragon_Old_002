@@ -9,7 +9,7 @@ namespace Compiler
 
         private bool _ignoreWhiteSpace = true;
 
-        private string prepareSource(string source)
+        private string PrepareSource(string source)
         {
             source = new Regex(@"\r\n|\n").Replace(source, "↓");
             source = new Regex(@"[\s\t]+↓").Replace(source, "↓");
@@ -25,9 +25,9 @@ namespace Compiler
 
         public IEnumerable<Token> Lex(string code)
         {
-            string preparedSource = prepareSource(code);
+            string preparedSource = PrepareSource(code);
             var input = new Input(preparedSource);
-            var context = false;
+            bool context = false;
 
             while (input.HasNext())
             {
@@ -37,6 +37,7 @@ namespace Compiler
                     input.IsEqualTo("choice") ||
                     input.IsEqualTo("open") ||
                     input.IsEqualTo("view") ||
+                    input.IsEqualTo("flow") ||
                     input.IsEqualTo("aggregate") ||
                     input.IsEqualTo("entity"))
                 {
@@ -45,10 +46,19 @@ namespace Compiler
                     yield return TokenLexers.Word(input);
                 } else if (input.IsEqualTo("extends") ||
                     input.IsEqualTo("importing") ||
+                    input.IsEqualTo("compose") ||
                     input.IsEqualTo("pluck"))
                 {
                     yield return TokenLexers.Word(input);
-                } 
+                }
+                else if (input.IsEqualTo("->"))
+                {
+                    yield return TokenLexers.Operators(input, "->");
+                }
+                else if (input.IsEqualTo("::"))
+                {
+                    yield return TokenLexers.Operators(input, "::");
+                }
                 else if (!context && Char.IsLetter(input.Current()))
                 {
                     yield return TokenLexers.TakeUntillEndOfContext(input);
