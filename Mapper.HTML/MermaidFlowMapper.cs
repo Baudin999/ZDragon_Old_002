@@ -25,7 +25,30 @@ namespace Mapper.HTML
     {step.From} ->> {step.To} : {from}
     {step.To} -->> {step.From} : {string.Join(" ", result.Types.Select(t => t.Value))}
 ".Trim();
-            } else
+            } else if (flowstep is ASTFlowStepComposition c_step)
+            {
+                var froms = c_step
+                        .Steps
+                        .Where(s => s is ASTFlowStep)
+                        .Select(s => {
+                            var step = (ASTFlowStep)s;
+                            var from = string.Join(" -> ", step.Parameters.SkipLast(1).Select(d => j(d.Types)).ToList());
+                            return $"{step.From} ->> {step.To} : {from}";
+                        })
+                        .ToList();
+                var tos = c_step
+                        .Steps
+                        .Where(s => s is ASTFlowStep)
+                        .Reverse()
+                        .Select(s => {
+                            var step = (ASTFlowStep)s;
+                            var to = j(step.Parameters.Last().Types);
+                            return $"{step.To} -->> {step.From} : {to}";
+                         })
+                        .ToList();
+                return string.Join("\n", froms.Concat(tos));
+            }
+            else
             {
                 return "";
             }
