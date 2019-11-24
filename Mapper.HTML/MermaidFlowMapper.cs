@@ -47,8 +47,7 @@ namespace Mapper.HTML
                          })
                         .ToList();
                 return string.Join("\n", froms.Concat(tos));
-            }
-            else
+            } else
             {
                 return "";
             }
