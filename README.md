@@ -3,4 +3,4 @@
 # ZDragon.NET
 ZDragon is moving to .NET!
 
-# Current Version: v2.0.1-beta
+# Current Version: 0.0.3
