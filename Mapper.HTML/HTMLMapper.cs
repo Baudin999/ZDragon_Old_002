@@ -11,16 +11,17 @@ namespace Mapper.HTML
     {
         public List<string> Parts { get; } = new List<string>();
         public MermaidMapper MermaidMapper { get; }
+        public HtmlTableMapper TableMapper { get; }
 
         public HtmlMapper(IEnumerable<IASTNode> nodeTree) : base(nodeTree)
         {
             this.MermaidMapper = new MermaidMapper(nodeTree);
             this.MermaidMapper.Start().ToList();
+            this.TableMapper = new HtmlTableMapper(nodeTree);
         }
 
         public string ToHtmlString(Dictionary<string, string> links)
         {
-
             return $@"
 <!DOCTYPE html>
 <html>
@@ -41,6 +42,8 @@ namespace Mapper.HTML
 </div>
 
 { string.Join("\n\n", Parts)}
+
+{ string.Join("\n\n", this.TableMapper.Start().ToList()) }
 
 <script>
 mermaid.initialize({{

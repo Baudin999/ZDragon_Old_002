@@ -87,7 +87,7 @@ namespace CLI
         public void Watch()
         {
             // Create a new FileSystemWatcher and set its properties.
-            using FileSystemWatcher watcher = new FileSystemWatcher
+            using var watcher = new FileSystemWatcher
             {
                 IncludeSubdirectories = true,
                 Path = this.Path,
@@ -111,13 +111,16 @@ namespace CLI
             watcher.Deleted += OnDelete;
             watcher.Renamed += OnRenamed;
 
-            // Begin watching.
-            watcher.EnableRaisingEvents = true;
             SignalSingleton.ExitSignal.Subscribe(() =>
             {
                 watcher.Dispose();
                 Cleanup();
             });
+
+            // Begin watching.
+            watcher.EnableRaisingEvents = true;
+
+            while (Console.ReadKey().Key != ConsoleKey.Q) { }
         }
 
 

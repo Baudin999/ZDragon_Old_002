@@ -28,7 +28,7 @@ namespace CLI.Commands
 
                       command.OnExecute(() =>
                       {
-                          string directory = fileOption.HasValue() switch
+                          var directory = fileOption.HasValue() switch
                           {
                               false => Directory.GetCurrentDirectory(),
                               true => fileOption.Value()
