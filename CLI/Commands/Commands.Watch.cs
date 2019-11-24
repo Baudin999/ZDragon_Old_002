@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Threading.Tasks;
+using CLI.Signals;
 using Microsoft.Extensions.CommandLineUtils;
 
 namespace CLI.Commands
@@ -45,10 +46,11 @@ namespace CLI.Commands
 
                           // Wait for the user to quit the program.
                           Console.WriteLine("Press 'q' to quit the sample.");
-                          while (Console.Read() != 'q') { }
+                          while (Console.ReadKey().Key != ConsoleKey.Q) { }
 
+
+                          SignalSingleton.ExitSignal.Dispatch();
                           project.Dispose();
-
                           return 0;
                       });
                   });
