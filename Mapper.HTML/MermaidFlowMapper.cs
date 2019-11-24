@@ -15,14 +15,20 @@ namespace Mapper.HTML
         private string t(ASTTypeDefinition def) => def.Value;
         private string j(IEnumerable<ASTTypeDefinition> defs) => string.Join(" ", defs.Select(t).ToList());
 
-        public string StepToString(ASTFlowStep step)
+        public string StepToString(IFlowStep flowstep)
         {
-            var result = step.Parameters.Last();
-            var from = string.Join(" -> ", step.Parameters.SkipLast(1).Select(d => j(d.Types)).ToList());
-            return $@"
+            if (flowstep is ASTFlowStep step)
+            {
+                var result = step.Parameters.Last();
+                var from = string.Join(" -> ", step.Parameters.SkipLast(1).Select(d => j(d.Types)).ToList());
+                return $@"
     {step.From} ->> {step.To} : {from}
     {step.To} -->> {step.From} : {string.Join(" ", result.Types.Select(t => t.Value))}
 ".Trim();
+            } else
+            {
+                return "";
+            }
         }
 
         public override string ToString() {
