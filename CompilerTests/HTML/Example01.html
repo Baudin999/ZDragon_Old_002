@@ -1,0 +1,83 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/mermaid.min.js"></script>
+    <link rel='stylesheet' type='text/css' href='/style.css' />
+  </head>
+<body>
+
+<a href='/index.html'>Home</a>
+
+<ul>
+<li><a href="model.xsd" alt="XSD">XSD</a></li>
+
+</ul>
+
+<div class="mermaid">classDiagram
+
+class Person {
+FirstName: String
+}
+</div>
+
+<h1>This is a chapter</h1>
+
+
+<p>And another chapter!</p>
+
+
+<h2>This is a subChapter</h2>
+
+
+<p>And a few paragraphs to see how
+things are coming along!</p>
+
+
+<blockquote>
+<p>NOTE: a simple note!</p>
+</blockquote>
+
+
+<pre><code>function foo() {
+    return 12;
+}
+</code></pre>
+
+
+<ul>
+<li>One
+<ul>
+<li>Two</li>
+<li>Three</li>
+</ul>
+</li>
+<li>Four</li>
+</ul>
+
+
+<script>
+mermaid.initialize({
+    startOnLoad:true,
+    classDiagram: {
+        useMaxWidth: false
+    }
+});
+
+setTimeout(() => {
+    let svg = document.getElementsByTagName('svg')[0];
+    let [a, b, width, height] = svg.attributes['viewBox'].value.split(' ');
+    svg.attributes['width'].value = width;
+    svg.attributes['height'].value = height;
+}, 30);
+
+console.log(`
+classDiagram
+
+class Person {
+FirstName: String
+}
+`);
+</script>
+
+</body>
+</html>

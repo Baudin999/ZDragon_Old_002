@@ -50,7 +50,7 @@ Points to look out for:
             var parser = new Parser(tokens);
             var parseTree = parser.Parse().ToList();
 
-            HtmlMapper mapper = new HtmlMapper(parseTree);
+            var mapper = new HtmlMapper(parseTree);
             _ = mapper.Start().ToList();
 
             var document = mapper.ToString();
@@ -73,7 +73,7 @@ Points to look out for:
             var parser = new Parser(tokens);
             var parseTree = parser.Parse().ToList();
 
-            HtmlMapper mapper = new HtmlMapper(parseTree);
+            var mapper = new HtmlMapper(parseTree);
             _ = mapper.Start().ToList();
 
             var document = mapper.ToString();
