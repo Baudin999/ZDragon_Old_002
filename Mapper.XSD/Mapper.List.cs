@@ -48,6 +48,10 @@ namespace Mapper.XSD
             }
 
             element.Name = null;
+            if (!(element.SchemaType is null))
+            {
+                element.SchemaType.Name = null;
+            }
             sequence.Items.Add(element);
             complexType.Particle = sequence;
             return complexType;

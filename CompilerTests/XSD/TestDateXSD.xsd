@@ -9,7 +9,7 @@
     </xs:annotation>
     <xs:all>
       <xs:element minOccurs="1" maxOccurs="1" name="Now">
-        <xs:simpleType name="Now">
+        <xs:simpleType>
           <xs:restriction base="xs:date" />
         </xs:simpleType>
       </xs:element>

@@ -179,7 +179,7 @@ type Root =
     F18: List DateTime;
 ";
             var generator = new ASTGenerator(code);
-            XSDMapper mapper = new XSDMapper(generator.AST);
+            var mapper = new XSDMapper(generator.AST);
             _ = mapper.Start().ToList();
 
             TestXSD(mapper.Schema, "./XSD/TestEveryFieldType.xsd");
@@ -200,7 +200,7 @@ type Root =
             TextWriter resultWriter = new StringWriter();
             xsd.Write(resultWriter);
 
-            Assert.Equal(writer.ToString(), resultWriter.ToString());
+            Assert.Equal(resultWriter.ToString(), writer.ToString());
         }
 
 

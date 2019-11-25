@@ -51,7 +51,7 @@ mermaid.initialize({{
     classDiagram: {{
         useMaxWidth: false
     }},
-    sequence: {{ actorMargin: 300 }}
+    sequence: {{ actorMargin: 250 }}
 }});
 
 setTimeout(() => {{
@@ -61,9 +61,6 @@ setTimeout(() => {{
     svg.attributes['height'].value = height;
 }}, 30);
 
-console.log(`
-{this.MermaidMapper.ToString()}
-`);
 </script>
 
 </body>
@@ -109,7 +106,6 @@ console.log(`
         {
             var result = new MermaidFlowMapper(astFlow).ToString();
             this.Parts.Add(result);
-            Console.WriteLine(result);
             return result;
         }
 
@@ -147,7 +143,6 @@ console.log(`
 
         public override string VisitASTData(ASTData astData)
         {
-            //ErdParts
             return "";
         }
     }

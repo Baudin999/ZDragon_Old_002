@@ -6,12 +6,12 @@
     </xs:annotation>
     <xs:all>
       <xs:element minOccurs="1" maxOccurs="1" name="F1">
-        <xs:simpleType name="F1">
+        <xs:simpleType>
           <xs:restriction base="xs:decimal" />
         </xs:simpleType>
       </xs:element>
       <xs:element minOccurs="1" maxOccurs="1" name="F2">
-        <xs:simpleType name="F2">
+        <xs:simpleType>
           <xs:restriction base="xs:string">
             <xs:minLength value="1" />
             <xs:maxLength value="100" />
@@ -19,32 +19,32 @@
         </xs:simpleType>
       </xs:element>
       <xs:element minOccurs="1" maxOccurs="1" name="F3">
-        <xs:simpleType name="F3">
+        <xs:simpleType>
           <xs:restriction base="xs:boolean" />
         </xs:simpleType>
       </xs:element>
       <xs:element minOccurs="1" maxOccurs="1" name="F4">
-        <xs:simpleType name="F4">
+        <xs:simpleType>
           <xs:restriction base="xs:date" />
         </xs:simpleType>
       </xs:element>
       <xs:element minOccurs="1" maxOccurs="1" name="F5">
-        <xs:simpleType name="F5">
+        <xs:simpleType>
           <xs:restriction base="xs:time" />
         </xs:simpleType>
       </xs:element>
       <xs:element minOccurs="1" maxOccurs="1" name="F6">
-        <xs:simpleType name="F6">
+        <xs:simpleType>
           <xs:restriction base="xs:dateTime" />
         </xs:simpleType>
       </xs:element>
       <xs:element minOccurs="0" maxOccurs="1" name="F7" nillable="true">
-        <xs:simpleType name="F7">
+        <xs:simpleType>
           <xs:restriction base="xs:decimal" />
         </xs:simpleType>
       </xs:element>
       <xs:element minOccurs="0" maxOccurs="1" name="F8" nillable="true">
-        <xs:simpleType name="F8">
+        <xs:simpleType>
           <xs:restriction base="xs:string">
             <xs:minLength value="1" />
             <xs:maxLength value="100" />
@@ -52,30 +52,30 @@
         </xs:simpleType>
       </xs:element>
       <xs:element minOccurs="0" maxOccurs="1" name="F9" nillable="true">
-        <xs:simpleType name="F9">
+        <xs:simpleType>
           <xs:restriction base="xs:boolean" />
         </xs:simpleType>
       </xs:element>
       <xs:element minOccurs="0" maxOccurs="1" name="F10" nillable="true">
-        <xs:simpleType name="F10">
+        <xs:simpleType>
           <xs:restriction base="xs:date" />
         </xs:simpleType>
       </xs:element>
       <xs:element minOccurs="0" maxOccurs="1" name="F11" nillable="true">
-        <xs:simpleType name="F11">
+        <xs:simpleType>
           <xs:restriction base="xs:time" />
         </xs:simpleType>
       </xs:element>
       <xs:element minOccurs="0" maxOccurs="1" name="F12" nillable="true">
-        <xs:simpleType name="F12">
+        <xs:simpleType>
           <xs:restriction base="xs:dateTime" />
         </xs:simpleType>
       </xs:element>
       <xs:element minOccurs="1" maxOccurs="1" name="F13">
-        <xs:complexType name="F13">
+        <xs:complexType>
           <xs:sequence minOccurs="0" maxOccurs="10">
             <xs:element>
-              <xs:simpleType name="F13">
+              <xs:simpleType>
                 <xs:restriction base="xs:decimal" />
               </xs:simpleType>
             </xs:element>
@@ -83,10 +83,10 @@
         </xs:complexType>
       </xs:element>
       <xs:element minOccurs="1" maxOccurs="1" name="F14">
-        <xs:complexType name="F14">
+        <xs:complexType>
           <xs:sequence minOccurs="0" maxOccurs="10">
             <xs:element>
-              <xs:simpleType name="F14">
+              <xs:simpleType>
                 <xs:restriction base="xs:string">
                   <xs:minLength value="1" />
                   <xs:maxLength value="100" />
@@ -97,10 +97,10 @@
         </xs:complexType>
       </xs:element>
       <xs:element minOccurs="1" maxOccurs="1" name="F15">
-        <xs:complexType name="F15">
+        <xs:complexType>
           <xs:sequence minOccurs="0" maxOccurs="10">
             <xs:element>
-              <xs:simpleType name="F15">
+              <xs:simpleType>
                 <xs:restriction base="xs:boolean" />
               </xs:simpleType>
             </xs:element>
@@ -108,10 +108,10 @@
         </xs:complexType>
       </xs:element>
       <xs:element minOccurs="1" maxOccurs="1" name="F16">
-        <xs:complexType name="F16">
+        <xs:complexType>
           <xs:sequence minOccurs="0" maxOccurs="10">
             <xs:element>
-              <xs:simpleType name="F16">
+              <xs:simpleType>
                 <xs:restriction base="xs:date" />
               </xs:simpleType>
             </xs:element>
@@ -119,10 +119,10 @@
         </xs:complexType>
       </xs:element>
       <xs:element minOccurs="1" maxOccurs="1" name="F17">
-        <xs:complexType name="F17">
+        <xs:complexType>
           <xs:sequence minOccurs="0" maxOccurs="10">
             <xs:element>
-              <xs:simpleType name="F17">
+              <xs:simpleType>
                 <xs:restriction base="xs:time" />
               </xs:simpleType>
             </xs:element>
@@ -130,10 +130,10 @@
         </xs:complexType>
       </xs:element>
       <xs:element minOccurs="1" maxOccurs="1" name="F18">
-        <xs:complexType name="F18">
+        <xs:complexType>
           <xs:sequence minOccurs="0" maxOccurs="10">
             <xs:element>
-              <xs:simpleType name="F18">
+              <xs:simpleType>
                 <xs:restriction base="xs:dateTime" />
               </xs:simpleType>
             </xs:element>

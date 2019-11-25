@@ -9,7 +9,7 @@
     </xs:annotation>
     <xs:all>
       <xs:element minOccurs="1" maxOccurs="1" name="Yup">
-        <xs:simpleType name="Yup">
+        <xs:simpleType>
           <xs:restriction base="xs:boolean"></xs:restriction>
         </xs:simpleType>
       </xs:element>

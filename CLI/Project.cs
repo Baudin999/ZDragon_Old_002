@@ -21,8 +21,8 @@ namespace CLI
             this.OutPath = System.IO.Path.GetFullPath($"out", this.Path);
             Directory.CreateDirectory(OutPath);
 
-            string[] allfiles = Directory.GetFiles(path, "*.car", SearchOption.AllDirectories);
-            foreach (string file in allfiles)
+            var allfiles = Directory.GetFiles(path, "*.car", SearchOption.AllDirectories);
+            foreach (var file in allfiles)
             {
                 var module = new Module(file, path, this);
                 Modules.Add(module);
@@ -50,8 +50,7 @@ namespace CLI
 </body>
 </html>
 ";
-            string filePath = System.IO.Path.GetFullPath("index.html", OutPath);
-
+            var filePath = System.IO.Path.GetFullPath("index.html", OutPath);
             File.WriteAllText(filePath, page);
         }
 
@@ -78,7 +77,6 @@ namespace CLI
                 if (module.Generator is null)
                 {
                     module.Parse();
-
                 }
                 return module.Generator.AST;
             }

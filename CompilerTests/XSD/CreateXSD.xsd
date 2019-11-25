@@ -18,7 +18,7 @@
     <xs:all>
       <xs:element minOccurs="1" maxOccurs="1" name="FirstName" ref="self:Name" />
       <xs:element minOccurs="0" maxOccurs="1" name="LastName" nillable="true">
-        <xs:simpleType name="LastName">
+        <xs:simpleType>
           <xs:restriction base="xs:string">
             <xs:minLength value="1" />
             <xs:maxLength value="100" />
@@ -26,15 +26,15 @@
         </xs:simpleType>
       </xs:element>
       <xs:element minOccurs="1" maxOccurs="1" name="Age">
-        <xs:simpleType name="Age">
+        <xs:simpleType>
           <xs:restriction base="xs:decimal" />
         </xs:simpleType>
       </xs:element>
       <xs:element minOccurs="1" maxOccurs="1" name="Tags">
-        <xs:complexType name="Tags">
+        <xs:complexType>
           <xs:sequence minOccurs="3" maxOccurs="30">
             <xs:element>
-              <xs:simpleType name="Tags">
+              <xs:simpleType>
                 <xs:restriction base="xs:string">
                   <xs:minLength value="3" />
                   <xs:maxLength value="30" />

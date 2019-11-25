@@ -72,8 +72,11 @@ end
 
         public override string ToString() {
             return $@"
+<div>
+<h2>{this.Flow.Name}</h2>
 <div class=""mermaid"">sequenceDiagram
 {string.Join("\n", this.Flow.Steps.Select(StepToString).ToList())}
+</div>
 </div>".Trim();
         }
     }

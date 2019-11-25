@@ -8,8 +8,8 @@ namespace Mapper.XSD
 	public partial class Mapper
 	{
 		public static XmlSchemaElement Element<T>(T e) where T : IElement, IRestrictable {
-            string _modifier = e.Type.First().Value;
-            string _type = e.Type.Last().Value;
+            var _modifier = e.Type.First().Value;
+            var _type = e.Type.Last().Value;
 
             var element = new XmlSchemaElement();
             element.Name = e.Name;
@@ -54,6 +54,10 @@ namespace Mapper.XSD
             else
             {
                 element.RefName = new System.Xml.XmlQualifiedName("self:" + _type);
+            }
+            if (!(element.SchemaType is null))
+            {
+                element.SchemaType.Name = null;
             }
             return element;
         }
