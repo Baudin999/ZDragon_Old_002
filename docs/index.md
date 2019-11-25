@@ -5,6 +5,13 @@ dragon. A Dragon which breathes fire, runs in circles and can defeat the best of
 worry, ZDragon is here to help you out. With the help of this tool you will have your documentation
 in order in no time.
 
+## Download
+
+For those who jsut want to jump in!
+
+[OSx](https://github.com/Baudin999/ZDragon.NET/releases/download/v2.0.3-beta/ckc)
+[Windows](https://github.com/Baudin999/ZDragon.NET/releases/download/v2.0.3-beta/ckc.exe)
+
 ## How to read this documentation
 
 This documentation is written for people new to ZDragon. If you already know how to tame the dragon
