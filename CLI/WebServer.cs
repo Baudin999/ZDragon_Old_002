@@ -13,7 +13,7 @@ using Microsoft.Extensions.Logging;
 using CLI.Controllers;
 using System.Reflection;
 using Microsoft.Extensions.Hosting;
-
+using System.IO;
 
 namespace CLI
 {
@@ -37,43 +37,10 @@ namespace CLI
                             .UseStartup<Startup>()
                             .UseWebRoot(rootPath);
                     })
+                    .UseContentRoot(Directory.GetCurrentDirectory())
                     .Build()
                     .Run();
 
-                //var webHost = WebHost.CreateDefaultBuilder();
-                //var webHost = WebHost
-                //    .CreateDefaultBuilder(new string[] { })
-                //    //.UseSetting(WebHostDefaults.SuppressStatusMessagesKey, "True")
-                //    .ConfigureServices(services =>
-                //    {
-                //        services
-                //            .AddMvcCore()
-                //            .AddApplicationPart(Assembly.GetEntryAssembly());
-
-                //    })
-                //    .Configure(config =>
-                //    {
-                //        config.UseStaticFiles();
-                //        config.UseWelcomePage("/index.html");
-
-                //        //var server = config.ApplicationServices.GetRequiredService<IServer>();
-                //        //var addresses = server.Features?.Get<IServerAddressesFeature>()?.Addresses;
-
-                //        //Console.WriteLine("\nWebServer:");
-                //        //Console.WriteLine($"Dev server running on: http://localhost:5000");
-                //        //Console.WriteLine($"Dev server running on: https://localhost:5001");
-
-                //    })
-                //    .ConfigureAppConfiguration(app =>
-                //    {
-                //        //
-                //    })
-                //    .UseWebRoot(rootPath)
-                //    //.ConfigureLogging(logging => logging.ClearProviders())
-                //    .Build();
-
-
-                //webHost.Run();
             });
         }
 

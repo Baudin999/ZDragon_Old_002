@@ -8,8 +8,7 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 
 namespace CLI.Controllers
 {
-    [Route("/api/home")]
-    public class HomeController : ControllerBase
+    public class ModuleController : ControllerBase
     {
         public string GetProject()
         {
