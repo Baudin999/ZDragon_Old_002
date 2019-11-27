@@ -10,6 +10,9 @@ namespace CLI
 {
     public class Project : IDisposable
     {
+
+        public static Project Current { get; private set; }
+
         public string Path { get; }
         public string OutPath { get; }
         public List<Module> Modules { get; } = new List<Module>();
@@ -33,6 +36,8 @@ namespace CLI
             CreateIndexPage();
             CreateAssets();
             Cleanup = () => { };
+
+            Project.Current = this;
         }
 
         private void CreateIndexPage()

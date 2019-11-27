@@ -25,6 +25,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mapper.JSON", "Mapper.JSON\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mapper.HTML", "Mapper.HTML\Mapper.HTML.csproj", "{FAEF3166-4534-43E0-ADCE-2E7AFC3C48AB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mapper.Application", "Mapper.Application\Mapper.Application.csproj", "{E975E743-A4CB-4B83-A755-4870DBA588B2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApplicationTests", "ApplicationTests\ApplicationTests.csproj", "{A95E08D8-BFC7-47D9-B36D-23202444E29E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -55,9 +59,18 @@ Global
 		{FAEF3166-4534-43E0-ADCE-2E7AFC3C48AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FAEF3166-4534-43E0-ADCE-2E7AFC3C48AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FAEF3166-4534-43E0-ADCE-2E7AFC3C48AB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E975E743-A4CB-4B83-A755-4870DBA588B2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E975E743-A4CB-4B83-A755-4870DBA588B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E975E743-A4CB-4B83-A755-4870DBA588B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E975E743-A4CB-4B83-A755-4870DBA588B2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A95E08D8-BFC7-47D9-B36D-23202444E29E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A95E08D8-BFC7-47D9-B36D-23202444E29E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A95E08D8-BFC7-47D9-B36D-23202444E29E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A95E08D8-BFC7-47D9-B36D-23202444E29E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{5AFE6847-C9C1-40C5-810C-4C12B4569C11} = {BE20F938-359D-49B2-A33B-4CDF07792C55}
+		{A95E08D8-BFC7-47D9-B36D-23202444E29E} = {BE20F938-359D-49B2-A33B-4CDF07792C55}
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		version = v2.0.3-beta

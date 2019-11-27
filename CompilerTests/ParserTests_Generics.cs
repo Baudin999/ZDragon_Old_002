@@ -108,5 +108,57 @@ alias ConcreteFoo = Foo String;
             var g = new ASTGenerator(code);
             Assert.Single(g.Errors);
         }
+
+        [Fact(DisplayName = "Generic Complex Types")]
+        public void GenericComplexTypes()
+        {
+            var code = @"
+
+type Person =
+    FirstName: String;
+
+type Header =
+    ContentType: ContentTypeEnum;
+
+choice ContentTypeEnum =
+    | ""application/json""
+    | ""application/xml""
+
+type Request 'a 'b =
+    Header: 'a;
+    Body: 'b;
+
+alias PersonRequest = Request Header Person;
+";
+
+            var g = new ASTGenerator(code);
+            Assert.Empty(g.Errors);
+            Assert.Equal(5, g.AST.Count);
+
+            var person = (ASTType)g.AST[0];
+            var header = (ASTType)g.AST[1];
+            var contentTypeEnum = (ASTChoice)g.AST[2];
+            var request = (ASTType)g.AST[3];
+            var personRequest = (ASTType)g.AST[4];
+
+            Assert.NotNull(person);
+            Assert.NotNull(header);
+            Assert.NotNull(contentTypeEnum);
+            Assert.NotNull(request);
+            Assert.NotNull(personRequest);
+
+            Assert.Equal(2, personRequest.Fields.Count());
+
+            var headerField = personRequest.Fields.First();
+            var bodyField = personRequest.Fields.Last();
+
+            Assert.Equal("Header", headerField.Name);
+            Assert.Equal("Header", headerField.Type.Last().Value);
+
+            Assert.Equal("Body", bodyField.Name);
+            Assert.Equal("Person", bodyField.Type.Last().Value);
+
+
+        }
     }
 }

@@ -50,13 +50,14 @@ class {astChoice.Name} {{
         {
             var typeReferences = astData.Options.Select(f =>
             {
-                string _type = f.Name;
+                var _type = f.Name;
                 if (_type != "String"
                     && _type != "Number"
                     && _type != "Boolean"
                     && _type != "Date"
                     && _type != "DateTime"
-                    && _type != "Time")
+                    && _type != "Time"
+                    && !_type.StartsWith("'", StringComparison.Ordinal))
                 {
                     return $@"{astData.Name} --* {_type}";
                 }
@@ -108,7 +109,8 @@ class {astData.Name} {{
                     && _type != "Boolean"
                     && _type != "Date"
                     && _type != "DateTime"
-                    && _type != "Time")
+                    && _type != "Time"
+                    && !_type.StartsWith("'", StringComparison.Ordinal))
                 {
                     if (_mod == "List")
                     {
@@ -116,7 +118,8 @@ class {astData.Name} {{
                         var max = f.Restrictions.FirstOrDefault(r => r.Key == "max")?.Value ?? "*";
 
                         return $@"{astType.Name} --o ""{min}..{max}"" {_type}";
-                    } else
+                    }
+                    else
                     {
                         return $@"{astType.Name} --o {_type}";
                     }

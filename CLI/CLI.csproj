@@ -5,6 +5,10 @@
     <TargetFramework>netcoreapp3.0</TargetFramework>
     <ReleaseVersion>v2.0.3-beta</ReleaseVersion>
   </PropertyGroup>
+    
+  <ItemGroup>
+   <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Compiler\Compiler.csproj" />
@@ -16,13 +20,12 @@
     <PackageReference Include="Microsoft.Extensions.CommandLineUtils" Version="1.1.1" />
     <PackageReference Include="System.IO.FileSystem" Version="4.3.0" />
     <PackageReference Include="System.IO.FileSystem.Watcher" Version="4.3.0" />
-    <PackageReference Include="Microsoft.AspNetCore" Version="2.2.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Hosting" Version="2.2.7" />
-    <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.2.0" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Assets\" />
     <Folder Include="Commands\" />
+    <Folder Include="Controllers\" />
+    <Folder Include="wwwroot\" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="Assets\style.css" />
@@ -31,5 +34,10 @@
   <ItemGroup>
     <EmbeddedResource Include="Assets\style.css" />
     <EmbeddedResource Include="Assets\mermaid.min.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="wwwroot\help.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 </Project>
