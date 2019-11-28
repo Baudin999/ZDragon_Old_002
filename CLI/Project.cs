@@ -55,7 +55,7 @@ namespace CLI
 </body>
 </html>
 ";
-            var filePath = System.IO.Path.GetFullPath("index.html", OutPath);
+            var filePath = System.IO.Path.GetFullPath("index_old.html", OutPath);
             File.WriteAllText(filePath, page);
         }
 
@@ -210,12 +210,9 @@ namespace CLI
                 var assembly = Assembly.GetExecutingAssembly();
                 var resourceName = name;
 
-                using (Stream stream = assembly.GetManifestResourceStream(resourceName))
-                using (StreamReader reader = new StreamReader(stream))
-                {
-                    string result = reader.ReadToEnd();
-                    return result;
-                }
+                using var stream = assembly.GetManifestResourceStream(resourceName);
+                using var reader = new StreamReader(stream);
+                return reader.ReadToEnd();
             }
 
             public static void WriteAsset(string path, string content)
