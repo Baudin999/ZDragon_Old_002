@@ -30,7 +30,7 @@ namespace CLI
         public void Parse()
         {
             var code = ReadModuleText();
-            this.Generator = new ASTGenerator(code);
+            this.Generator = new ASTGenerator(code, this.Name);
             this.LastParsed = DateTime.Now;
             this.Transpiler = new Transpiler(this.Generator, this.Project);
 
@@ -39,10 +39,11 @@ namespace CLI
 
         public void SaveModuleOutput()
         {
-            this.Transpiler.StartMappings();
+            this.Transpiler.StartMappings(this.Name);
             Console.WriteLine($"Perfectly parsed: {Name}");
             SaveResult("Model.xsd", Transpiler.XsdToString());
             SaveResult("index.html", Transpiler.HtmlToString());
+            SaveResult("description.json", Transpiler.ToDescriptors());
             foreach (var (key, value) in Transpiler.JsonToString())
             {
                 SaveResult(key, value);
@@ -68,7 +69,7 @@ namespace CLI
 
         private void SaveResult(string fileName, string source)
         {
-            string filePath = System.IO.Path.GetFullPath(fileName, OutPath);
+            var filePath = System.IO.Path.GetFullPath(fileName, OutPath);
             System.IO.Directory.CreateDirectory(OutPath);
             System.IO.File.WriteAllText(filePath, source);
         }

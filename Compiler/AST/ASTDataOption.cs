@@ -20,7 +20,7 @@ namespace Compiler.AST
                 var id = parser.Consume(TokenType.Identifier);
                 var parameters = parser.ConsumeWhile(TokenType.GenericParameter);
 
-                ASTDataOption r = new ASTDataOption();
+                var r = new ASTDataOption();
                 r.Name = id.Value;
                 r.Parameters = parameters.Select(p => p.Value).ToList();
                 r.Annotations = annotations;

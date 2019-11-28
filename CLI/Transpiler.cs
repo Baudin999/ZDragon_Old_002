@@ -7,17 +7,23 @@ using Compiler.AST;
 using Mapper.HTML;
 using Mapper.JSON;
 using Mapper.XSD;
+using Mapper.Application;
+using System.Text.Json.Serialization;
+using System.Text.Json;
 
 namespace CLI
 {
     public class Transpiler
     {
+        private IEnumerable<Descriptor> Descriptions;
+
         public Project Project { get; }
         public string Code => Generator.Code;
         public ASTGenerator Generator { get; }
         public XSDMapper XsdMapper { get; private set; }
         public HtmlMapper HtmlMapper { get; private set; }
         public JsonMapper JsonMapper { get; private set; }
+        public DescriptionMapper DescriptionMapper { get; private set; }
         public List<IASTError> Errors { get { return this.Generator.Errors; } }
         public List<IASTNode> Imports { get; private set; } = new List<IASTNode>();
 
@@ -36,9 +42,15 @@ namespace CLI
 
         public string HtmlToString()
         {
-            Dictionary<string, string> links = new Dictionary<string, string>();
+            var links = new Dictionary<string, string>();
             this.JsonMapper.Schemas.ToList().ForEach(s => links.Add(s.Key, s.Key));
             return this.HtmlMapper.ToHtmlString(links);
+        }
+
+        public string ToDescriptors()
+        {
+            var json = JsonSerializer.Serialize(Descriptions, typeof(IEnumerable<Descriptor>));
+            return json;
         }
 
         public Dictionary<string, string> JsonToString()
@@ -47,7 +59,7 @@ namespace CLI
         }
 
 
-        public void StartMappings()
+        public void StartMappings(string moduleName = "")
         {
             this.ResolveImports();
             this.XsdMapper = new XSDMapper(this.Generator.AST.Concat(this.Imports).ToList());
@@ -58,6 +70,9 @@ namespace CLI
 
             this.JsonMapper = new JsonMapper(this.Generator.AST.Concat(this.Imports).ToList());
             this.JsonMapper.Start();
+
+            this.DescriptionMapper = new DescriptionMapper(this.Generator.AST.Concat(this.Imports).ToList(), moduleName);
+            Descriptions = this.DescriptionMapper.Start().ToList().SelectMany(s => s).ToList();
         }
 
         private void ResolveImports()
@@ -66,7 +81,7 @@ namespace CLI
             var imports = Generator.AST.FindAll(n => n is ASTImport).ToList();
             imports.ForEach(node =>
             {
-                ASTImport import = (ASTImport)node;
+                var import = (ASTImport)node;
                 var ast = this.Project.GetAstForModule(import.Name);
                 if (!import.Imports.Any())
                 {

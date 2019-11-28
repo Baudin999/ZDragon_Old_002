@@ -7,6 +7,8 @@ namespace Compiler.AST
     public class ASTChoice : IASTNode, INamable, ICloneable
     {
         public string Name { get; set; } = "";
+        public IEnumerable<ASTAnnotation> Annotations { get; set; } = Enumerable.Empty<ASTAnnotation>();
+        public IEnumerable<ASTDirective> Directives { get; set; } = Enumerable.Empty<ASTDirective>();
         public List<ASTTypeDefinition> Type { get; set; } = new List<ASTTypeDefinition>();
         public List<ASTOption> Options { get; private set; } = new List<ASTOption>();
 

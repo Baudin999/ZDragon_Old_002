@@ -17,7 +17,11 @@ namespace Compiler
         {
             foreach (IASTNode node in NodeTree)
             {
-                yield return Visit(node);
+                var result = Visit(node);
+                if (result != null)
+                {
+                    yield return result;
+                }
             }
         }
 

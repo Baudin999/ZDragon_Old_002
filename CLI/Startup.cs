@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Mvc.Razor.Compilation;
+using System.Reflection;
 
 namespace CLI
 {
@@ -41,7 +42,7 @@ namespace CLI
             app.UseStaticFiles(new StaticFileOptions
             {
                 FileProvider = new PhysicalFileProvider(
-                    Path.Combine(Directory.GetCurrentDirectory(), "wwwroot")),
+                    Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "wwwroot")),
                 RequestPath = ""
             });
             app.UseHttpsRedirection();

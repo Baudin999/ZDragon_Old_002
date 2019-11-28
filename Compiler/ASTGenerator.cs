@@ -7,15 +7,17 @@ namespace Compiler
 {
     public class ASTGenerator
     {
-        public string Code { get; set; }
+        public string ModuleName { get; }
+        public string Code { get; }
         public IEnumerable<Token> Tokens { get; }
         public Parser Parser { get; }
         public List<IASTNode> ParseTree { get; }
         public List<IASTError> Errors { get; }
         public List<IASTNode> AST { get; }
 
-        public ASTGenerator(string code)
+        public ASTGenerator(string code, string moduleName = "")
         {
+            this.ModuleName = moduleName;
             this.Code = code; 
             this.Tokens = new Lexer().Lex(code);
             this.Parser = new Parser(this.Tokens);

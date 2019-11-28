@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Threading.Tasks;
 using Microsoft.Extensions.CommandLineUtils;
 
@@ -22,12 +23,13 @@ namespace CLI.Commands
                 command.OnExecute(() =>
                 {
 
-                    if (fileOption.Value() is null)
+                    var directory = fileOption.HasValue() switch
                     {
-                        throw new Exception("Should specify a project root directory.");
-                    }
+                        false => Directory.GetCurrentDirectory(),
+                        true => fileOption.Value()
+                    };
 
-                    var project = new Project(fileOption.Value());
+                    var project = new Project(directory);
                     WebServer.Start(project.OutPath);
 
                     // Wait for the user to quit the program.
