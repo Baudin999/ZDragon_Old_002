@@ -30,6 +30,7 @@ namespace CLI
                             .UseWebRoot(rootPath)
                             .UseSetting(WebHostDefaults.SuppressStatusMessagesKey, "True")
                             .ConfigureLogging(logging => logging.ClearProviders());
+
                     })
                     .UseContentRoot(Directory.GetCurrentDirectory())
                     .Build()

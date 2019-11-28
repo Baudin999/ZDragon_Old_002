@@ -27,6 +27,8 @@ namespace CLI
         public List<IASTError> Errors { get { return this.Generator.Errors; } }
         public List<IASTNode> Imports { get; private set; } = new List<IASTNode>();
 
+        public List<IASTNode> AST => Imports.Concat(Generator.AST).ToList();
+
         public Transpiler(ASTGenerator generator, Project project)
         {
             this.Generator = generator;
@@ -71,8 +73,8 @@ namespace CLI
             this.JsonMapper = new JsonMapper(this.Generator.AST.Concat(this.Imports).ToList());
             this.JsonMapper.Start();
 
-            this.DescriptionMapper = new DescriptionMapper(this.Generator.AST.Concat(this.Imports).ToList(), moduleName);
-            Descriptions = this.DescriptionMapper.Start().ToList().SelectMany(s => s).ToList();
+            //this.DescriptionMapper = new DescriptionMapper(this.Generator.AST.Concat(this.Imports).ToList(), moduleName);
+            //Descriptions = this.DescriptionMapper.Start().ToList().SelectMany(s => s).ToList();
         }
 
         private void ResolveImports()

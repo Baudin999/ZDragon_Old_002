@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Compiler;
 using Compiler.AST;
+using Mapper.Application;
 
 namespace CLI
 {
@@ -43,7 +44,7 @@ namespace CLI
             Console.WriteLine($"Perfectly parsed: {Name}");
             SaveResult("Model.xsd", Transpiler.XsdToString());
             SaveResult("index.html", Transpiler.HtmlToString());
-            SaveResult("description.json", Transpiler.ToDescriptors());
+
             foreach (var (key, value) in Transpiler.JsonToString())
             {
                 SaveResult(key, value);
@@ -60,6 +61,17 @@ namespace CLI
                         m.Parse();
                         m.SaveModuleOutput();
                     });
+        }
+
+        public IEnumerable<Descriptor> GetDescriptions(string param)
+        {
+            var mapper = new DescriptionMapper(this.Transpiler.AST, this.Name);
+            var nodes = mapper.Start().SelectMany(s => s);
+            foreach (var node in nodes)
+            {
+                if (node.Is(param)) yield return node;
+            }
+            yield break;
         }
 
         private string ReadModuleText()

@@ -23,7 +23,8 @@ namespace Mapper.Application
             {
                 Module = ModuleName,
                 Name = astType.Name,
-                Description = MapAnnotations(astType.Annotations)
+                Description = MapAnnotations(astType.Annotations),
+                DescriptorType = DescriptorType.Type.ToString("g")
             };
 
 
@@ -34,7 +35,9 @@ namespace Mapper.Application
                     Module = ModuleName,
                     Name = field.Name,
                     Description = MapAnnotations(field.Annotations),
-                    Type = MapTypes(field.Type)
+                    Parent = astType.Name,
+                    Type = MapTypes(field.Type),
+                    DescriptorType = DescriptorType.Field.ToString("g")
                 };
             }
         }
@@ -46,7 +49,8 @@ namespace Mapper.Application
                 Module = ModuleName,
                 Name = astAlias.Name,
                 Description = MapAnnotations(astAlias.Annotations),
-                Type = MapTypes(astAlias.Type)
+                Type = MapTypes(astAlias.Type),
+                DescriptorType = DescriptorType.Alias.ToString("g")
             };
         }
 
@@ -56,7 +60,8 @@ namespace Mapper.Application
             {
                 Module = ModuleName,
                 Name = astData.Name,
-                Description = MapAnnotations(astData.Annotations)
+                Description = MapAnnotations(astData.Annotations),
+                DescriptorType = DescriptorType.Data.ToString("g")
             };
 
             foreach (var option in astData.Options)
@@ -65,7 +70,9 @@ namespace Mapper.Application
                 {
                     Module = ModuleName,
                     Name = option.Name,
-                    Description = MapAnnotations(option.Annotations)
+                    Parent = astData.Name,
+                    Description = MapAnnotations(option.Annotations),
+                    DescriptorType = DescriptorType.DataOption.ToString("g")
                 };
             }
         }
@@ -76,7 +83,8 @@ namespace Mapper.Application
             {
                 Module = ModuleName,
                 Name = astChoice.Name,
-                Description = MapAnnotations(astChoice.Annotations)
+                Description = MapAnnotations(astChoice.Annotations),
+                DescriptorType = DescriptorType.Choice.ToString("g")
             };
         }
 
