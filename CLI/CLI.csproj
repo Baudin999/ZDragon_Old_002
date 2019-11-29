@@ -4,6 +4,7 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.0</TargetFramework>
     <ReleaseVersion>v2.0.3-beta</ReleaseVersion>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
     
   <ItemGroup>
@@ -21,6 +22,7 @@
     <PackageReference Include="Microsoft.Extensions.CommandLineUtils" Version="1.1.1" />
     <PackageReference Include="System.IO.FileSystem" Version="4.3.0" />
     <PackageReference Include="System.IO.FileSystem.Watcher" Version="4.3.0" />
+    <PackageReference Include="Bogus" Version="28.4.1" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Assets\" />

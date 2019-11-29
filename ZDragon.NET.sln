@@ -14,9 +14,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 		.gitignore = .gitignore
 		.travis.yml = .travis.yml
-		zdragon_release.sh = zdragon_release.sh
 		release.sh = release.sh
-		localDeployment.sh = localDeployment.sh
+		github_release.sh = github_release.sh
+		local_release.sh = local_release.sh
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mapper.XSD", "Mapper.XSD\Mapper.XSD.csproj", "{CC0033CB-E0DD-435D-B3E6-84C2A33DFBFC}"

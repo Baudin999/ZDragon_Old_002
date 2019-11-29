@@ -311,6 +311,30 @@ type Person
             ASTType t = parseTree[0] as ASTType;
             Assert.Equal(2, t.Directives.Count());
         }
+
+        [Fact]
+        public void FieldDirectives()
+        {
+            var code = @"
+type Person =
+    % faker: Person.FirstName
+    FirstName: String
+        & min 2
+        & max 30
+    ;
+";
+            var g = new ASTGenerator(code);
+            Assert.Equal(1, g.AST.Count());
+
+            var t = g.AST[0] as ASTType;
+            Assert.NotNull(t);
+            Assert.Single(t.Fields);
+
+            var firstName = t.Fields.First();
+            Assert.Equal("FirstName", firstName.Name);
+            Assert.Single(firstName.Directives);
+
+        }
     }
 
 

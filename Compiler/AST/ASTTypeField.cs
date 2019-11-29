@@ -7,8 +7,10 @@ namespace Compiler.AST
     public class ASTTypeField : IASTNode, IRestrictable, IElement, INamable, ICloneable
     {
         public string Name { get; set; } = "";
-        public IEnumerable<ASTTypeDefinition> Type { get; set; } = Enumerable.Empty<ASTTypeDefinition>();
         public IEnumerable<ASTAnnotation> Annotations { get; set; } = Enumerable.Empty<ASTAnnotation>();
+        public IEnumerable<ASTDirective> Directives { get; set; } = Enumerable.Empty<ASTDirective>();
+
+        public IEnumerable<ASTTypeDefinition> Type { get; set; } = Enumerable.Empty<ASTTypeDefinition>();
         public IEnumerable<ASTRestriction> Restrictions { get; set; } = Enumerable.Empty<ASTRestriction>();
 
         public ASTTypeField() { }
@@ -17,6 +19,8 @@ namespace Compiler.AST
         {
             var result = new ASTTypeField();
             result.Restrictions = new List<ASTRestriction>();
+            var (d_errors, directives) = ASTDirective.Parse(parser);
+            result.Directives = directives;
             result.Annotations = ASTAnnotation.Parse(parser).ToList();
 
             var pluck = parser.TryConsume(TokenType.KW_Pluck);

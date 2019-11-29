@@ -1,20 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Compiler.AST;
 using Mapper.Application;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ActionConstraints;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
 
 namespace CLI.Controllers
 {
     public class ModuleController : ControllerBase
     {
-        public string GetProject()
-        {
-            return "Carlos";
-        }
 
         [HttpGet("/api/modules")]
         public IEnumerable<string> GetModules()
@@ -33,7 +26,6 @@ namespace CLI.Controllers
                 .ThenBy(d => d.Parent)
                 .ThenBy(d => d.Name);
         }
-
 
         [HttpGet("/api/svg")]
         public string RenderDescriptor(Descriptor descriptor)

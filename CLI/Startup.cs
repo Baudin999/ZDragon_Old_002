@@ -7,6 +7,9 @@ using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Mvc.Razor.Compilation;
 using System.Reflection;
+using Microsoft.AspNetCore.Http;
+using System.Threading.Tasks;
+using System;
 
 namespace CLI
 {
@@ -45,8 +48,8 @@ namespace CLI
             {
                 app.UseExceptionHandler("/Home/Error");
             }
+            app.UseMiddleware<ErrorLoggingMiddleware>();
             app.UseCors(MyAllowSpecificOrigins);
-
             app.UseStaticFiles();
             app.UseStaticFiles(new StaticFileOptions
             {
@@ -61,6 +64,29 @@ namespace CLI
             {
                 endpoints.MapControllers();
             });
+        }
+    }
+
+    public class ErrorLoggingMiddleware
+    {
+        private readonly RequestDelegate _next;
+
+        public ErrorLoggingMiddleware(RequestDelegate next)
+        {
+            _next = next;
+        }
+
+        public async Task Invoke(HttpContext context)
+        {
+            try
+            {
+                await _next(context);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"The following error happened: {e.Message}");
+                throw;
+            }
         }
     }
 }
