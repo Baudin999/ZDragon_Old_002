@@ -15,7 +15,7 @@ namespace CLI
 {
     public class Transpiler
     {
-        private IEnumerable<Descriptor> Descriptions;
+        private IEnumerable<Descriptor> Descriptions = Enumerable.Empty<Descriptor>();
 
         public Project Project { get; }
         public string Code => Generator.Code;

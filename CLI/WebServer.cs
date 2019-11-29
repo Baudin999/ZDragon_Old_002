@@ -11,7 +11,7 @@ namespace CLI
 {
     public class WebServer
     {
-        public static string RootPath;
+        public static string RootPath = "";
         public static Task Start(string rootPath)
         {
             RootPath = rootPath;

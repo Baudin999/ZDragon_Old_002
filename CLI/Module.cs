@@ -26,6 +26,9 @@ namespace CLI
             this.Name = CreateModuleName();
             this.OutPath = System.IO.Path.GetFullPath($"out/{Name}", basePath);
             this.Project = project;
+
+            this.Generator = new ASTGenerator("", this.Name);
+            this.Transpiler = new Transpiler(this.Generator, this.Project);
         }
 
         public void Parse()

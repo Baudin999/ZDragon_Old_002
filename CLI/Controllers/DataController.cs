@@ -91,7 +91,7 @@ namespace CLI.Controllers
     }
 
     public static class DataHelpers {
-        public static Object GetPropValue(this Object obj, String name)
+        public static object? GetPropValue(this object obj, string name)
         {
             foreach (var part in name.Split('.'))
             {
@@ -106,10 +106,10 @@ namespace CLI.Controllers
             return obj;
         }
 
-        public static T GetPropValue<T>(this Object obj, String name)
+        public static T GetPropValue<T>(this object obj, String name) 
         {
             var retval = GetPropValue(obj, name);
-            if (retval == null) { return default(T); }
+            if (retval == null) { return default; }
 
             // throws InvalidCastException if types are incompatible
             return (T)retval;

@@ -7,7 +7,7 @@ using Markdig;
 
 namespace Mapper.HTML
 {
-    public class HtmlMapper : VisitorBase<string>
+    public class HtmlMapper : DefaultVisitor<string> //VisitorBase<string>
     {
         public List<string> Parts { get; } = new List<string>();
         public MermaidMapper MermaidMapper { get; }
@@ -19,6 +19,30 @@ namespace Mapper.HTML
             this.MermaidMapper.Start().ToList();
             this.TableMapper = new HtmlTableMapper(nodeTree);
         }
+
+
+        public override string VisitASTChapter(ASTChapter astChapter)
+        {
+            var result = Markdown.ToHtml(astChapter.Content);
+            Parts.Add(result);
+            return result;
+        }
+
+       
+        public override string VisitASTFlow(ASTFlow astFlow)
+        {
+            var result = new MermaidFlowMapper(astFlow).ToString();
+            this.Parts.Add(result);
+            return result;
+        }
+
+        public override string VisitASTParagraph(ASTParagraph astParagraph)
+        {
+            var result = Markdown.ToHtml(astParagraph.Content);
+            Parts.Add(result);
+            return result;
+        }
+
 
         public string ToHtmlString(Dictionary<string, string> links)
         {
@@ -38,10 +62,14 @@ namespace Mapper.HTML
 {string.Join("\n", links.Select(l => $"<li><a href=\"{l.Value}\">{l.Key}</a></li>").ToList())}
 </ul>
 
+{ string.Join("\n\n", Parts)}
+
+## ERD
+
 <div class=""mermaid"">{this.MermaidMapper.ToString()}
 </div>
 
-{ string.Join("\n\n", Parts)}
+## Tables
 
 { string.Join("\n\n", this.TableMapper.Start().ToList()) }
 
@@ -69,81 +97,5 @@ setTimeout(() => {{
 ";
         }
 
-
-        public override string VisitASTAlias(ASTAlias astAlias)
-        {
-            return "";
-        }
-
-        public override string VisitASTAnnotation(ASTAnnotation astAnnotation)
-        {
-            return "";
-        }
-
-        public override string VisitASTChapter(ASTChapter astChapter)
-        {
-            var result = Markdown.ToHtml(astChapter.Content);
-            Parts.Add(result);
-            return result;
-        }
-
-        public override string VisitASTChoice(ASTChoice astChoice)
-        {
-            return "";
-        }
-
-        public override string VisitASTDirective(ASTDirective astDirective)
-        {
-            return "";
-        }
-
-        public override string VisitASTOption(ASTOption astOption)
-        {
-            return "";
-        }
-
-        public override string VisitASTFlow(ASTFlow astFlow)
-        {
-            var result = new MermaidFlowMapper(astFlow).ToString();
-            this.Parts.Add(result);
-            return result;
-        }
-
-        public override string VisitASTParagraph(ASTParagraph astParagraph)
-        {
-            var result = Markdown.ToHtml(astParagraph.Content);
-            Parts.Add(result);
-            return result;
-        }
-
-        public override string VisitASTRestriction(ASTRestriction astRestriction)
-        {
-            return "";
-        }
-
-        public override string VisitASTType(ASTType astType)
-        {
-            return "";
-        }
-
-        public override string VisitASTTypeDefinition(ASTTypeDefinition astTypeDefinition)
-        {
-            return "";
-        }
-
-        public override string VisitASTTypeField(ASTTypeField astTypeField)
-        {
-            return "";
-        }
-
-        public override string VisitDefault(IASTNode node)
-        {
-            return "";
-        }
-
-        public override string VisitASTData(ASTData astData)
-        {
-            return "";
-        }
     }
 }
