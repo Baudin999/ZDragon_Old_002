@@ -8,6 +8,7 @@ using System.Dynamic;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using System.Reflection;
+using Newtonsoft.Json.Serialization;
 
 namespace CLI.Controllers
 {
@@ -19,16 +20,42 @@ namespace CLI.Controllers
         public IActionResult GetData(string module, string type)
         {
             Module = Project.Current.Modules.First(m => m.Name == module);
-            var node = Find(type);
-
-            if (!(node is null) && node is ASTType t)
+            var result = Generate(type);
+            if (result is null)
             {
-                var result = GenerateData(t);
-                return Ok(JsonConvert.SerializeObject(result, Formatting.Indented));
+                return NotFound();
+            }
+            else
+            {
+                return Ok(JsonConvert.SerializeObject(result, new JsonSerializerSettings
+                {
+                    Formatting = Formatting.Indented,
+                    ContractResolver = new DefaultContractResolver
+                    {
+                        NamingStrategy = new SnakeCaseNamingStrategy(true, true)
+                    }
+                }));
+            }
+        }
+
+        private dynamic Generate(string nodeName)
+        {
+            var node = Find(nodeName);
+
+            if (node is ASTType)
+            {
+                return GenerateType((ASTType)node);
+            }
+            else if (node is ASTAlias)
+            {
+                return GenerateAlias((ASTAlias)node);
+            }
+            else if (node is ASTChoice)
+            {
+                return GenerateEnum((ASTChoice)node);
             }
 
-            return NotFound();
-
+            return null;
         }
 
         private IASTNode Find(string name)
@@ -36,7 +63,7 @@ namespace CLI.Controllers
             return Module.Transpiler.AST.FirstOrDefault(m => m is INamable && ((INamable)m).Name == name);
         }
 
-        private dynamic GenerateData(ASTType node)
+        private dynamic GenerateType(ASTType node)
         {
             dynamic result = new ExpandoObject();
             foreach (var field in node.Fields)
@@ -46,13 +73,37 @@ namespace CLI.Controllers
                 var data = (_mod, _type) switch
                 {
                     ("Maybe", _) => GenerateBaseValue(_type),
-                    ("List", _) => GenerateBaseValue(_type),
+                    ("List", _) => GenerateList(_type),
                     (_, _) => GenerateBaseValue(_type, fakerDirective)
                 };
 
                 AddProperty(result, field.Name, data);
             }
             return result;
+        }
+
+        private dynamic GenerateEnum(ASTChoice choice)
+        {
+            var faker = new Bogus.Faker();
+            return faker.Random.ListItem(choice.Options).Value;
+        }
+
+        private dynamic GenerateAlias(ASTAlias alias)
+        {
+            var fakerDirective = alias.Directives.FirstOrDefault(f => f.Key == "faker")?.Value;
+            var (_mod, _type) = (alias.Type.First().Value, alias.Type.Last().Value);
+            return (_mod, _type) switch
+            {
+                ("Maybe", _) => GenerateBaseValue(_type),
+                ("List", _) => GenerateList(_type),
+                (_, _) => GenerateBaseValue(_type, fakerDirective)
+            };
+        }
+
+        private List<object> GenerateList(string _type)
+        {
+            var randomAmount = new Random().Next(0, 5);
+            return new Faker<dynamic>().Generate(randomAmount).Select(i => this.GenerateBaseValue(_type)).ToList();
         }
 
         private object GenerateBaseValue(string _type, string? fakerDirective = null)
@@ -70,7 +121,7 @@ namespace CLI.Controllers
                 "Date" => faker.Person.DateOfBirth.ToShortDateString(),
                 "Time" => faker.Person.DateOfBirth.ToShortTimeString(),
                 "DateTime" => faker.Person.DateOfBirth.ToString(),
-                _ => "No recognised type",
+                _ => Generate(_type),
             };
         }
 
@@ -90,7 +141,8 @@ namespace CLI.Controllers
         }
     }
 
-    public static class DataHelpers {
+    public static class DataHelpers
+    {
         public static object? GetPropValue(this object obj, string name)
         {
             foreach (var part in name.Split('.'))
@@ -99,14 +151,23 @@ namespace CLI.Controllers
 
                 Type type = obj.GetType();
                 var info = type.GetProperty(part);
-                if (info == null) { return null; }
-
-                obj = info.GetValue(obj, null);
+                if (info != null)
+                {
+                    obj = info.GetValue(obj, null);
+                }
+                else
+                {
+                    var fieldInfo = type.GetField(part);
+                    if (fieldInfo != null)
+                    {
+                        obj = fieldInfo.GetValue(obj);
+                    }
+                }
             }
             return obj;
         }
 
-        public static T GetPropValue<T>(this object obj, String name) 
+        public static T GetPropValue<T>(this object obj, String name)
         {
             var retval = GetPropValue(obj, name);
             if (retval == null) { return default; }
