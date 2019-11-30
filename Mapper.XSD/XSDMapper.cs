@@ -197,6 +197,8 @@ namespace Mapper.XSD
         {
             return null;
         }
+
+        public override XmlSchemaObject? VisitASTView(ASTView astView) => null;
     }
 }
 

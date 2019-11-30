@@ -62,12 +62,12 @@ namespace Compiler
 
         public override string VisitASTOption(ASTOption astOption)
         {
-            throw new NotImplementedException();
+            return "";
         }
 
         public override string VisitASTParagraph(ASTParagraph astOption)
         {
-            throw new NotImplementedException();
+            return "";
         }
 
         public override string VisitASTRestriction(ASTRestriction astRestriction)
@@ -126,6 +126,8 @@ namespace Compiler
                 return $"    {astTypeField.Name}: {typeDef};";
             }
         }
+
+        public override string VisitASTView(ASTView astView) => throw new NotImplementedException();
 
         public override string VisitDefault(IASTNode node)
         {

@@ -36,6 +36,14 @@
   </h2>
   <p class="description">{descriptor.description || 'No Description'}</p>
   <a alt={descriptor.module} href={`/${descriptor.module}/index.html`}>
-    {descriptor.module}
+    Module: {descriptor.module}
   </a>
+  {#if !descriptor.parent}
+    <br />
+    <a
+      alt={descriptor.name}
+      href={`/api/data/${descriptor.module}/${descriptor.name}`}>
+      Show me the data!
+    </a>
+  {/if}
 </div>

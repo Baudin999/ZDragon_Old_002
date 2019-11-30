@@ -1,15 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.Json;
 using Compiler;
 using Compiler.AST;
+using Mapper.Application;
 using Mapper.HTML;
 using Mapper.JSON;
 using Mapper.XSD;
-using Mapper.Application;
-using System.Text.Json.Serialization;
-using System.Text.Json;
 
 namespace CLI
 {
@@ -33,13 +31,17 @@ namespace CLI
         {
             this.Generator = generator;
             this.Project = project;
+            XsdMapper = new XSDMapper(Enumerable.Empty<IASTNode>());
+            HtmlMapper = new HtmlMapper(Enumerable.Empty<IASTNode>());
+            JsonMapper = new JsonMapper(Enumerable.Empty<IASTNode>());
+            DescriptionMapper = new DescriptionMapper(Enumerable.Empty<IASTNode>());
         }
 
         public string XsdToString()
         {
             TextWriter writer = new StringWriter();
             XsdMapper.Schema.Write(writer);
-            return writer.ToString();
+            return writer.ToString() ?? "";
         }
 
         public string HtmlToString()
@@ -61,67 +63,21 @@ namespace CLI
         }
 
 
-        public void StartMappings(string moduleName = "")
+        public void StartTranspilation(string moduleName = "")
         {
-            this.ResolveImports();
-            this.XsdMapper = new XSDMapper(this.Generator.AST.Concat(this.Imports).ToList());
+            this.Imports = ImportResolver.ResolveImports(this.Generator);
+            this.Generator.Resolve(this.Imports);
+
+            this.XsdMapper = new XSDMapper(this.Generator.AST);
             this.XsdMapper.Start().ToList();
 
-            this.HtmlMapper = new HtmlMapper(this.Generator.AST.Concat(this.Imports).ToList());
+            this.HtmlMapper = new HtmlMapper(this.Generator.AST, this.Generator.Errors);
             this.HtmlMapper.Start().ToList();
 
-            this.JsonMapper = new JsonMapper(this.Generator.AST.Concat(this.Imports).ToList());
+            this.JsonMapper = new JsonMapper(this.Generator.AST);
             this.JsonMapper.Start();
-
-            //this.DescriptionMapper = new DescriptionMapper(this.Generator.AST.Concat(this.Imports).ToList(), moduleName);
-            //Descriptions = this.DescriptionMapper.Start().ToList().SelectMany(s => s).ToList();
         }
 
-        private void ResolveImports()
-        {
-            this.Imports = new List<IASTNode>();
-            var imports = Generator.AST.FindAll(n => n is ASTImport).ToList();
-            imports.ForEach(node =>
-            {
-                var import = (ASTImport)node;
-                var ast = this.Project.GetAstForModule(import.Name);
-                if (!import.Imports.Any())
-                {
-                    var copies = ast
-                        .FindAll(a => a is ASTType || a is ASTAlias || a is ASTData || a is ASTChoice)
-                        .Select(a => {
-                            return a switch
-                            {
-                                ASTType t => t.Clone() as IASTNode,
-                                ASTAlias t => t.Clone() as IASTNode,
-                                ASTData t => t.Clone() as IASTNode,
-                                ASTChoice t => t.Clone() as IASTNode,
-                                _ => throw new Exception("Can only serialize real AST nodes.")
-                            };
-                        })
-                        .ToList();
-                    this.Imports.AddRange(copies);
-                } else
-                {
-                    var importedNodes = import.Imports.Select(import =>
-                    {
-                        return ast.FirstOrDefault(a =>
-                        {
-                            return a switch
-                            {
-                                ASTType n => n.Name == import,
-                                ASTAlias n => n.Name == import,
-                                ASTData n => n.Name == import,
-                                ASTChoice n => n.Name == import,
-                                _ => false
-                            };
-                        });                    
-                    })
-                    .ToList()
-                    .FindAll(n => !(n is null));
-                    this.Imports.AddRange(importedNodes);
-                }
-            });
-        }
+        
     }
 }

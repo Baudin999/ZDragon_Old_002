@@ -1,25 +1,23 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
-using System.Text.Json;
+using Bogus;
 using Compiler.AST;
 using Microsoft.AspNetCore.Mvc;
-using Bogus;
-using System.Dynamic;
-using System.Collections.Generic;
 using Newtonsoft.Json;
-using System.Reflection;
 using Newtonsoft.Json.Serialization;
 
 namespace CLI.Controllers
 {
-    public class DataController : ControllerBase
+    public class JsonDataController : ControllerBase
     {
-        private Module Module;
+        private Module? Module;
 
         [HttpGet("/api/data/{module}/{type}")]
         public IActionResult GetData(string module, string type)
         {
-            Module = Project.Current.Modules.First(m => m.Name == module);
+            Module = Project.Current?.Modules.First(m => m.Name == module);
             var result = Generate(type);
             if (result is null)
             {
@@ -55,12 +53,12 @@ namespace CLI.Controllers
                 return GenerateEnum((ASTChoice)node);
             }
 
-            return null;
+            return new { };
         }
 
-        private IASTNode Find(string name)
+        private IASTNode? Find(string name)
         {
-            return Module.Transpiler.AST.FirstOrDefault(m => m is INamable && ((INamable)m).Name == name);
+            return Module?.Transpiler.AST.FirstOrDefault(m => m is INamable && ((INamable)m).Name == name);
         }
 
         private dynamic GenerateType(ASTType node)
@@ -153,14 +151,18 @@ namespace CLI.Controllers
                 var info = type.GetProperty(part);
                 if (info != null)
                 {
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
                     obj = info.GetValue(obj, null);
+#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
                 }
                 else
                 {
                     var fieldInfo = type.GetField(part);
                     if (fieldInfo != null)
                     {
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
                         obj = fieldInfo.GetValue(obj);
+#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
                     }
                 }
             }
@@ -170,7 +172,9 @@ namespace CLI.Controllers
         public static T GetPropValue<T>(this object obj, String name)
         {
             var retval = GetPropValue(obj, name);
+#pragma warning disable CS8653 // A default expression introduces a null value for a type parameter.
             if (retval == null) { return default; }
+#pragma warning restore CS8653 // A default expression introduces a null value for a type parameter.
 
             // throws InvalidCastException if types are incompatible
             return (T)retval;

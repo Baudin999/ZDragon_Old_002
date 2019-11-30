@@ -5,10 +5,13 @@ namespace Compiler.AST
     {
         public Token? Token { get; }
         public string Message { get; }
-        public ASTError(string message, Token? token)
+        public string Title { get; } = "";
+
+        public ASTError(string message, string title = "", Token? token = null)
         {
             this.Message = message;
             this.Token = token;
+            this.Title = title;
         }
 
     }

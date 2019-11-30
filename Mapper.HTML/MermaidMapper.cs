@@ -15,7 +15,7 @@ namespace Mapper.HTML
         {
             var template = $@"
 class {astAlias.Name} {{
-{string.Join("\n", astAlias.Type.Select(t => t.Value).ToList())}
+{string.Join(Environment.NewLine, astAlias.Type.Select(t => t.Value).ToList())}
 }}
 ";
             this.Parts.Add(template);
@@ -28,7 +28,7 @@ class {astAlias.Name} {{
         {
             var template = $@"
 class {astChoice.Name} {{
-{string.Join("\n", astChoice.Options.Select(o => o.Value).ToList())}
+{string.Join(Environment.NewLine, astChoice.Options.Select(o => o.Value).ToList())}
 }}
 
 ";
@@ -58,9 +58,9 @@ class {astChoice.Name} {{
             });
             var template = $@"
 class {astData.Name} {{
-{string.Join("\n", astData.Options.Select(o => o.ToMermaidString()).ToList())}
+{string.Join(Environment.NewLine, astData.Options.Select(o => o.ToMermaidString()).ToList())}
 }}
-{string.Join("\n", typeReferences)}
+{string.Join(Environment.NewLine, typeReferences)}
 ";
             this.Parts.Add(template);
             return template;
@@ -104,10 +104,10 @@ class {astData.Name} {{
             {
                 var template = $@"
 class {astType.Name} {{
-{string.Join("\n", fields)}
+{string.Join(Environment.NewLine, fields)}
 }}
-{string.Join("\n", extensions)}
-{string.Join("\n", typeReferences)}
+{string.Join(Environment.NewLine, extensions)}
+{string.Join(Environment.NewLine, typeReferences)}
 ";
                 this.Parts.Add(template);
                 return template;
@@ -116,7 +116,7 @@ class {astType.Name} {{
             {
                 var template = $@"
 class {astType.Name}
-{string.Join("\n", extensions)}
+{string.Join(Environment.NewLine, extensions)}
 ";
                 Parts.Add(template);
                 return template;
@@ -127,10 +127,7 @@ class {astType.Name}
         public override string ToString()
         {
 
-            return $@"
-classDiagram
-{string.Join("", Parts.ToList())}
-".Trim();
+            return $"classDiagram\n{string.Join(Environment.NewLine, Parts.ToList())}";
         }
 
     }

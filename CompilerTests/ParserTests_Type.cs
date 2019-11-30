@@ -282,11 +282,11 @@ type Person =
             Assert.NotNull(parseTree);
 
             Assert.Single(parseTree);
-            ASTType t = (ASTType)parseTree[0];
+            var t = (ASTType)parseTree[0];
             Assert.Single(t.Fields);
             Assert.Equal(2, t.Fields.First().Restrictions.Count());
 
-            ASTTypeField field = t.Fields.First();
+            var field = t.Fields.First();
             Assert.Equal(2, field.Restrictions.Count());
             Assert.Equal("Should not be 30", field.Restrictions.ToList()[1].Annotations.First().Value);
         }
@@ -308,7 +308,7 @@ type Person
 
             var s = parser.Errors.First();
 
-            ASTType t = parseTree[0] as ASTType;
+            var t = parseTree[0] as ASTType;
             Assert.Equal(2, t.Directives.Count());
         }
 
@@ -324,7 +324,7 @@ type Person =
     ;
 ";
             var g = new ASTGenerator(code);
-            Assert.Equal(1, g.AST.Count());
+            Assert.Single(g.AST);
 
             var t = g.AST[0] as ASTType;
             Assert.NotNull(t);

@@ -84,7 +84,7 @@ namespace Compiler
                 return clone;
             } else
             {
-                errors.Add(new ASTError("No valid field to pluck from.", null));
+                errors.Add(new ASTError("No valid field to pluck from.", "Invalid Syntax", null));
             }
 
             return field;
@@ -108,11 +108,11 @@ namespace Compiler
                 var clone = (FindNode(_mod) as ASTType)?.Clone();
                 if (clone is null)
                 {
-                    errors.Add(new ASTError("Cannot resolve generic type", null));
+                    errors.Add(new ASTError("Cannot resolve generic type", "Invalid Syntax", null));
                 }
                 else if (clone.Parameters.Count() != alias.Type.Count() - 1)
                 {
-                    errors.Add(new ASTError("Not resolving all generic parameters.", null));
+                    errors.Add(new ASTError("Not resolving all generic parameters.", "Invalid Syntax", null));
                 }
                 else
                 {

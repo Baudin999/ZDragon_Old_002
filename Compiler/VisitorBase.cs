@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Compiler.AST;
 
 namespace Compiler
@@ -43,6 +44,7 @@ namespace Compiler
                 ASTChapter n => VisitASTChapter(n),
                 ASTParagraph n => VisitASTParagraph(n),
                 ASTFlow n => VisitASTFlow(n),
+                ASTView n => VisitASTView(n),
                 _ => VisitDefault(node),
             };
         }
@@ -59,6 +61,9 @@ namespace Compiler
         public abstract T VisitASTRestriction(ASTRestriction astRestriction);
         public abstract T VisitASTOption(ASTOption astOption);
 
+        // Other
+        public abstract T VisitASTView(ASTView astView);
+
         // flows
         public abstract T VisitASTFlow(ASTFlow astFlow);
 
@@ -68,6 +73,12 @@ namespace Compiler
 
         // default
         public abstract T VisitDefault(IASTNode node);
+
+
+        public IASTNode Find(string name)
+        {
+            return NodeTree.FirstOrDefault(n => n is INamable && ((INamable)n).Name == name);
+        }
     }
 
 
@@ -89,6 +100,7 @@ namespace Compiler
         public override T VisitASTType(ASTType astType) => d;
         public override T VisitASTTypeDefinition(ASTTypeDefinition astTypeDefinition) => d;
         public override T VisitASTTypeField(ASTTypeField astTypeField) => d;
+        public override T VisitASTView(ASTView astView) => d;
         public override T VisitDefault(IASTNode node) => d;
 
         private T d

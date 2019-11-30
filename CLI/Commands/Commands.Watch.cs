@@ -36,7 +36,7 @@ namespace CLI.Commands
 
                           var project = new Project(directory);
 
-                          Task webserverTask = null;
+                          Task? webserverTask = null;
                           if (serve.HasValue())
                           {
                               webserverTask = WebServer.Start(project.OutPath);

@@ -19,6 +19,7 @@ namespace CLI
         public ASTGenerator Generator { get; private set; }
         public DateTime LastParsed { get; private set; }
 
+        
         public Module(string path, string basePath, Project project)
         {
             this.Path = path;
@@ -43,7 +44,7 @@ namespace CLI
 
         public void SaveModuleOutput()
         {
-            this.Transpiler.StartMappings(this.Name);
+            this.Transpiler.StartTranspilation(this.Name);
             Console.WriteLine($"Perfectly parsed: {Name}");
             SaveResult("Model.xsd", Transpiler.XsdToString());
             SaveResult("index.html", Transpiler.HtmlToString());

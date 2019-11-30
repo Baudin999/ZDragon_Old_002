@@ -98,12 +98,12 @@ type {result.Name} =
 Example:
 type {result.Name} =
     {nextPhrase}
-", parser.Current));
+", "Invalid Syntax", parser.Current));
                         }
                         else
                         {
                             errors.Add(new ASTError($@"
-Missing type body. If you use an '=' sign you should have at least one field.", parser.Current));
+Missing type body. If you use an '=' sign you should have at least one field.", "Invalid Syntax", parser.Current));
                         }
                     }
                 }
@@ -114,7 +114,7 @@ Missing type body. If you use an '=' sign you should have at least one field.", 
             {
                 return (new List<ASTError>
                 {
-                    new ASTError(ex.Message, parser.Current)
+                    new ASTError(ex.Message, "Invalid Syntax", parser.Current)
                 }, result);
             }
 

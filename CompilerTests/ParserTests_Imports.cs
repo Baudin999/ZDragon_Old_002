@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using CLI;
 using Compiler;
 using Compiler.AST;
 using Xunit;
@@ -40,7 +41,7 @@ open Customer importing (Customer)
 
 
         [Fact]
-        public void ImportAList()
+        public void ImportAlist()
         {
             var code = @"
 open Customer importing (Customer, Person, Product)
@@ -53,6 +54,32 @@ open Customer importing (Customer, Person, Product)
             Assert.Equal("Customer", import.Name);
             Assert.Equal(3, import.Imports.Count());
             Assert.Equal(new string[] { "Customer", "Person", "Product" }, import.Imports);
+        }
+
+
+        [Fact]
+        public void ImportAndParseAST()
+        {
+            
+            var baseCode = @"
+type Person =
+    FirstName: String;
+";
+            var _g = new ASTGenerator(baseCode);
+            
+            var code = @"
+open Sample;
+
+type Student extends Person;
+";
+            var g = new ASTGenerator(code);
+            
+            g.Resolve(_g.AST);
+
+
+            var student = (ASTType)g.AST[1];
+            Assert.Equal("Student", student.Name);
+            Assert.Single(student.Fields);
         }
     }
 }

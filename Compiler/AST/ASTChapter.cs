@@ -7,7 +7,7 @@ namespace Compiler.AST
         public ASTChapter() { }
         public ASTChapter(string content)
         {
-            this.Content = content;
+            this.Content = content.Trim();
         }
     }
 }

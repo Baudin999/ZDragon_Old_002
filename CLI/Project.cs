@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using CLI.Signals;
 using Compiler.AST;
 
@@ -11,12 +12,12 @@ namespace CLI
     public class Project : IDisposable
     {
 
-        public static Project Current { get; private set; }
+        public static Project? Current { get; private set; }
 
-        public string Path { get; }
-        public string OutPath { get; }
+        public string Path { get; } = "";
+        public string OutPath { get; } = "";
         public List<Module> Modules { get; } = new List<Module>();
-        public Action Cleanup { get; private set; }
+        public Action Cleanup { get; private set; } = () => { };
 
         public Project(string path)
         {
@@ -32,12 +33,23 @@ namespace CLI
                 module.Parse();
             }
 
-            Modules.ForEach(m => m.SaveModuleOutput());
+            
             CreateIndexPage();
             CreateAssets();
             Cleanup = () => { };
 
+            Task.Run(Parse);
+
             Project.Current = this;
+        }
+
+        public void Parse()
+        {
+            foreach (var module in this.Modules)
+            {
+                module.Parse();
+                module.SaveModuleOutput();
+            }
         }
 
         private void CreateIndexPage()
@@ -83,7 +95,7 @@ namespace CLI
                 {
                     module.Parse();
                 }
-                return module.Generator.AST;
+                return module?.Generator?.AST ?? new List<IASTNode>();
             }
         }
 
@@ -170,7 +182,7 @@ namespace CLI
             try
             {
                 Console.WriteLine($"File: {e.FullPath} {e.ChangeType}");
-                Modules.Remove(Modules.Find(m => m.Path == e.FullPath));
+                Modules.Remove(Modules.FirstOrDefault(m => m.Path == e.FullPath));
                 CreateIndexPage();
             }
             catch (Exception ex)
@@ -184,7 +196,7 @@ namespace CLI
             try
             {
                 Console.WriteLine($"File: {e.OldFullPath} renamed to {e.FullPath}");
-                Modules.Remove(Modules.Find(m => m.Path == e.OldFullPath));
+                Modules.Remove(Modules.FirstOrDefault(m => m.Path == e.OldFullPath));
 
                 var module = new Module(e.FullPath, this.Path, this);
                 Modules.Add(module);
@@ -211,8 +223,14 @@ namespace CLI
                 var resourceName = name;
 
                 using var stream = assembly.GetManifestResourceStream(resourceName);
-                using var reader = new StreamReader(stream);
-                return reader.ReadToEnd();
+                if (!(stream is null))
+                {
+                    using var reader = new StreamReader(stream);
+                    return reader.ReadToEnd();
+                } else
+                {
+                    return "";
+                }
             }
 
             public static void WriteAsset(string path, string content)

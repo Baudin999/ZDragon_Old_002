@@ -28,18 +28,18 @@ namespace Mapper.Application
             };
 
 
-            foreach (var field in astType.Fields)
-            {
-                yield return new Descriptor
-                {
-                    Module = ModuleName,
-                    Name = field.Name,
-                    Description = MapAnnotations(field.Annotations),
-                    Parent = astType.Name,
-                    Type = MapTypes(field.Type),
-                    DescriptorType = DescriptorType.Field.ToString("g")
-                };
-            }
+            //foreach (var field in astType.Fields)
+            //{
+            //    yield return new Descriptor
+            //    {
+            //        Module = ModuleName,
+            //        Name = field.Name,
+            //        Description = MapAnnotations(field.Annotations),
+            //        Parent = astType.Name,
+            //        Type = MapTypes(field.Type),
+            //        DescriptorType = DescriptorType.Field.ToString("g")
+            //    };
+            //}
         }
 
         public override IEnumerable<Descriptor> VisitASTAlias(ASTAlias astAlias)
@@ -64,17 +64,17 @@ namespace Mapper.Application
                 DescriptorType = DescriptorType.Data.ToString("g")
             };
 
-            foreach (var option in astData.Options)
-            {
-                yield return new Descriptor
-                {
-                    Module = ModuleName,
-                    Name = option.Name,
-                    Parent = astData.Name,
-                    Description = MapAnnotations(option.Annotations),
-                    DescriptorType = DescriptorType.DataOption.ToString("g")
-                };
-            }
+            //foreach (var option in astData.Options)
+            //{
+            //    yield return new Descriptor
+            //    {
+            //        Module = ModuleName,
+            //        Name = option.Name,
+            //        Parent = astData.Name,
+            //        Description = MapAnnotations(option.Annotations),
+            //        DescriptorType = DescriptorType.DataOption.ToString("g")
+            //    };
+            //}
         }
 
         public override IEnumerable<Descriptor> VisitASTChoice(ASTChoice astChoice)

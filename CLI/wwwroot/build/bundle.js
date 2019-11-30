@@ -341,6 +341,59 @@ var app = (function () {
 
     const file = "src/SearchResult.svelte";
 
+    // (41:2) {#if !descriptor.parent}
+    function create_if_block(ctx) {
+    	let br;
+    	let t0;
+    	let a;
+    	let t1;
+    	let a_alt_value;
+    	let a_href_value;
+
+    	const block = {
+    		c: function create() {
+    			br = element("br");
+    			t0 = space();
+    			a = element("a");
+    			t1 = text("Show me the data!");
+    			add_location(br, file, 41, 4, 896);
+    			attr_dev(a, "alt", a_alt_value = ctx.descriptor.name);
+    			attr_dev(a, "href", a_href_value = `/api/data/${ctx.descriptor.module}/${ctx.descriptor.name}`);
+    			add_location(a, file, 42, 4, 907);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, br, anchor);
+    			insert_dev(target, t0, anchor);
+    			insert_dev(target, a, anchor);
+    			append_dev(a, t1);
+    		},
+    		p: function update(changed, ctx) {
+    			if (changed.descriptor && a_alt_value !== (a_alt_value = ctx.descriptor.name)) {
+    				attr_dev(a, "alt", a_alt_value);
+    			}
+
+    			if (changed.descriptor && a_href_value !== (a_href_value = `/api/data/${ctx.descriptor.module}/${ctx.descriptor.name}`)) {
+    				attr_dev(a, "href", a_href_value);
+    			}
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(br);
+    			if (detaching) detach_dev(t0);
+    			if (detaching) detach_dev(a);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block.name,
+    		type: "if",
+    		source: "(41:2) {#if !descriptor.parent}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
     function create_fragment(ctx) {
     	let div;
     	let h2;
@@ -357,11 +410,14 @@ var app = (function () {
     	let t5;
     	let t6;
     	let a;
-    	let t7_value = ctx.descriptor.module + "";
     	let t7;
+    	let t8_value = ctx.descriptor.module + "";
+    	let t8;
     	let a_alt_value;
     	let a_href_value;
+    	let t9;
     	let dispose;
+    	let if_block = !ctx.descriptor.parent && create_if_block(ctx);
 
     	const block = {
     		c: function create() {
@@ -376,7 +432,10 @@ var app = (function () {
     			t5 = text(t5_value);
     			t6 = space();
     			a = element("a");
-    			t7 = text(t7_value);
+    			t7 = text("Module: ");
+    			t8 = text(t8_value);
+    			t9 = space();
+    			if (if_block) if_block.c();
     			attr_dev(h2, "class", "svelte-8inx22");
     			add_location(h2, file, 33, 2, 573);
     			attr_dev(p, "class", "description svelte-8inx22");
@@ -404,13 +463,16 @@ var app = (function () {
     			append_dev(div, t6);
     			append_dev(div, a);
     			append_dev(a, t7);
+    			append_dev(a, t8);
+    			append_dev(div, t9);
+    			if (if_block) if_block.m(div, null);
     		},
     		p: function update(changed, ctx) {
     			if (changed.descriptor && t0_value !== (t0_value = ctx.descriptor.module + "")) set_data_dev(t0, t0_value);
     			if (changed.descriptor && t2_value !== (t2_value = (ctx.descriptor.parent ? ctx.descriptor.parent + "." : "") + "")) set_data_dev(t2, t2_value);
     			if (changed.descriptor && t3_value !== (t3_value = ctx.descriptor.name + "")) set_data_dev(t3, t3_value);
     			if (changed.descriptor && t5_value !== (t5_value = (ctx.descriptor.description || "No Description") + "")) set_data_dev(t5, t5_value);
-    			if (changed.descriptor && t7_value !== (t7_value = ctx.descriptor.module + "")) set_data_dev(t7, t7_value);
+    			if (changed.descriptor && t8_value !== (t8_value = ctx.descriptor.module + "")) set_data_dev(t8, t8_value);
 
     			if (changed.descriptor && a_alt_value !== (a_alt_value = ctx.descriptor.module)) {
     				attr_dev(a, "alt", a_alt_value);
@@ -419,11 +481,25 @@ var app = (function () {
     			if (changed.descriptor && a_href_value !== (a_href_value = `/${ctx.descriptor.module}/index.html`)) {
     				attr_dev(a, "href", a_href_value);
     			}
+
+    			if (!ctx.descriptor.parent) {
+    				if (if_block) {
+    					if_block.p(changed, ctx);
+    				} else {
+    					if_block = create_if_block(ctx);
+    					if_block.c();
+    					if_block.m(div, null);
+    				}
+    			} else if (if_block) {
+    				if_block.d(1);
+    				if_block = null;
+    			}
     		},
     		i: noop,
     		o: noop,
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(div);
+    			if (if_block) if_block.d();
     			dispose();
     		}
     	};

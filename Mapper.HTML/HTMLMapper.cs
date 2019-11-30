@@ -7,19 +7,27 @@ using Markdig;
 
 namespace Mapper.HTML
 {
-    public class HtmlMapper : DefaultVisitor<string> //VisitorBase<string>
+    public class HtmlMapper : DefaultVisitor<string>
     {
         public List<string> Parts { get; } = new List<string>();
+        public IEnumerable<IASTError> Errors { get; }
         public MermaidMapper MermaidMapper { get; }
         public HtmlTableMapper TableMapper { get; }
 
-        public HtmlMapper(IEnumerable<IASTNode> nodeTree) : base(nodeTree)
+        public HtmlMapper(IEnumerable<IASTNode> nodeTree, IEnumerable<IASTError> errors) : base(nodeTree)
         {
+            this.Errors = errors;
             this.MermaidMapper = new MermaidMapper(nodeTree);
             this.MermaidMapper.Start().ToList();
             this.TableMapper = new HtmlTableMapper(nodeTree);
         }
 
+        public HtmlMapper(IEnumerable<IASTNode> nodeTree) : base(nodeTree) {
+            this.Errors = Enumerable.Empty<IASTError>();
+            this.MermaidMapper = new MermaidMapper(nodeTree);
+            this.MermaidMapper.Start().ToList();
+            this.TableMapper = new HtmlTableMapper(nodeTree);
+        }
 
         public override string VisitASTChapter(ASTChapter astChapter)
         {
@@ -43,9 +51,31 @@ namespace Mapper.HTML
             return result;
         }
 
+        public override string VisitASTView(ASTView astView)
+        {
+            var ast = astView.Nodes.Select(Find).ToList();
+            var mermaidMapper = new MermaidMapper(ast);
+            mermaidMapper.Start().ToList();
+            var mermaidString = mermaidMapper.ToString().Trim();
+            var result = $@"<div class=""mermaid"">{mermaidString}</div>";
+            Parts.Add(result);
+            return result;
+        }
+
 
         public string ToHtmlString(Dictionary<string, string> links)
         {
+            //
+            var errorBlock = string.Join("\n", this.Errors.Select(error =>
+            {
+                return $@"
+<div class=""error"">
+    <div class=""title"">{error.Title}</div>
+    <div><pre>{error.Message.Trim()}</pre></div>
+</div>
+";
+            }));
+
             return $@"
 <!DOCTYPE html>
 <html>
@@ -62,32 +92,34 @@ namespace Mapper.HTML
 {string.Join("\n", links.Select(l => $"<li><a href=\"{l.Value}\">{l.Key}</a></li>").ToList())}
 </ul>
 
-{ string.Join("\n\n", Parts)}
+{ errorBlock }
 
-## ERD
+{ string.Join("\n", Parts)}
 
-<div class=""mermaid"">{this.MermaidMapper.ToString()}
-</div>
+<h2>ERD</h2>
 
-## Tables
+<div class=""mermaid"">{this.MermaidMapper.ToString()}</div>
+
+<h2>Tables</h2>
 
 { string.Join("\n\n", this.TableMapper.Start().ToList()) }
 
 <script>
 mermaid.initialize({{
-    startOnLoad:true,
-    classDiagram: {{
-        useMaxWidth: false
-    }},
+    startOnLoad: false,
     sequence: {{ actorMargin: 250 }}
 }});
 
-setTimeout(() => {{
-    let svg = document.getElementsByTagName('svg')[0];
-    let [a, b, width, height] = svg.attributes['viewBox'].value.split(' ');
-    svg.attributes['width'].value = width;
-    svg.attributes['height'].value = height;
-}}, 30);
+[...document.getElementsByClassName(""mermaid"")].reverse().forEach((element, i) => {{
+    const id = ""mermaid-"" + i;				
+	mermaid.render(
+        id,
+        element.textContent.trim(),
+        (svg, bind) => {{
+            element.innerHTML = svg;
+        }},
+        element);
+}});
 
 </script>
 

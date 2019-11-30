@@ -5,5 +5,6 @@ namespace Compiler.AST
     {
         public Token? Token { get;  }
         public string Message { get;  }
+        public string Title { get; }
     }
 }
