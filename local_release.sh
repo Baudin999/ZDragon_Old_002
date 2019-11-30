@@ -1,8 +1,8 @@
 #!/bin/bash -i
 if [ -z ${ZDRAGON_PATH} ]; then
-    read -p "Please enter your ZDragon.NET source path: `echo $'\n'`" -e
+    read -p "Please enter your ZDragon.NET source path (folder with the dotnet solution): `echo $'\n'`" -e
     if [ ! $(ls -a $REPLY | grep .sln) ] || [ ! $(ls -a $REPLY | grep CLI) ] ; then
-        echo "This is not a valid dotnet project, or it does not contain the ZDragon.NET project. Exiting."
+        echo "This is not a valid dotnet solution, or it does not contain the ZDragon.NET solution. Exiting."
         exit 1;
     fi
     ZDRAGON_PATH = $REPLY
