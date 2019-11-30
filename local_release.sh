@@ -5,12 +5,12 @@ if [ -z ${ZDRAGON_PATH} ]; then
         echo "This is not a valid dotnet project, or it does not contain the ZDragon.NET project. Exiting."
         exit 1;
     fi
-    PATH = $REPLY
+    ZDRAGON_PATH = $REPLY
     read -p "Would you like to add this path to your bash profile to be re-used in the next start? (y/n)" -n 1 -r
     if [[ $REPLY =~ ^[Yy]$ ]]; then
-        echo -e "export ZDRAGON_PATH=$PATH\n" >> $HOME/.bash_profile
+        echo -e "export ZDRAGON_PATH=$ZDRAGON_PATH\n" >> $HOME/.bash_profile
         source ~/.bash_profile
-        echo "Added $PATH to your bash profile."
+        echo "Added $ZDRAGON_PATH to your bash profile."
     fi
 fi
 
