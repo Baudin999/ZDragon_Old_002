@@ -61,7 +61,7 @@ namespace Compiler
                         };
 
                         var baseTypes = new[] { "String", "Number", "Boolean", "Date", "Time", "DateTime" };
-                        if (!baseTypes.Contains(__type))
+                        if (!baseTypes.Contains(__type) && !__type.StartsWith("'", StringComparison.CurrentCulture))
                         {
                             var foundNode = ParseTree.FirstOrDefault(n => n is INamable && ((INamable)n).Name == _type);
                             if (foundNode is null)
