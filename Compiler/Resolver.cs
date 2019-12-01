@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using Compiler.AST;
 
@@ -13,22 +14,24 @@ namespace Compiler
             this.ParseTree = parseTree;
         }
 
-        public (IEnumerable<ASTError>, IEnumerable<IASTNode>) Resolve()
+        public (IEnumerable<IASTError>, IEnumerable<IASTNode>) Resolve()
         {
-            var errors = new List<ASTError>();
+            var errors = new List<IASTError>();
             var nodes = new List<IASTNode>();
-            foreach (IASTNode node in ParseTree)
+            foreach (var node in ParseTree)
             {
-                if (node is ASTData)
+                if (node is ASTData dataNode)
                 {
-                    foreach (var option in ((ASTData)node).Options)
+                    foreach (var option in dataNode.Options)
                     {
                         var existingNode = FindNode(option.Name);
                         if (existingNode is null)
                         {
                             nodes.Add(new ASTType(
                                 option.Name,
+                                dataNode.Module,
                                 option.Parameters,
+                                Enumerable.Empty<string>(),
                                 Enumerable.Empty<ASTTypeField>(),
                                 Enumerable.Empty<ASTAnnotation>(),
                                 Enumerable.Empty<ASTDirective>())
@@ -39,11 +42,15 @@ namespace Compiler
                 }
                 else if (node is ASTAlias alias)
                 {
-                    ResolveAlias(alias, nodes, errors);
+                    var (resolve_alias_errors, resolvedAlias) = ResolveAlias(alias);
+                    errors.AddRange(resolve_alias_errors);
+                    nodes.Add(resolvedAlias);
                 }
                 else if (node is ASTType t)
                 {
-                    ResolveType(t, nodes, errors);
+                    var (resolve_errors, resolvedType) = ResolveType(t);
+                    errors.AddRange(resolve_errors);
+                    nodes.Add(resolvedType);
                 }
                 else
                 {
@@ -51,7 +58,7 @@ namespace Compiler
                 }
 
             }
-            return (errors, nodes);
+            return (errors, nodes.ToList());
         }
 
         private IASTNode FindNode(string name)
@@ -60,12 +67,12 @@ namespace Compiler
             {
                 // Oh my dotnet, what have you done!!
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
-                return n != null && n is INamable && (n as INamable).Name == name;
+                return n != null && !(n is ASTImport) && n is INamable && (n as INamable).Name == name;
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
             });
         }
 
-        private ASTTypeField PluckField(ASTPluckedField field, List<ASTError> errors)
+        private (IEnumerable<IASTError>, ASTTypeField) PluckField(ASTPluckedField field)
         {
 
             var _ref = field.Type.First();
@@ -81,16 +88,15 @@ namespace Compiler
                     clone.SetRestriction(r.Key, r.Value, r);
                 });
 
-                return clone;
+                return (Enumerable.Empty<ASTError>(), clone);
             } else
             {
-                errors.Add(new ASTError("No valid field to pluck from.", "Invalid Syntax", null));
+                var error = new ASTError("No valid field to pluck from.", "Invalid Syntax");
+                return (new[] { error }, field);
             }
-
-            return field;
         }
 
-        private void ResolveAlias(ASTAlias alias, List<IASTNode> nodes, List<ASTError> errors)
+        private (IEnumerable<IASTError>, IASTNode) ResolveAlias(ASTAlias alias)
         {
             // here we'll resolve generic aliasses
             var _mod = alias.Type.First().Value;
@@ -101,11 +107,12 @@ namespace Compiler
                 //
                 // alias ConcreteFoo = List Foo String
                 //
-                nodes.Add(alias);
+                return (Enumerable.Empty<IASTError>(), alias);
             }
             else
             {
-                var clone = (FindNode(_mod) as ASTType)?.Clone();
+                var errors = new List<IASTError>();
+                var clone = FindNode(_mod) as ASTType;
                 if (clone is null)
                 {
                     errors.Add(new ASTError("Cannot resolve generic type", "Invalid Syntax", null));
@@ -116,50 +123,67 @@ namespace Compiler
                 }
                 else
                 {
-                    clone.Name = alias.Name;
-                    clone.Fields.ToList().ForEach(field =>
+                    var resolvedFields = clone.Fields.Select(field =>
                     {
-                        field.Type = field.Type.Select(t =>
+                        var fieldTypes = field.Type.Select(t =>
                         {
                             if (t.IsGeneric)
                             {
                                 var index = clone.Parameters.ToList().IndexOf(t.Value) + 1;
-                                return alias.Type.ElementAt(index);
+                                return (ASTTypeDefinition)alias.Type.ElementAt(index).Clone();
                             }
-                            else return t;
-                        }).ToList();
+                            return (ASTTypeDefinition)t.Clone();
+                        });
+
+                        return new ASTTypeField(
+                            (string)field.Name.Clone(),
+                            (string)field.Module.Clone(),
+                            ObjectCloner.CloneList(field.Annotations),
+                            ObjectCloner.CloneList(field.Directives),
+                            fieldTypes,
+                            ObjectCloner.CloneList(field.Restrictions)
+                            );
                     });
-                    nodes.Add(clone);
+
+                    var newType = new ASTType(
+                        (string)alias.Name.Clone(),
+                        (string)alias.Module.Clone(),
+                        ObjectCloner.CloneList(clone.Parameters),
+                        ObjectCloner.CloneList(clone.Extensions),
+                        resolvedFields,//ObjectCloner.CloneList(clone.Fields),
+                        ObjectCloner.CloneList(alias.Annotations),
+                        ObjectCloner.CloneList(alias.Directives)
+                        );
+
+                    return (errors, newType);
                 }
+
+                return (errors, alias);
             }
         }
 
-        private void ResolveType(ASTType t, List<IASTNode> nodes, List<ASTError> errors)
+        private (IEnumerable<IASTError>, ASTType) ResolveType(ASTType t)
         {
-            t.Extensions.ToList().ForEach(e =>
+            var errors = new List<IASTError>();
+            var extended_fields = t.Extensions.SelectMany(e =>
             {
-                if (!(FindNode(e) is ASTType extendedFrom))
-                {
-                    // TODO: Handle error gracefully.
-                    //throw new System.Exception($"Cannot find type {e} to extend from");
-                }
-                else
-                {
-                    var clones = extendedFrom.Fields.Select(f => (ASTTypeField)f.Clone()).ToList();
-                    t.AddFields(clones);
-                }
+                var t = FindNode(e) as ASTType;
+                if (t is null) return Enumerable.Empty<ASTTypeField>();
+                return ObjectCloner.CloneList(t.Fields);
             });
 
-            t.Fields = t.Fields.ToList().Select(f =>
+            var fields = t.Fields.Select(f =>
             {
-                return f switch
+                if (f is ASTPluckedField field)
                 {
-                    ASTPluckedField field => PluckField(field, errors),
-                    ASTTypeField field => field,
-                    _ => throw new InvalidTokenException("Not a field type")
-                };
+                    var (errors, pluckedField) = PluckField(field);
+                    errors = errors.Concat(errors);
+                    return pluckedField;
+                }
+                return f;
             });
-            nodes.Add(t);
+
+            return (errors, t.Clone(extended_fields.Concat(fields)));
         }
     }
 }

@@ -7,25 +7,29 @@ namespace Compiler.AST
 {
     public class ASTType : IASTNode, INamable, IRootNode
     {
-        public string Name { get; set; } = "";
-        public IEnumerable<ASTAnnotation> Annotations { get; set; } = Enumerable.Empty<ASTAnnotation>();
-        public IEnumerable<ASTDirective> Directives { get; set; } = Enumerable.Empty<ASTDirective>();
+        public string Name { get; }
+        public string Module { get; }
+        public IEnumerable<string> Parameters { get; }
+        public IEnumerable<string> Extensions { get; }
+        public IEnumerable<ASTTypeField> Fields { get; private set; }
 
-        public IEnumerable<string> Parameters { get; set; }  = Enumerable.Empty<string>();
-        public IEnumerable<string> Extensions { get; set; } = Enumerable.Empty<string>();
-        public IEnumerable<ASTTypeField> Fields { get; set; } = Enumerable.Empty<ASTTypeField>();
+        public IEnumerable<ASTAnnotation> Annotations { get; }
+        public IEnumerable<ASTDirective> Directives { get; }
 
-        public ASTType() { }
         public ASTType(
                 string name,
+                string module,
                 IEnumerable<string> parameters,
+                IEnumerable<string> extensions,
                 IEnumerable<ASTTypeField> fields,
                 IEnumerable<ASTAnnotation> annotations,
                 IEnumerable<ASTDirective> directives)
         {
             this.Name = name;
+            this.Module = module;
             this.Parameters = parameters;
             this.Fields = fields;
+            this.Extensions = extensions;
             this.Annotations = annotations;
             this.Directives = directives;
         }
@@ -36,19 +40,15 @@ namespace Compiler.AST
             this.Fields = this.Fields.Union(fields);
         }
 
-        public static (List<ASTError>, ASTType) Parse(IParser parser, List<ASTAnnotation> annotations, List<ASTDirective> directives)
+        public static (List<IASTError>, ASTType?) Parse(IParser parser, List<ASTAnnotation> annotations, List<ASTDirective> directives, string module = "")
         {
-            var result = new ASTType();
             try
             {
-                var errors = new List<ASTError>();
-
-                result.Annotations = annotations;
-                result.Directives = directives;
+                var errors = new List<IASTError>();
 
                 parser.Next();
-                result.Name = parser.Consume(TokenType.Identifier).Value;
-                result.Parameters =
+                var name = parser.Consume(TokenType.Identifier).Value;
+                var parameters =
                     parser
                         .ConsumeWhile(TokenType.GenericParameter)
                         .Select(v => v.Value)
@@ -59,9 +59,10 @@ namespace Compiler.AST
                  * If there is an 'extends' extension.
                  */
                 var extends = parser.TryConsume(TokenType.KW_Extends);
+                var extensions = new List<string>();
                 if (!(extends is null))
                 {
-                    result.Extensions =
+                    extensions =
                         parser
                             .ConsumeWhile(TokenType.Identifier)
                             .Select(v => v.Value)
@@ -74,14 +75,16 @@ namespace Compiler.AST
                  * Fields which we can parse...
                  */
                 var equals = parser.TryConsume(TokenType.Equal);
+                var fields = new List<ASTTypeField>();
                 if (!(equals is null))
                 {
-                    var fields = new List<ASTTypeField>();
                     while (parser.TryConsume(TokenType.ContextEnded) == null)
                     {
-                        fields.Add(ASTTypeField.Parse(parser));
+                        var (field_errors, field) = ASTTypeField.Parse(parser, module);
+                        fields.Add(field);
+                        errors.AddRange(field_errors);
                     }
-                    result.Fields = fields;
+                    
                     if (fields.Count == 0)
                     {
 
@@ -92,11 +95,11 @@ namespace Compiler.AST
 Missing type body. If you use an '=' sign you should have at least one field.
 It might be that you are missing an indentation:
 
-type {result.Name} =
+type {name} =
 {nextPhrase}
 
 Example:
-type {result.Name} =
+type {name} =
     {nextPhrase}
 ", "Invalid Syntax", parser.Current));
                         }
@@ -108,29 +111,51 @@ Missing type body. If you use an '=' sign you should have at least one field.", 
                     }
                 }
 
-                return (errors, result);
+                var result = new ASTType(
+                    name,
+                    module,
+                    parameters,
+                    extensions,
+                    fields,
+                    annotations,
+                    directives);
+
+                return (errors.ToList(), result);
             }
             catch (InvalidTokenException ex)
             {
-                return (new List<ASTError>
+                return (new List<IASTError>
                 {
                     new ASTError(ex.Message, "Invalid Syntax", parser.Current)
-                }, result);
+                }, null);
             }
 
         }
 
         public ASTType Clone()
         {
-            return new ASTType
-            {
-                Name = (string)this.Name.Clone(),
-                Annotations = ObjectCloner.CloneList(this.Annotations.ToList()),
-                Directives = ObjectCloner.CloneList(this.Directives.ToList()),
-                Parameters = ObjectCloner.CloneList(this.Parameters.ToList()),
-                Extensions = ObjectCloner.CloneList(this.Extensions.ToList()),
-                Fields = ObjectCloner.CloneList(this.Fields.ToList())
-            };
+            return new ASTType(
+                (string)this.Name.Clone(),
+                (string)this.Module.Clone(),
+                ObjectCloner.CloneList(this.Parameters),
+                ObjectCloner.CloneList(this.Extensions),
+                ObjectCloner.CloneList(this.Fields),
+                ObjectCloner.CloneList(this.Annotations),
+                ObjectCloner.CloneList(this.Directives)
+                );
+        }
+
+        public ASTType Clone(IEnumerable<ASTTypeField> fields)
+        {
+            return new ASTType(
+                (string)this.Name.Clone(),
+                (string)this.Module.Clone(),
+                ObjectCloner.CloneList(this.Parameters),
+                ObjectCloner.CloneList(this.Extensions),
+                fields.ToList(),
+                ObjectCloner.CloneList(this.Annotations),
+                ObjectCloner.CloneList(this.Directives)
+                );
         }
     }
 }

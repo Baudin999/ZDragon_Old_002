@@ -40,7 +40,7 @@ namespace Compiler
                     Errors.AddRange(errors);
                     annotations = new List<ASTAnnotation>();
                     directives = new List<ASTDirective>();
-                    yield return t;
+                    if (!(t is null)) yield return t;
                 }
                 else if (Current.TokenType == TokenType.KW_Alias)
                 {
@@ -52,7 +52,7 @@ namespace Compiler
                 }
                 else if (Current.TokenType == TokenType.KW_Choice)
                 {
-                    var (errors, result) = ASTChoice.Parse(this);
+                    var (errors, result) = ASTChoice.Parse(this, annotations, directives);
                     Errors.AddRange(errors);
                     yield return result;
                     annotations = new List<ASTAnnotation>();
@@ -210,14 +210,14 @@ Expected either {first} or {second} but encoutered {this.Current.TokenType}.
         public Token? TryConsume(TokenType tokenType, out Token? t)
         {
             Token? result = default;
-            int index = 0;
+            var index = 0;
             while (HasPeek(index))
             {
                 var token = Peek(index);
                 if (token.TokenType == tokenType)
                 {
                     result = token;
-                    for (int i = 0; i <= index; ++i)
+                    for (var i = 0; i <= index; ++i)
                     {
                         if (HasNext()) Next();
                     }
@@ -235,6 +235,29 @@ Expected either {first} or {second} but encoutered {this.Current.TokenType}.
 
             t = result;
             return t;
+        }
+
+        public bool IsNext(TokenType tokenType)
+        {
+            var index = 0;
+            while (HasPeek(index))
+            {
+                var token = Peek(index);
+                if (token.TokenType == tokenType)
+                {
+                    return true;
+                }
+                else if (token.TokenType == TokenType.Indent || token.TokenType == TokenType.NewLine)
+                {
+                    index += 1;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+
+            return false;
         }
 
     }

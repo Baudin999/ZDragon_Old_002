@@ -44,7 +44,7 @@ type Person =
             var parseTree = new Parser(tokens).Parse().ToList();
             Assert.NotNull(parseTree);
 
-            XSDMapper mapper = new XSDMapper(parseTree);
+            var mapper = new XSDMapper(parseTree);
             _ = mapper.Start().ToList();
 
 
@@ -63,7 +63,7 @@ alias Name = String;
             var parseTree = new Parser(tokens).Parse().ToList();
             Assert.NotNull(parseTree);
 
-            XSDMapper mapper = new XSDMapper(parseTree);
+            var mapper = new XSDMapper(parseTree);
             _ = mapper.Start().ToList();
 
             TestXSD(mapper.Schema, "./XSD/TestSimpleAlias.xsd");
@@ -89,7 +89,7 @@ type Person =
             var parseTree = new Parser(tokens).Parse().ToList();
             Assert.NotNull(parseTree);
 
-            XSDMapper mapper = new XSDMapper(parseTree);
+            var mapper = new XSDMapper(parseTree);
             _ = mapper.Start().ToList();
 
             TestXSD(mapper.Schema, "./XSD/TestChoice.xsd");
@@ -107,7 +107,7 @@ type Start =
     Something: Then;
 ";
             var generator = new ASTGenerator(code);
-            XSDMapper mapper = new XSDMapper(generator.AST);
+            var mapper = new XSDMapper(generator.AST);
             _ = mapper.Start().ToList();
 
             TestXSD(mapper.Schema, "./XSD/TestDateXSD.xsd");
@@ -125,7 +125,7 @@ type Start =
     Something: Naha;
 ";
             var generator = new ASTGenerator(code);
-            XSDMapper mapper = new XSDMapper(generator.AST);
+            var mapper = new XSDMapper(generator.AST);
             _ = mapper.Start().ToList();
 
             TestXSD(mapper.Schema, "./XSD/TestBooleanXSD.xsd");
@@ -148,7 +148,7 @@ type Customer extends Person =
     pluck Addressable.Addresses;
 ";
             var generator = new ASTGenerator(code);
-            XSDMapper mapper = new XSDMapper(generator.AST);
+            var mapper = new XSDMapper(generator.AST);
             _ = mapper.Start().ToList();
 
             TestXSD(mapper.Schema, "./XSD/TestPluckedFieldsXSD.xsd");

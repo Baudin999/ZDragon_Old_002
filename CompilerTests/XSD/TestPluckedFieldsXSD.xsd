@@ -41,6 +41,14 @@
       <xs:documentation />
     </xs:annotation>
     <xs:all>
+      <xs:element minOccurs="1" maxOccurs="1" name="FirstName">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:minLength value="12" />
+            <xs:maxLength value="32" />
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
       <xs:element minOccurs="1" maxOccurs="1" name="Addresses">
         <xs:complexType>
           <xs:sequence minOccurs="0" maxOccurs="10">
@@ -54,14 +62,6 @@
             </xs:element>
           </xs:sequence>
         </xs:complexType>
-      </xs:element>
-      <xs:element minOccurs="1" maxOccurs="1" name="FirstName">
-        <xs:simpleType>
-          <xs:restriction base="xs:string">
-            <xs:minLength value="12" />
-            <xs:maxLength value="32" />
-          </xs:restriction>
-        </xs:simpleType>
       </xs:element>
     </xs:all>
   </xs:complexType>

@@ -21,7 +21,7 @@ alias Name = String;
             Assert.Single(parseTree);
 
 
-            ASTAlias alias = parseTree[0] as ASTAlias;
+            var alias = parseTree[0] as ASTAlias;
             Assert.Equal("Name", alias.Name);
             Assert.Equal(Helpers.ToTypeDefinition(new[] { "String" }), alias.Type.ToList());
         }

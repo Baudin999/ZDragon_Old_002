@@ -9,7 +9,8 @@ namespace Compiler.AST
     {
 
         public string Value { get; private set; } = "";
-        public ASTAnnotation() { }
+        public string Module { get; } = "";
+
         public ASTAnnotation(string value)
         {
             this.Value = value;
@@ -19,14 +20,14 @@ namespace Compiler.AST
         {
             var annotations = parser.ConsumeWhile(TokenType.Annotation).ToList();
 
-            var result = annotations.Select(annotation =>
+            return annotations.Select(annotation =>
             {
-                string result = new Regex(@"\s*@\s*").Replace(annotation.Value, "");
+                var result = new Regex(@"\s*@\s*").Replace(annotation.Value, "");
                 return new ASTAnnotation(result.Trim());
             });
 
-            if (parser.HasNext() && parser.Current.TokenType == TokenType.Annotation) parser.Next();
-            return result;
+            //if (parser.HasNext() && parser.Current.TokenType == TokenType.Annotation) parser.Next();
+            //return result;
         }
 
         public object Clone()

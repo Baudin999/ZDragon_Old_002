@@ -83,7 +83,7 @@ namespace CLI.Controllers
         private dynamic GenerateEnum(ASTChoice choice)
         {
             var faker = new Bogus.Faker();
-            return faker.Random.ListItem(choice.Options).Value;
+            return faker.Random.ListItem(choice.Options.ToList()).Value;
         }
 
         private dynamic GenerateAlias(ASTAlias alias)

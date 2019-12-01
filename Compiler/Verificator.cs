@@ -24,9 +24,9 @@ namespace Compiler
         {
             var errors = new List<ASTError>();
             var elements = new List<string>();
-            ParseTree.FindAll(n => n is INamable).ForEach(n =>
+            ParseTree.ToList().ForEach(n =>
             {
-                if (n is INamable namable)
+                if (n is INamable namable && !(n is ASTImport))
                 {
                     if (elements.Contains(namable.Name))
                     {

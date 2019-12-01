@@ -6,49 +6,81 @@ namespace Compiler.AST
 {
     public class ASTTypeField : IASTNode, IRestrictable, IElement, INamable, ICloneable
     {
-        public string Name { get; set; } = "";
-        public IEnumerable<ASTAnnotation> Annotations { get; set; } = Enumerable.Empty<ASTAnnotation>();
-        public IEnumerable<ASTDirective> Directives { get; set; } = Enumerable.Empty<ASTDirective>();
+        public string Name { get; }
+        public string Module { get;  }
+        public IEnumerable<ASTAnnotation> Annotations { get; }
+        public IEnumerable<ASTDirective> Directives { get; }
 
-        public IEnumerable<ASTTypeDefinition> Type { get; set; } = Enumerable.Empty<ASTTypeDefinition>();
-        public IEnumerable<ASTRestriction> Restrictions { get; set; } = Enumerable.Empty<ASTRestriction>();
+        public IEnumerable<ASTTypeDefinition> Type { get; }
+        public IEnumerable<ASTRestriction> Restrictions { get; private set; }
 
-        public ASTTypeField() { }
+        public ASTTypeField(
+            string name,
+            string module,
+            IEnumerable<ASTAnnotation> annotations,
+            IEnumerable<ASTDirective> directives,
+            IEnumerable<ASTTypeDefinition> types,
+            IEnumerable<ASTRestriction> restrictions
+            ) {
+            this.Name = name;
+            this.Module = module;
+            this.Annotations = annotations;
+            this.Directives = directives;
+            this.Type = types;
+            this.Restrictions = restrictions;
+        }
 
-        public static ASTTypeField Parse(IParser parser)
+        public static (IEnumerable<IASTError>, ASTTypeField) Parse(IParser parser, string module = "")
         {
-            var result = new ASTTypeField();
-            result.Restrictions = new List<ASTRestriction>();
             var (d_errors, directives) = ASTDirective.Parse(parser);
-            result.Directives = directives;
-            result.Annotations = ASTAnnotation.Parse(parser).ToList();
+            var annotations = ASTAnnotation.Parse(parser).ToList();
 
             var pluck = parser.TryConsume(TokenType.KW_Pluck);
-            if (!(pluck is null))
+            var name = "";
+            if (pluck is null)
             {
-                result = new ASTPluckedField();
-            }
-            else
-            {
-                result.Name = parser.Consume(TokenType.Identifier).Value;
+                name = parser.Consume(TokenType.Identifier).Value;
                 Token Separator = parser.Consume(TokenType.Separator);
             }
 
-            result.Type = ASTTypeDefinition.Parse(parser).ToList();
-            result.Restrictions = ASTRestriction.CreateRestrictions(parser, TokenType.KW_Type).ToList();
+            var types = ASTTypeDefinition.Parse(parser, module);
+            var restrictions = ASTRestriction.CreateRestrictions(parser, TokenType.KW_Type).ToList();
             parser.Consume(TokenType.EndStatement);
-            return result;
+
+
+            if (pluck is null)
+            {
+                return (d_errors, new ASTTypeField(
+                    name,
+                    module,
+                    annotations,
+                    directives,
+                    types,
+                    restrictions
+                    ));
+            } else
+            {
+                return (d_errors, new ASTPluckedField(
+                    name,
+                    module,
+                    annotations,
+                    directives,
+                    types,
+                    restrictions
+                    ));
+            }
         }
 
         public object Clone()
         {
-            return new ASTTypeField
-            {
-                Name = this.Name,
-                Type = this.Type.Select(t => new ASTTypeDefinition(t.Value)),
-                Annotations = ObjectCloner.CloneList(this.Annotations.ToList()),
-                Restrictions = ObjectCloner.CloneList(this.Restrictions.ToList())
-            };
+            return new ASTTypeField(
+                (string)this.Name.Clone(),
+                (string)this.Module.Clone(),
+                ObjectCloner.CloneList(this.Annotations.ToList()),
+                ObjectCloner.CloneList(this.Directives.ToList()),
+                ObjectCloner.CloneList(this.Type.ToList()),
+                ObjectCloner.CloneList(this.Restrictions.ToList())
+                );
         }
 
         public void SetRestriction(string key, string value, ASTRestriction original)
@@ -65,5 +97,16 @@ namespace Compiler.AST
         }
     }
 
-    public class ASTPluckedField : ASTTypeField { }
+    public class ASTPluckedField : ASTTypeField
+    {
+        public ASTPluckedField(
+            string name,
+            string module,
+            IEnumerable<ASTAnnotation> annotations,
+            IEnumerable<ASTDirective> directives,
+            IEnumerable<ASTTypeDefinition> types,
+            IEnumerable<ASTRestriction> restrictions) : base(name, module, annotations, directives, types, restrictions)
+        {
+        }
+    }
 }

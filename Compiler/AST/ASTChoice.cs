@@ -6,45 +6,60 @@ namespace Compiler.AST
 {
     public class ASTChoice : IASTNode, INamable, ICloneable
     {
-        public string Name { get; set; } = "";
-        public IEnumerable<ASTAnnotation> Annotations { get; set; } = Enumerable.Empty<ASTAnnotation>();
-        public IEnumerable<ASTDirective> Directives { get; set; } = Enumerable.Empty<ASTDirective>();
-        public List<ASTTypeDefinition> Type { get; set; } = new List<ASTTypeDefinition>();
-        public List<ASTOption> Options { get; private set; } = new List<ASTOption>();
+        public string Name { get; }
+        public string Module { get; }
+        public IEnumerable<ASTAnnotation> Annotations { get; }
+        public IEnumerable<ASTDirective> Directives { get; }
+        public IEnumerable<ASTOption> Options { get; }
 
-        public ASTChoice() { }
-
-        public ASTChoice(string name, List<ASTTypeDefinition> type, List<ASTOption> options)
+        public ASTChoice(
+            string name,
+            string module,
+            IEnumerable<ASTAnnotation> annotations,
+            IEnumerable<ASTDirective> directives,
+            IEnumerable<ASTOption> options)
         {
             this.Name = name;
-            this.Type = type;
+            this.Module = module;
+            this.Annotations = annotations;
+            this.Directives = directives;
             this.Options = options;
         }
 
-        public static (List<ASTError>, ASTChoice) Parse(IParser parser)
+        public static (IEnumerable<IASTError>, ASTChoice) Parse(
+            IParser parser,
+            IEnumerable<ASTAnnotation> annotations,
+            IEnumerable<ASTDirective> directives,
+            string module = "")
         {
             if (parser.HasNext()) parser.Next();
 
-            var result = new ASTChoice();
-
             var nameId = parser.Consume(TokenType.Identifier);
-            result.Name = nameId.Value;
             parser.Consume(TokenType.Equal);
-            result.Type = ASTTypeDefinition.Parse(parser).ToList();
-            result.Options = ASTOption.Parse(parser).ToList();
+            //result.Type = ASTTypeDefinition.Parse(parser).ToList();
+            var options = ASTOption.Parse(parser).ToList();
             parser.TryConsume(TokenType.EndStatement);
             parser.Consume(TokenType.ContextEnded);
+
+            var result = new ASTChoice(
+                nameId.Value,
+                module,
+                annotations,
+                directives,
+                options);
+
             return (new List<ASTError>(), result);
         }
 
         public object Clone()
         {
-            return new ASTChoice
-            {
-                Name = (string)this.Name.Clone(),
-                Type = ObjectCloner.CloneList(this.Type),
-                Options = ObjectCloner.CloneList(this.Options)
-            };
+            return new ASTChoice(
+                (string)this.Name.Clone(),
+                (string)this.Module.Clone(),
+                ObjectCloner.CloneList(this.Annotations),
+                ObjectCloner.CloneList(this.Directives),
+                ObjectCloner.CloneList(this.Options)
+                );
         }
     }
 }

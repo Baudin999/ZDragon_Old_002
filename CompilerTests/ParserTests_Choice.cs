@@ -22,12 +22,14 @@ choice Gender =
             Assert.NotNull(parseTree);
             Assert.Single(parseTree);
 
-            ASTChoice choice = parseTree[0] as ASTChoice;
+            var choice = parseTree[0] as ASTChoice;
             Assert.Equal("Gender", choice.Name);
-            Assert.Equal(3, choice.Options.Count);
-            Assert.Equal("Male", choice.Options[0].Value);
-            Assert.Equal("Female", choice.Options[1].Value);
-            Assert.Equal("Other", choice.Options[2].Value);
+            Assert.Equal(3, choice.Options.Count());
+
+            var choiceOptions = choice.Options.ToList();
+            Assert.Equal("Male", choiceOptions[0].Value);
+            Assert.Equal("Female", choiceOptions[1].Value);
+            Assert.Equal("Other", choiceOptions[2].Value);
 
         }
 
@@ -48,8 +50,8 @@ choice Gender =
             Assert.NotNull(parseTree);
             Assert.Single(parseTree);
 
-            ASTChoice choice = parseTree[0] as ASTChoice;
-            ASTOption option = choice.Options[2];
+            var choice = parseTree[0] as ASTChoice;
+            var option = choice.Options.Last();
             Assert.Equal("Other", option.Value);
             Assert.Single(option.Annotations);
             Assert.Equal("Non-binary option", option.Annotations.First().Value);

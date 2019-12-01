@@ -6,8 +6,9 @@ namespace Compiler.AST
 {
     public class ASTRestriction : IASTNode, ICloneable
     {
-        public string Key { get;  }
+        public string Key { get; }
         public string Value { get; private set; }
+        public string Module { get; } = "";
         public int Depth { get; }
         public IEnumerable<ASTAnnotation> Annotations { get;  }
         public Token Token { get; }

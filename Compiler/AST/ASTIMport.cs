@@ -6,18 +6,27 @@ namespace Compiler.AST
 {
     public class ASTImport : IASTNode, INamable
     {
-        public string Name { get; set; } = "";
-        public IEnumerable<string> Imports { get; set; } = Enumerable.Empty<string>();
-        public ASTImport() { }
-        public static (List<ASTError>, ASTImport) Parse(IParser parser)
+        public string Name { get; }
+        public string Module { get; }
+        public IEnumerable<string> Imports { get; }
+
+        public ASTImport(
+            string name,
+            string module,
+            IEnumerable<string> imports) {
+            this.Name = name;
+            this.Module = module;
+            this.Imports = imports;
+        }
+
+        public static (IEnumerable<IASTError>, ASTImport) Parse(IParser parser, string module = "")
         {
-            List<ASTError> errors = new List<ASTError>();
-            ASTImport result = new ASTImport();
-            List<string> imports = new List<string>();
+            var errors = new List<ASTError>();
+            var imports = new List<string>();
             
             if (parser.HasNext()) parser.Next();
             var nameId = parser.Consume(TokenType.Identifier);
-            result.Name = nameId.Value;
+            var name = nameId.Value;
 
             parser.TryConsume(TokenType.ContextStarted);
             var importing = parser.TryConsume(TokenType.KW_Importing);
@@ -35,7 +44,11 @@ namespace Compiler.AST
                 parser.Consume(TokenType.GroupClosed);
             }
             parser.TryConsume(TokenType.ContextStarted);
-            result.Imports = imports;
+
+            var result = new ASTImport(
+                name,
+                module,
+                imports);
 
             return (errors, result);
         }
