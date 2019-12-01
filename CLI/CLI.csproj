@@ -22,13 +22,15 @@
     <PackageReference Include="Microsoft.Extensions.CommandLineUtils" Version="1.1.1" />
     <PackageReference Include="System.IO.FileSystem" Version="4.3.0" />
     <PackageReference Include="System.IO.FileSystem.Watcher" Version="4.3.0" />
-    <PackageReference Include="Bogus" Version="28.4.1" />
+    <PackageReference Include="Bogus" Version="28.4.2" />
+    <PackageReference Include="LiteDB" Version="4.1.4" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Assets\" />
     <Folder Include="Commands\" />
     <Folder Include="Controllers\" />
     <Folder Include="wwwroot\" />
+    <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="Assets\style.css" />
