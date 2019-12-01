@@ -33,8 +33,8 @@ type Person =
     Address: Address;
 
 ";
-            ASTGenerator generator = new ASTGenerator(code);
-            JsonMapper mapper = new JsonMapper(generator.AST);
+            var generator = new ASTGenerator(code);
+            var mapper = new JsonMapper(generator);
             mapper.Start();
 
 
@@ -58,8 +58,8 @@ choice Gender =
     | ""Female""
     | ""Other""
 ";
-            ASTGenerator generator = new ASTGenerator(code);
-            JsonMapper mapper = new JsonMapper(generator.AST);
+            var generator = new ASTGenerator(code);
+            var mapper = new JsonMapper(generator);
             mapper.Start();
 
 
@@ -81,8 +81,8 @@ data Response =
     | Customer
     | School
 ";
-            ASTGenerator generator = new ASTGenerator(code);
-            JsonMapper mapper = new JsonMapper(generator.AST);
+            var generator = new ASTGenerator(code);
+            var mapper = new JsonMapper(generator);
             mapper.Start();
 
 

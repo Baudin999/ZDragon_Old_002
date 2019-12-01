@@ -6,10 +6,10 @@ using Compiler.AST;
 
 namespace Mapper.HTML
 {
-    public class MermaidMapper : DefaultVisitor<string>
+    public class MermaidMapper : VisitorDefault<string>
     {
         private List<string> Parts = new List<string>();
-        public MermaidMapper(IEnumerable<IASTNode> nodeTree) : base(nodeTree) { }
+        public MermaidMapper(ASTGenerator generator) : base(generator) { }
 
         public override string VisitASTAlias(ASTAlias astAlias)
         {

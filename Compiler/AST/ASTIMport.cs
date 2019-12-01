@@ -4,9 +4,9 @@ using System.Linq;
 
 namespace Compiler.AST
 {
-    public class ASTImport : IASTNode, INamable
+    public class ASTImport : IASTNode
     {
-        public string Name { get; }
+        public string ModuleName { get; }
         public string Module { get; }
         public IEnumerable<string> Imports { get; }
 
@@ -14,7 +14,7 @@ namespace Compiler.AST
             string name,
             string module,
             IEnumerable<string> imports) {
-            this.Name = name;
+            this.ModuleName = name;
             this.Module = module;
             this.Imports = imports;
         }

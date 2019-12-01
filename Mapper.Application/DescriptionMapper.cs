@@ -6,14 +6,14 @@ using Compiler.AST;
 
 namespace Mapper.Application
 {
-    public class DescriptionMapper : DefaultVisitor<IEnumerable<Descriptor>>
+    public class DescriptionMapper : VisitorDefault<IEnumerable<Descriptor>>
     {
         private string ModuleName;
-        public DescriptionMapper(IEnumerable<IASTNode> nodeTree) : base(nodeTree)
+        public DescriptionMapper(ASTGenerator generator) : base(generator)
         {
         }
 
-        public DescriptionMapper(IEnumerable<IASTNode> nodeTree, string moduleName) : base(nodeTree)
+        public DescriptionMapper(ASTGenerator generator, string moduleName) : base(generator)
         {
             this.ModuleName = moduleName;
         }

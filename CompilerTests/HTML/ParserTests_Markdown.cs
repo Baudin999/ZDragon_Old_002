@@ -105,11 +105,9 @@ type Person =
 
 ";
             var g = new ASTGenerator(code);
-            var mapper = new HtmlMapper(g.AST);
+            var mapper = new HtmlMapper(g);
             _ = mapper.Start().ToList();
-            //var html = mapper.ToHtmlString(new Dictionary<string, string>()).Trim();
-            //var txt = File.ReadAllText("./HTML/Example01.html");
-            //Assert.Equal(txt, html);
+
             Assert.True(true);
         }
 

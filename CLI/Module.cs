@@ -14,7 +14,7 @@ namespace CLI
         public string BasePath { get; }
         public string OutPath { get; }
         public Project Project { get; }
-        public List<string> References { get; private set; } = new List<string>();
+        public List<string> ReferencedModules { get; private set; } = new List<string>();
         public Transpiler Transpiler { get; private set; }
         public ASTGenerator Generator { get; private set; }
         public DateTime LastParsed { get; private set; }
@@ -39,7 +39,7 @@ namespace CLI
             this.LastParsed = DateTime.Now;
             this.Transpiler = new Transpiler(this.Generator, this.Project);
 
-            References = Generator.AST.FindAll(n => n is ASTImport).Select(i => ((ASTImport)i).Name).ToList(); 
+            ReferencedModules = Generator.AST.FindAll(n => n is ASTImport).Select(i => ((ASTImport)i).ModuleName).ToList(); 
         }
 
         public void SaveModuleOutput()
@@ -59,7 +59,7 @@ namespace CLI
             // regenerated and their output changed.
             this.Project
                 .Modules
-                .FindAll(m => m.References.FirstOrDefault(r => r == this.Name) != null)
+                .FindAll(m => m.ReferencedModules.FirstOrDefault(r => r == this.Name) != null)
                 .ForEach(m =>
                     {
                         m.Parse();
@@ -69,7 +69,7 @@ namespace CLI
 
         public IEnumerable<Descriptor> GetDescriptions(string param)
         {
-            var mapper = new DescriptionMapper(this.Transpiler.AST, this.Name);
+            var mapper = new DescriptionMapper(this.Generator, this.Name);
             var nodes = mapper.Start().SelectMany(s => s);
             foreach (var node in nodes)
             {

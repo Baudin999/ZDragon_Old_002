@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-16"?>
-<xs:schema xmlns:self="org.schema.something" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<xs:schema xmlns:self="org.schema.zdragon" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <xs:simpleType name="Then">
     <xs:restriction base="xs:date" />
   </xs:simpleType>

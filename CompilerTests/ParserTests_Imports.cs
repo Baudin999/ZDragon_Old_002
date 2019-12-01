@@ -16,11 +16,10 @@ namespace CompilerTests
 open Prelude
 ";
             var g = new ASTGenerator(code);
-            Assert.NotNull(g.ParseTree);
             Assert.Empty(g.Parser.Errors.ToList());
 
             var import = (ASTImport)g.AST[0];
-            Assert.Equal("Prelude", import.Name);
+            Assert.Equal("Prelude", import.ModuleName);
             Assert.Empty(import.Imports);
         }
 
@@ -31,11 +30,10 @@ open Prelude
 open Customer importing (Customer)
 ";
             var g = new ASTGenerator(code);
-            Assert.NotNull(g.ParseTree);
             Assert.Empty(g.Parser.Errors.ToList());
 
             var import = (ASTImport)g.AST[0];
-            Assert.Equal("Customer", import.Name);
+            Assert.Equal("Customer", import.ModuleName);
             Assert.Single(import.Imports);
         }
 
@@ -47,11 +45,10 @@ open Customer importing (Customer)
 open Customer importing (Customer, Person, Product)
 ";
             var g = new ASTGenerator(code);
-            Assert.NotNull(g.ParseTree);
             Assert.Empty(g.Parser.Errors.ToList());
 
             var import = (ASTImport)g.AST[0];
-            Assert.Equal("Customer", import.Name);
+            Assert.Equal("Customer", import.ModuleName);
             Assert.Equal(3, import.Imports.Count());
             Assert.Equal(new string[] { "Customer", "Person", "Product" }, import.Imports);
         }
@@ -73,11 +70,9 @@ open Sample;
 type Student extends Person;
 ";
             var g = new ASTGenerator(code);
-            
             g.Resolve(_g.AST);
 
-
-            var student = (ASTType)g.AST[1];
+            var student = (ASTType)g.Find("Student");
             Assert.Equal("Student", student.Name);
             Assert.Single(student.Fields);
         }

@@ -31,10 +31,10 @@ namespace CLI
         {
             this.Generator = generator;
             this.Project = project;
-            XsdMapper = new XSDMapper(Enumerable.Empty<IASTNode>());
-            HtmlMapper = new HtmlMapper(Enumerable.Empty<IASTNode>());
-            JsonMapper = new JsonMapper(Enumerable.Empty<IASTNode>());
-            DescriptionMapper = new DescriptionMapper(Enumerable.Empty<IASTNode>());
+            XsdMapper = new XSDMapper(generator);
+            HtmlMapper = new HtmlMapper(generator);
+            JsonMapper = new JsonMapper(generator);
+            DescriptionMapper = new DescriptionMapper(generator);
         }
 
         public string XsdToString()
@@ -68,13 +68,13 @@ namespace CLI
             this.Imports = ImportResolver.ResolveImports(this.Generator);
             this.Generator.Resolve(this.Imports);
 
-            this.XsdMapper = new XSDMapper(this.Generator.AST);
+            this.XsdMapper = new XSDMapper(this.Generator);
             this.XsdMapper.Start().ToList();
 
-            this.HtmlMapper = new HtmlMapper(this.Generator.AST, this.Generator.Errors);
+            this.HtmlMapper = new HtmlMapper(this.Generator);
             this.HtmlMapper.Start().ToList();
 
-            this.JsonMapper = new JsonMapper(this.Generator.AST);
+            this.JsonMapper = new JsonMapper(this.Generator);
             this.JsonMapper.Start();
         }
 

@@ -46,11 +46,8 @@ Points to look out for:
 * Item 3
 
 ";
-            var tokens = new Lexer().Lex(code);
-            var parser = new Parser(tokens);
-            var parseTree = parser.Parse().ToList();
-
-            var mapper = new HtmlMapper(parseTree);
+            var generator = new ASTGenerator(code);
+            var mapper = new HtmlMapper(generator);
             _ = mapper.Start().ToList();
 
             var document = mapper.ToString();
@@ -69,11 +66,8 @@ Points to look out for:
 * Item 3
 
 ";
-            var tokens = new Lexer().Lex(code);
-            var parser = new Parser(tokens);
-            var parseTree = parser.Parse().ToList();
-
-            var mapper = new HtmlMapper(parseTree);
+            var generator = new ASTGenerator(code);
+            var mapper = new HtmlMapper(generator);
             _ = mapper.Start().ToList();
 
             var document = mapper.ToString();

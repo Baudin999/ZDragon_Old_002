@@ -16,7 +16,7 @@ namespace CLI
             _imports.ForEach(node =>
             {
                 var import = (ASTImport)node;
-                var ast = Project.Current?.GetAstForModule(import.Name);
+                var ast = Project.Current?.GetAstForModule(import.ModuleName);
                 if (!import.Imports.Any())
                 {
                     var copies = ast?

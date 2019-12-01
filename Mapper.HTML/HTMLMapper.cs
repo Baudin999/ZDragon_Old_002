@@ -7,26 +7,19 @@ using Markdig;
 
 namespace Mapper.HTML
 {
-    public class HtmlMapper : DefaultVisitor<string>
+    public class HtmlMapper : VisitorDefault<string>
     {
         public List<string> Parts { get; } = new List<string>();
         public IEnumerable<IASTError> Errors { get; }
         public MermaidMapper MermaidMapper { get; }
         public HtmlTableMapper TableMapper { get; }
 
-        public HtmlMapper(IEnumerable<IASTNode> nodeTree, IEnumerable<IASTError> errors) : base(nodeTree)
+        public HtmlMapper(ASTGenerator generator) : base(generator)
         {
-            this.Errors = errors;
-            this.MermaidMapper = new MermaidMapper(nodeTree);
+            this.Errors = generator.Errors;
+            this.MermaidMapper = new MermaidMapper(generator);
             this.MermaidMapper.Start().ToList();
-            this.TableMapper = new HtmlTableMapper(nodeTree);
-        }
-
-        public HtmlMapper(IEnumerable<IASTNode> nodeTree) : base(nodeTree) {
-            this.Errors = Enumerable.Empty<IASTError>();
-            this.MermaidMapper = new MermaidMapper(nodeTree);
-            this.MermaidMapper.Start().ToList();
-            this.TableMapper = new HtmlTableMapper(nodeTree);
+            this.TableMapper = new HtmlTableMapper(generator);
         }
 
         public override string VisitASTChapter(ASTChapter astChapter)
@@ -53,8 +46,8 @@ namespace Mapper.HTML
 
         public override string VisitASTView(ASTView astView)
         {
-            var ast = astView.Nodes.Select(Find).ToList();
-            var mermaidMapper = new MermaidMapper(ast);
+            var ast = astView.Nodes.Select(Generator.Find).ToList();
+            var mermaidMapper = new MermaidMapper(new ASTGenerator(ast));
             mermaidMapper.Start().ToList();
             var mermaidString = mermaidMapper.ToString().Trim();
             var result = $@"<div class=""mermaid"">{mermaidString}</div>";

@@ -9,7 +9,7 @@ namespace Compiler
         : VisitorBase<string>
     {
         List<string> value = new List<string>();
-        public VisitorSource(IEnumerable<IASTNode> nodeTree) : base(nodeTree)
+        public VisitorSource(ASTGenerator generator) : base(generator)
         {
             
         }
@@ -38,7 +38,7 @@ namespace Compiler
             return $"@ {astAnnotation.Value}";
         }
 
-        public override string VisitASTChapter(ASTChapter astOption)
+        public override string VisitASTChapter(ASTChapter astChapter)
         {
             throw new NotImplementedException();
         }
@@ -65,7 +65,7 @@ namespace Compiler
             return "";
         }
 
-        public override string VisitASTParagraph(ASTParagraph astOption)
+        public override string VisitASTParagraph(ASTParagraph astParagraph)
         {
             return "";
         }

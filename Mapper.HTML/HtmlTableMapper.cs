@@ -6,9 +6,9 @@ using Compiler.AST;
 
 namespace Mapper.HTML
 {
-    public class HtmlTableMapper : DefaultVisitor<string>
+    public class HtmlTableMapper : VisitorDefault<string>
     {
-        public HtmlTableMapper(IEnumerable<IASTNode> nodeTree) : base(nodeTree) { }
+        public HtmlTableMapper(ASTGenerator generator) : base(generator) { }
 
         public override string VisitASTTypeField(ASTTypeField astTypeField)
         {

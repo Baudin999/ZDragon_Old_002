@@ -5,11 +5,11 @@ using Compiler.AST;
 
 namespace Mapper.Application.CSharp
 {
-    public class CSharpVisitor : DefaultVisitor<string>
+    public class CSharpVisitor : VisitorDefault<string>
     {
         private readonly string Namespace;
-        public CSharpVisitor(IEnumerable<IASTNode> nodeTree) : base(nodeTree) { }
-        public CSharpVisitor(IEnumerable<IASTNode> nodeTree, string _namespace) : base(nodeTree) {
+        public CSharpVisitor(ASTGenerator generator) : base(generator) { }
+        public CSharpVisitor(ASTGenerator generator, string _namespace) : base(generator) {
             Namespace = _namespace;
         }
 
