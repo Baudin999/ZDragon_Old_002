@@ -10,7 +10,7 @@
      if [[ $REPLY =~ ^[Yy]$ ]]; then
          FILES=("ZDragon.NET.sln" "CLI/CLI.csproj" "Compiler/Compiler.csproj" "CompilerTests/CompilerTests.csproj" "Mapper.XSD/Mapper.XSD.csproj" "README.md"
          "Mapper.HTML/Mapper.HTML.csproj" "Mapper.JSON/Mapper.JSON.csproj"
-         "CLI/Program.cs" "docs/index.md")
+         "CLI/Program.cs" "docs/index.md" "ApplicationTests/ApplicationTests.csproj" "Mapper.Application/Mapper.Application.csproj")
 
          for FILE in "${FILES[@]}"
          do
