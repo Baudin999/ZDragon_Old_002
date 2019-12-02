@@ -100,7 +100,7 @@ namespace Compiler
         {
             // here we'll resolve generic aliasses
             var _mod = alias.Type.First().Value;
-            if (_mod == "List" || _mod == "Maybe" || alias.Type.Count() == 1)
+            if (_mod == "List" || _mod == "Maybe" || Parser.BaseTypes.Contains(_mod))
             {
                 // non generic type...
                 // we do not allow generic Lists or Maybes like:
@@ -109,7 +109,34 @@ namespace Compiler
                 //
                 return (Enumerable.Empty<IASTError>(), alias);
             }
-            else
+            else if (!Parser.BaseTypes.Contains(_mod) && alias.Type.Count() == 1)
+            {
+                // Clearly we're in a case like:
+                // alias Foo = Bar;
+                // let's create a new type cloned from the old one...
+                var errors = new List<IASTError>();
+                var source = FindNode(_mod) as ASTType;
+                if (source is null)
+                {
+                    errors.Add(new ASTError($"Cannot find type {_mod} to rename. You can only alias existing types.", "Invalid Syntax"));
+                    return (errors, alias);
+                }
+                else
+                {
+                    var newType = new ASTType(
+                        alias.Name,
+                        alias.Module,
+                        Enumerable.Empty<string>(),
+                        Enumerable.Empty<string>(),
+                        ObjectCloner.CloneList(source.Fields),
+                        ObjectCloner.CloneList(alias.Annotations),
+                        ObjectCloner.CloneList(alias.Directives)
+                        );
+                    return (errors, newType);
+                }
+
+            }
+            else if (alias.Type.Count() > 1)
             {
                 var errors = new List<IASTError>();
                 var clone = FindNode(_mod) as ASTType;
@@ -159,6 +186,9 @@ namespace Compiler
                 }
 
                 return (errors, alias);
+            } else
+            {
+                return (Enumerable.Empty<IASTError>(), alias);
             }
         }
 

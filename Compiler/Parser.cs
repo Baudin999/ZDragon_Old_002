@@ -27,6 +27,8 @@ namespace Compiler
         public Token Peek(int index = 1) => tokenStream[position + index];
 
 
+        public static string[] BaseTypes = { "String", "Number", "Boolean", "Date", "Time", "DateTime" };
+
         public IEnumerable<IASTNode> Parse()
         {
             var annotations = new List<ASTAnnotation>();

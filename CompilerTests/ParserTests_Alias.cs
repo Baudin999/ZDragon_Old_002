@@ -165,5 +165,26 @@ alias Name = String
             Assert.Equal(TokenType.String, restriction.Token.TokenType);
 
         }
+
+        [Fact]
+        public void RenameType()
+        {
+            var code = @"
+type School =
+    Name: String;
+
+alias FooBar = School;
+";
+            var g = new ASTGenerator(code);
+            var fooBar = g.Find("FooBar");
+            Assert.True(fooBar is ASTType);
+
+            var t = (ASTType)fooBar;
+            Assert.Single(t.Fields);
+
+            var name = t.Fields.First();
+            Assert.Equal("Name", name.Name);
+            Assert.Equal("String", name.Type.First().Value);
+        }
     }
 }
