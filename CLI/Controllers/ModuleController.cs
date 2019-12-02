@@ -18,6 +18,18 @@ namespace CLI.Controllers
         [HttpGet("/api/search/{param}")]
         public IEnumerable<Descriptor> Search(string param)
         {
+            if (param == "modules:")
+            {
+                return Project.Current?.Modules.Select(m =>
+                {
+                    return new Descriptor
+                    {
+                        Module = m.Name,
+                        Description = "The " + m
+                    };
+                }) ?? Enumerable.Empty<Descriptor>();
+            }
+
             return Project
                 .Current?
                 .Modules

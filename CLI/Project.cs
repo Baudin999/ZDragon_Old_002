@@ -48,7 +48,7 @@ namespace CLI
             foreach (var module in this.Modules)
             {
                 module.Parse();
-                module.SaveModuleOutput();
+                module.SaveModuleOutput(false);
             }
         }
 
@@ -168,7 +168,7 @@ namespace CLI
                 var module = new Module(e.FullPath, this.Path, this);
                 Modules.Add(module);
                 module.Parse();
-                module.SaveModuleOutput();
+                module.SaveModuleOutput(false);
                 CreateIndexPage();
             }
             catch (Exception ex)
@@ -201,7 +201,7 @@ namespace CLI
                 var module = new Module(e.FullPath, this.Path, this);
                 Modules.Add(module);
                 module.Parse();
-                module.SaveModuleOutput();
+                module.SaveModuleOutput(false);
                 CreateIndexPage();
             }
             catch (Exception ex)

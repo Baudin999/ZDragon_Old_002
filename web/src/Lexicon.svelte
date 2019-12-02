@@ -1,10 +1,15 @@
 <script>
   import navigator from "./navigator.js";
   let data = [];
-  let findData = async search => {
-    var fetchResult = await fetch("https://localhost:5001/api/lexicon");
+  let search = "";
+  let findData = async _search => {
+    if (!_search) return;
+    search = _search;
+    var fetchResult = await fetch(
+      "https://localhost:5001/api/lexicon?query=" + search
+    );
     var result = await fetchResult.json();
-    data = result;
+    data = result || [];
   };
 
   let deleteItem = async entry => {
@@ -15,22 +20,18 @@
       },
       body: JSON.stringify(entry)
     });
-    findData();
+    findData(search);
   };
 
-  findData();
+  let onkeyup = query => {
+    findData(query);
+  };
 </script>
 
 <style>
-  h1 {
-    color: #ff3e00;
-    text-transform: uppercase;
-    font-size: 4em;
-    font-weight: 100;
-  }
   .items {
     display: block;
-    width: 700px;
+    width: 1024px;
     position: relative;
     left: 50%;
     transform: translateX(-50%);
@@ -43,17 +44,22 @@
     margin: 3px;
   }
   .item--name {
-    flex: 200px;
+    flex: 150px;
     text-align: left;
     border-right: 1px solid lightgray;
     padding: 0.5em;
     font-weight: bold;
+    text-decoration: underline;
   }
   .item--description {
     flex: 500px;
     text-align: justify;
     padding: 0.5em;
     padding-right: 3em;
+  }
+  .item--description__owner {
+    margin-top: 0.5em;
+    font-size: 0.7em;
   }
   .item__delete {
     color: red;
@@ -66,7 +72,7 @@
   }
 </style>
 
-<h1>Search your lexicon!</h1>
+<h1 class="title">Search your lexicon!</h1>
 
 <div>
   <span
@@ -77,14 +83,30 @@
     Create
   </span>
   <h2>Search your lexicon:</h2>
-  <input type="text" on:change={e => findData(e.target.value)} />
+  <input
+    type="text"
+    on:keyup={e => e.code === 'Enter' && onkeyup(e.target.value)}
+    on:change={e => findData(e.target.value)} />
 </div>
 
 <div class="items">
+  <div class="item">
+    <div class="item--name">Domain</div>
+    <div class="item--name">Name</div>
+    <div class="item--description">Description</div>
+  </div>
   {#each data as d}
     <div class="item">
-      <div class="item--name">{d.name}</div>
-      <div class="item--description">{d.description}</div>
+      <div class="item--name">{d.domain}</div>
+      <div
+        class="item--name"
+        on:click={() => navigator.navigate('edit-lexicon', d.id)}>
+        {d.name}
+      </div>
+      <div class="item--description">
+        {d.description}
+        <div class="item--description__owner">Owner: {d.dataOwner}</div>
+      </div>
       <span class="item__delete" on:click={() => deleteItem(d)}>X</span>
     </div>
   {/each}

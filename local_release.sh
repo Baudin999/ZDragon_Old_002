@@ -8,5 +8,6 @@ OS="${2:-osx-x64}"
 # If your zdragon source location differs from this, edit this variable.
 SOURCE_DIR="${3:-$HOME/Projects/dotnet/ZDragon.NET/CLI}"
 APP_NAME="${4:-ckc}"
+dotnet clean "$SOURCE_DIR"
 dotnet publish "$SOURCE_DIR" -c Release --runtime "$OS" /p:PublishSingleFile=true -o "$OUTPUT_DIR"
 mv -v "$OUTPUT_DIR"CLI "$OUTPUT_DIR""$APP_NAME"

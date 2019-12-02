@@ -42,7 +42,7 @@ namespace CLI
             ReferencedModules = Generator.AST.FindAll(n => n is ASTImport).Select(i => ((ASTImport)i).ModuleName).ToList(); 
         }
 
-        public void SaveModuleOutput()
+        public void SaveModuleOutput(bool decend = true)
         {
             this.Transpiler.StartTranspilation(this.Name);
             Console.WriteLine($"Perfectly parsed: {Name}");
@@ -54,17 +54,22 @@ namespace CLI
                 SaveResult(key, value);
             }
 
-            // We would now also want to resolve the other modules
-            // which depend upon this module so that they are automatically
-            // regenerated and their output changed.
-            this.Project
-                .Modules
-                .FindAll(m => m.ReferencedModules.FirstOrDefault(r => r == this.Name) != null)
-                .ForEach(m =>
-                    {
-                        m.Parse();
-                        m.SaveModuleOutput();
-                    });
+            // Trickery to no regenerate infinately...
+            // TODO: replace with propper topological order...
+            if (decend)
+            {
+                // We would now also want to resolve the other modules
+                // which depend upon this module so that they are automatically
+                // regenerated and their output changed.
+                this.Project
+                    .Modules
+                    .FindAll(m => m.ReferencedModules.FirstOrDefault(r => r == this.Name) != null)
+                    .ForEach(m =>
+                        {
+                            m.Parse();
+                            m.SaveModuleOutput(false);
+                        });
+            }
         }
 
         public IEnumerable<Descriptor> GetDescriptions(string param)

@@ -25,10 +25,23 @@ namespace CLI
             return Db;
         }
 
-        public static IEnumerable<LexiconEntry> GetLexicon()
+        public static IEnumerable<LexiconEntry> GetLexicon(string query)
         {
             var col = get().GetCollection<LexiconEntry>("lexiconEntries");
-            return col.FindAll();
+            if (query == "all:")
+            {
+                return col.FindAll();
+            }
+            return col.Find(l => 
+                l.Name.Contains(query, StringComparison.OrdinalIgnoreCase) ||
+                l.Domain.Contains(query, StringComparison.OrdinalIgnoreCase) ||
+                l.Description.Contains(query, StringComparison.OrdinalIgnoreCase));
+        }
+
+        public static LexiconEntry GetLexiconItem(Guid id)
+        {
+            var col = get().GetCollection<LexiconEntry>("lexiconEntries");
+            return col.FindOne(entry => entry.Id == id);
         }
 
         public static LexiconEntry AddLexiconEntry(LexiconEntry entry)

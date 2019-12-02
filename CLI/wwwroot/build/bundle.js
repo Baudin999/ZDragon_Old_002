@@ -65,6 +65,9 @@ var app = (function () {
     function children(element) {
         return Array.from(element.childNodes);
     }
+    function set_style(node, key, value, important) {
+        node.style.setProperty(key, value, important ? 'important' : '');
+    }
     function custom_event(type, detail) {
         const e = document.createEvent('CustomEvent');
         e.initCustomEvent(type, false, false, detail);
@@ -316,6 +319,10 @@ var app = (function () {
         else
             dispatch_dev("SvelteDOMSetAttribute", { node, attribute, value });
     }
+    function prop_dev(node, property, value) {
+        node[property] = value;
+        dispatch_dev("SvelteDOMSetProperty", { node, property, value });
+    }
     function set_data_dev(text, data) {
         data = '' + data;
         if (text.data === data)
@@ -342,7 +349,7 @@ var app = (function () {
 
     const file = "src/SearchResult.svelte";
 
-    // (41:2) {#if !descriptor.parent}
+    // (41:2) {#if !descriptor.parent && descriptor.type}
     function create_if_block(ctx) {
     	let br;
     	let t0;
@@ -357,10 +364,10 @@ var app = (function () {
     			t0 = space();
     			a = element("a");
     			t1 = text("Show me the data!");
-    			add_location(br, file, 41, 4, 896);
+    			add_location(br, file, 41, 4, 915);
     			attr_dev(a, "alt", a_alt_value = ctx.descriptor.name);
     			attr_dev(a, "href", a_href_value = `/api/data/${ctx.descriptor.module}/${ctx.descriptor.name}`);
-    			add_location(a, file, 42, 4, 907);
+    			add_location(a, file, 42, 4, 926);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, br, anchor);
@@ -388,7 +395,7 @@ var app = (function () {
     		block,
     		id: create_if_block.name,
     		type: "if",
-    		source: "(41:2) {#if !descriptor.parent}",
+    		source: "(41:2) {#if !descriptor.parent && descriptor.type}",
     		ctx
     	});
 
@@ -418,7 +425,7 @@ var app = (function () {
     	let a_href_value;
     	let t9;
     	let dispose;
-    	let if_block = !ctx.descriptor.parent && create_if_block(ctx);
+    	let if_block = !ctx.descriptor.parent && ctx.descriptor.type && create_if_block(ctx);
 
     	const block = {
     		c: function create() {
@@ -483,7 +490,7 @@ var app = (function () {
     				attr_dev(a, "href", a_href_value);
     			}
 
-    			if (!ctx.descriptor.parent) {
+    			if (!ctx.descriptor.parent && ctx.descriptor.type) {
     				if (if_block) {
     					if_block.p(changed, ctx);
     				} else {
@@ -585,7 +592,7 @@ var app = (function () {
     	return child_ctx;
     }
 
-    // (37:0) {#each data as d}
+    // (32:0) {#each data as d}
     function create_each_block(ctx) {
     	let current;
 
@@ -625,7 +632,7 @@ var app = (function () {
     		block,
     		id: create_each_block.name,
     		type: "each",
-    		source: "(37:0) {#each data as d}",
+    		source: "(32:0) {#each data as d}",
     		ctx
     	});
 
@@ -682,15 +689,15 @@ var app = (function () {
     			}
 
     			each_1_anchor = empty();
-    			attr_dev(h1, "class", "svelte-1cxhk4e");
-    			add_location(h1, file$1, 24, 0, 469);
+    			attr_dev(h1, "class", "title");
+    			add_location(h1, file$1, 19, 0, 366);
     			attr_dev(a, "href", "https://zdragon.nl");
-    			add_location(a, file$1, 27, 2, 512);
-    			add_location(p, file$1, 25, 0, 498);
-    			add_location(h2, file$1, 32, 2, 601);
+    			add_location(a, file$1, 22, 2, 423);
+    			add_location(p, file$1, 20, 0, 409);
+    			add_location(h2, file$1, 27, 2, 512);
     			attr_dev(input, "type", "text");
-    			add_location(input, file$1, 33, 2, 632);
-    			add_location(div, file$1, 31, 0, 593);
+    			add_location(input, file$1, 28, 2, 543);
+    			add_location(div, file$1, 26, 0, 504);
     			dispose = listen_dev(input, "change", ctx.change_handler, false, false, false);
     		},
     		l: function claim(nodes) {
@@ -881,13 +888,19 @@ var app = (function () {
     class Navigator {
       constructor() {
         this.route = writable("index");
+        this.params = writable([]);
       }
-      navigate(route) {
+      navigate(route, ...params) {
         this.route.update(n => route);
+        this.params.update(n => params || []);
       }
 
       subscribe(f) {
         this.route.subscribe(f);
+      }
+
+      $params(f) {
+        this.params.subscribe(f);
       }
     }
 
@@ -902,66 +915,103 @@ var app = (function () {
     	return child_ctx;
     }
 
-    // (84:2) {#each data as d}
+    // (98:2) {#each data as d}
     function create_each_block$1(ctx) {
-    	let div2;
+    	let div4;
     	let div0;
-    	let t0_value = ctx.d.name + "";
+    	let t0_value = ctx.d.domain + "";
     	let t0;
     	let t1;
     	let div1;
-    	let t2_value = ctx.d.description + "";
+    	let t2_value = ctx.d.name + "";
     	let t2;
     	let t3;
-    	let span;
+    	let div3;
+    	let t4_value = ctx.d.description + "";
+    	let t4;
     	let t5;
+    	let div2;
+    	let t6;
+    	let t7_value = ctx.d.dataOwner + "";
+    	let t7;
+    	let t8;
+    	let span;
+    	let t10;
     	let dispose;
 
     	function click_handler_1(...args) {
     		return ctx.click_handler_1(ctx, ...args);
     	}
 
+    	function click_handler_2(...args) {
+    		return ctx.click_handler_2(ctx, ...args);
+    	}
+
     	const block = {
     		c: function create() {
-    			div2 = element("div");
+    			div4 = element("div");
     			div0 = element("div");
     			t0 = text(t0_value);
     			t1 = space();
     			div1 = element("div");
     			t2 = text(t2_value);
     			t3 = space();
+    			div3 = element("div");
+    			t4 = text(t4_value);
+    			t5 = space();
+    			div2 = element("div");
+    			t6 = text("Owner: ");
+    			t7 = text(t7_value);
+    			t8 = space();
     			span = element("span");
     			span.textContent = "X";
-    			t5 = space();
-    			attr_dev(div0, "class", "item--name svelte-v3kqy5");
-    			add_location(div0, file$2, 85, 6, 1671);
-    			attr_dev(div1, "class", "item--description svelte-v3kqy5");
-    			add_location(div1, file$2, 86, 6, 1716);
-    			attr_dev(span, "class", "item__delete svelte-v3kqy5");
-    			add_location(span, file$2, 87, 6, 1775);
-    			attr_dev(div2, "class", "item svelte-v3kqy5");
-    			add_location(div2, file$2, 84, 4, 1646);
-    			dispose = listen_dev(span, "click", click_handler_1, false, false, false);
+    			t10 = space();
+    			attr_dev(div0, "class", "item--name svelte-q471s4");
+    			add_location(div0, file$2, 99, 6, 2077);
+    			attr_dev(div1, "class", "item--name svelte-q471s4");
+    			add_location(div1, file$2, 100, 6, 2124);
+    			attr_dev(div2, "class", "item--description__owner svelte-q471s4");
+    			add_location(div2, file$2, 107, 8, 2323);
+    			attr_dev(div3, "class", "item--description svelte-q471s4");
+    			add_location(div3, file$2, 105, 6, 2259);
+    			attr_dev(span, "class", "item__delete svelte-q471s4");
+    			add_location(span, file$2, 109, 6, 2407);
+    			attr_dev(div4, "class", "item svelte-q471s4");
+    			add_location(div4, file$2, 98, 4, 2052);
+
+    			dispose = [
+    				listen_dev(div1, "click", click_handler_1, false, false, false),
+    				listen_dev(span, "click", click_handler_2, false, false, false)
+    			];
     		},
     		m: function mount(target, anchor) {
-    			insert_dev(target, div2, anchor);
-    			append_dev(div2, div0);
+    			insert_dev(target, div4, anchor);
+    			append_dev(div4, div0);
     			append_dev(div0, t0);
-    			append_dev(div2, t1);
-    			append_dev(div2, div1);
+    			append_dev(div4, t1);
+    			append_dev(div4, div1);
     			append_dev(div1, t2);
-    			append_dev(div2, t3);
-    			append_dev(div2, span);
-    			append_dev(div2, t5);
+    			append_dev(div4, t3);
+    			append_dev(div4, div3);
+    			append_dev(div3, t4);
+    			append_dev(div3, t5);
+    			append_dev(div3, div2);
+    			append_dev(div2, t6);
+    			append_dev(div2, t7);
+    			append_dev(div4, t8);
+    			append_dev(div4, span);
+    			append_dev(div4, t10);
     		},
     		p: function update(changed, new_ctx) {
     			ctx = new_ctx;
-    			if (changed.data && t0_value !== (t0_value = ctx.d.name + "")) set_data_dev(t0, t0_value);
-    			if (changed.data && t2_value !== (t2_value = ctx.d.description + "")) set_data_dev(t2, t2_value);
+    			if (changed.data && t0_value !== (t0_value = ctx.d.domain + "")) set_data_dev(t0, t0_value);
+    			if (changed.data && t2_value !== (t2_value = ctx.d.name + "")) set_data_dev(t2, t2_value);
+    			if (changed.data && t4_value !== (t4_value = ctx.d.description + "")) set_data_dev(t4, t4_value);
+    			if (changed.data && t7_value !== (t7_value = ctx.d.dataOwner + "")) set_data_dev(t7, t7_value);
     		},
     		d: function destroy(detaching) {
-    			if (detaching) detach_dev(div2);
-    			dispose();
+    			if (detaching) detach_dev(div4);
+    			run_all(dispose);
     		}
     	};
 
@@ -969,7 +1019,7 @@ var app = (function () {
     		block,
     		id: create_each_block$1.name,
     		type: "each",
-    		source: "(84:2) {#each data as d}",
+    		source: "(98:2) {#each data as d}",
     		ctx
     	});
 
@@ -986,7 +1036,14 @@ var app = (function () {
     	let t5;
     	let input;
     	let t6;
+    	let div5;
+    	let div4;
     	let div1;
+    	let t8;
+    	let div2;
+    	let t10;
+    	let div3;
+    	let t12;
     	let dispose;
     	let each_value = ctx.data;
     	let each_blocks = [];
@@ -1009,25 +1066,44 @@ var app = (function () {
     			t5 = space();
     			input = element("input");
     			t6 = space();
+    			div5 = element("div");
+    			div4 = element("div");
     			div1 = element("div");
+    			div1.textContent = "Domain";
+    			t8 = space();
+    			div2 = element("div");
+    			div2.textContent = "Name";
+    			t10 = space();
+    			div3 = element("div");
+    			div3.textContent = "Description";
+    			t12 = space();
 
     			for (let i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].c();
     			}
 
-    			attr_dev(h1, "class", "svelte-v3kqy5");
-    			add_location(h1, file$2, 68, 0, 1336);
+    			attr_dev(h1, "class", "title");
+    			add_location(h1, file$2, 74, 0, 1491);
     			attr_dev(span, "class", "nav-button");
-    			add_location(span, file$2, 71, 2, 1375);
-    			add_location(h2, file$2, 78, 2, 1498);
+    			add_location(span, file$2, 77, 2, 1544);
+    			add_location(h2, file$2, 84, 2, 1667);
     			attr_dev(input, "type", "text");
-    			add_location(input, file$2, 79, 2, 1530);
-    			add_location(div0, file$2, 70, 0, 1367);
-    			attr_dev(div1, "class", "items svelte-v3kqy5");
-    			add_location(div1, file$2, 82, 0, 1602);
+    			add_location(input, file$2, 85, 2, 1699);
+    			add_location(div0, file$2, 76, 0, 1536);
+    			attr_dev(div1, "class", "item--name svelte-q471s4");
+    			add_location(div1, file$2, 93, 4, 1890);
+    			attr_dev(div2, "class", "item--name svelte-q471s4");
+    			add_location(div2, file$2, 94, 4, 1931);
+    			attr_dev(div3, "class", "item--description svelte-q471s4");
+    			add_location(div3, file$2, 95, 4, 1970);
+    			attr_dev(div4, "class", "item svelte-q471s4");
+    			add_location(div4, file$2, 92, 2, 1867);
+    			attr_dev(div5, "class", "items svelte-q471s4");
+    			add_location(div5, file$2, 91, 0, 1845);
 
     			dispose = [
     				listen_dev(span, "click", ctx.click_handler, false, false, false),
+    				listen_dev(input, "keyup", ctx.keyup_handler, false, false, false),
     				listen_dev(input, "change", ctx.change_handler, false, false, false)
     			];
     		},
@@ -1044,14 +1120,21 @@ var app = (function () {
     			append_dev(div0, t5);
     			append_dev(div0, input);
     			insert_dev(target, t6, anchor);
-    			insert_dev(target, div1, anchor);
+    			insert_dev(target, div5, anchor);
+    			append_dev(div5, div4);
+    			append_dev(div4, div1);
+    			append_dev(div4, t8);
+    			append_dev(div4, div2);
+    			append_dev(div4, t10);
+    			append_dev(div4, div3);
+    			append_dev(div5, t12);
 
     			for (let i = 0; i < each_blocks.length; i += 1) {
-    				each_blocks[i].m(div1, null);
+    				each_blocks[i].m(div5, null);
     			}
     		},
     		p: function update(changed, ctx) {
-    			if (changed.deleteItem || changed.data) {
+    			if (changed.deleteItem || changed.data || changed.navigator) {
     				each_value = ctx.data;
     				let i;
 
@@ -1063,7 +1146,7 @@ var app = (function () {
     					} else {
     						each_blocks[i] = create_each_block$1(child_ctx);
     						each_blocks[i].c();
-    						each_blocks[i].m(div1, null);
+    						each_blocks[i].m(div5, null);
     					}
     				}
 
@@ -1081,7 +1164,7 @@ var app = (function () {
     			if (detaching) detach_dev(t1);
     			if (detaching) detach_dev(div0);
     			if (detaching) detach_dev(t6);
-    			if (detaching) detach_dev(div1);
+    			if (detaching) detach_dev(div5);
     			destroy_each(each_blocks, detaching);
     			run_all(dispose);
     		}
@@ -1100,11 +1183,14 @@ var app = (function () {
 
     function instance$2($$self, $$props, $$invalidate) {
     	let data = [];
+    	let search = "";
 
-    	let findData = async search => {
-    		var fetchResult = await fetch("https://localhost:5001/api/lexicon");
+    	let findData = async _search => {
+    		if (!_search) return;
+    		search = _search;
+    		var fetchResult = await fetch("https://localhost:5001/api/lexicon?query=" + search);
     		var result = await fetchResult.json();
-    		$$invalidate("data", data = result);
+    		$$invalidate("data", data = result || []);
     	};
 
     	let deleteItem = async entry => {
@@ -1114,17 +1200,21 @@ var app = (function () {
     			body: JSON.stringify(entry)
     		});
 
-    		findData();
+    		findData(search);
     	};
 
-    	findData();
+    	let onkeyup = query => {
+    		findData(query);
+    	};
 
     	const click_handler = () => {
     		navigator.navigate("add-lexicon");
     	};
 
+    	const keyup_handler = e => e.code === "Enter" && onkeyup(e.target.value);
     	const change_handler = e => findData(e.target.value);
-    	const click_handler_1 = ({ d }) => deleteItem(d);
+    	const click_handler_1 = ({ d }) => navigator.navigate("edit-lexicon", d.id);
+    	const click_handler_2 = ({ d }) => deleteItem(d);
 
     	$$self.$capture_state = () => {
     		return {};
@@ -1132,17 +1222,22 @@ var app = (function () {
 
     	$$self.$inject_state = $$props => {
     		if ("data" in $$props) $$invalidate("data", data = $$props.data);
+    		if ("search" in $$props) search = $$props.search;
     		if ("findData" in $$props) $$invalidate("findData", findData = $$props.findData);
     		if ("deleteItem" in $$props) $$invalidate("deleteItem", deleteItem = $$props.deleteItem);
+    		if ("onkeyup" in $$props) $$invalidate("onkeyup", onkeyup = $$props.onkeyup);
     	};
 
     	return {
     		data,
     		findData,
     		deleteItem,
+    		onkeyup,
     		click_handler,
+    		keyup_handler,
     		change_handler,
-    		click_handler_1
+    		click_handler_1,
+    		click_handler_2
     	};
     }
 
@@ -1163,63 +1258,299 @@ var app = (function () {
     /* src/LexiconAdd.svelte generated by Svelte v3.15.0 */
     const file$3 = "src/LexiconAdd.svelte";
 
+    function get_each_context$2(ctx, list, i) {
+    	const child_ctx = Object.create(ctx);
+    	child_ctx.tag = list[i];
+    	return child_ctx;
+    }
+
+    function get_each_context_1(ctx, list, i) {
+    	const child_ctx = Object.create(ctx);
+    	child_ctx.application = list[i];
+    	return child_ctx;
+    }
+
+    // (156:8) {#each data.applications as application}
+    function create_each_block_1(ctx) {
+    	let div;
+    	let t0_value = ctx.application + "";
+    	let t0;
+    	let t1;
+    	let span;
+    	let t3;
+    	let dispose;
+
+    	function click_handler(...args) {
+    		return ctx.click_handler(ctx, ...args);
+    	}
+
+    	const block = {
+    		c: function create() {
+    			div = element("div");
+    			t0 = text(t0_value);
+    			t1 = space();
+    			span = element("span");
+    			span.textContent = "X";
+    			t3 = space();
+    			attr_dev(span, "class", "delete svelte-1qonizy");
+    			add_location(span, file$3, 158, 12, 3225);
+    			add_location(div, file$3, 156, 10, 3181);
+    			dispose = listen_dev(span, "click", click_handler, false, false, false);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, div, anchor);
+    			append_dev(div, t0);
+    			append_dev(div, t1);
+    			append_dev(div, span);
+    			append_dev(div, t3);
+    		},
+    		p: function update(changed, new_ctx) {
+    			ctx = new_ctx;
+    			if (changed.data && t0_value !== (t0_value = ctx.application + "")) set_data_dev(t0, t0_value);
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div);
+    			dispose();
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_each_block_1.name,
+    		type: "each",
+    		source: "(156:8) {#each data.applications as application}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (176:8) {#each data.tags as tag}
+    function create_each_block$2(ctx) {
+    	let div;
+    	let t0_value = ctx.tag + "";
+    	let t0;
+    	let t1;
+    	let span;
+    	let t3;
+    	let dispose;
+
+    	function click_handler_1(...args) {
+    		return ctx.click_handler_1(ctx, ...args);
+    	}
+
+    	const block = {
+    		c: function create() {
+    			div = element("div");
+    			t0 = text(t0_value);
+    			t1 = space();
+    			span = element("span");
+    			span.textContent = "X";
+    			t3 = space();
+    			attr_dev(span, "class", "delete svelte-1qonizy");
+    			add_location(span, file$3, 178, 12, 3694);
+    			add_location(div, file$3, 176, 10, 3658);
+    			dispose = listen_dev(span, "click", click_handler_1, false, false, false);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, div, anchor);
+    			append_dev(div, t0);
+    			append_dev(div, t1);
+    			append_dev(div, span);
+    			append_dev(div, t3);
+    		},
+    		p: function update(changed, new_ctx) {
+    			ctx = new_ctx;
+    			if (changed.data && t0_value !== (t0_value = ctx.tag + "")) set_data_dev(t0, t0_value);
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div);
+    			dispose();
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_each_block$2.name,
+    		type: "each",
+    		source: "(176:8) {#each data.tags as tag}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
     function create_fragment$3(ctx) {
     	let h1;
     	let t1;
-    	let div2;
+    	let div10;
     	let form;
+    	let div4;
     	let div0;
     	let label0;
     	let t3;
-    	let input;
+    	let input0;
     	let t4;
     	let div1;
     	let label1;
     	let t6;
-    	let textarea;
+    	let input1;
     	let t7;
+    	let div2;
+    	let label2;
+    	let t9;
+    	let textarea;
+    	let t10;
+    	let div3;
+    	let label3;
+    	let t12;
+    	let input2;
+    	let t13;
+    	let div9;
+    	let div6;
+    	let label4;
+    	let t15;
+    	let div5;
+    	let input3;
+    	let t16;
+    	let t17;
+    	let div8;
+    	let label5;
+    	let t19;
+    	let div7;
+    	let input4;
+    	let t20;
+    	let t21;
     	let button;
     	let dispose;
+    	let each_value_1 = ctx.data.applications;
+    	let each_blocks_1 = [];
+
+    	for (let i = 0; i < each_value_1.length; i += 1) {
+    		each_blocks_1[i] = create_each_block_1(get_each_context_1(ctx, each_value_1, i));
+    	}
+
+    	let each_value = ctx.data.tags;
+    	let each_blocks = [];
+
+    	for (let i = 0; i < each_value.length; i += 1) {
+    		each_blocks[i] = create_each_block$2(get_each_context$2(ctx, each_value, i));
+    	}
 
     	const block = {
     		c: function create() {
     			h1 = element("h1");
     			h1.textContent = "Please describe something";
     			t1 = space();
-    			div2 = element("div");
+    			div10 = element("div");
     			form = element("form");
+    			div4 = element("div");
     			div0 = element("div");
     			label0 = element("label");
-    			label0.textContent = "Name:";
+    			label0.textContent = "Domain:";
     			t3 = space();
-    			input = element("input");
+    			input0 = element("input");
     			t4 = space();
     			div1 = element("div");
     			label1 = element("label");
-    			label1.textContent = "Description:";
+    			label1.textContent = "Name:";
     			t6 = space();
-    			textarea = element("textarea");
+    			input1 = element("input");
     			t7 = space();
+    			div2 = element("div");
+    			label2 = element("label");
+    			label2.textContent = "Description:";
+    			t9 = space();
+    			textarea = element("textarea");
+    			t10 = space();
+    			div3 = element("div");
+    			label3 = element("label");
+    			label3.textContent = "Data owner:";
+    			t12 = space();
+    			input2 = element("input");
+    			t13 = space();
+    			div9 = element("div");
+    			div6 = element("div");
+    			label4 = element("label");
+    			label4.textContent = "Applications:";
+    			t15 = space();
+    			div5 = element("div");
+    			input3 = element("input");
+    			t16 = space();
+
+    			for (let i = 0; i < each_blocks_1.length; i += 1) {
+    				each_blocks_1[i].c();
+    			}
+
+    			t17 = space();
+    			div8 = element("div");
+    			label5 = element("label");
+    			label5.textContent = "Tags:";
+    			t19 = space();
+    			div7 = element("div");
+    			input4 = element("input");
+    			t20 = space();
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].c();
+    			}
+
+    			t21 = space();
     			button = element("button");
     			button.textContent = "Add";
-    			attr_dev(h1, "class", "svelte-kkahjt");
-    			add_location(h1, file$3, 32, 0, 539);
-    			add_location(label0, file$3, 37, 6, 606);
-    			attr_dev(input, "class", "svelte-kkahjt");
-    			add_location(input, file$3, 38, 6, 633);
-    			add_location(div0, file$3, 36, 4, 594);
-    			add_location(label1, file$3, 44, 6, 745);
-    			attr_dev(textarea, "class", "svelte-kkahjt");
-    			add_location(textarea, file$3, 45, 6, 779);
-    			add_location(div1, file$3, 43, 4, 733);
+    			attr_dev(h1, "class", "title");
+    			add_location(h1, file$3, 112, 0, 2094);
+    			attr_dev(label0, "class", "svelte-1qonizy");
+    			add_location(label0, file$3, 118, 8, 2202);
+    			attr_dev(input0, "class", "svelte-1qonizy");
+    			add_location(input0, file$3, 119, 8, 2233);
+    			add_location(div0, file$3, 117, 6, 2188);
+    			attr_dev(label1, "class", "svelte-1qonizy");
+    			add_location(label1, file$3, 125, 8, 2359);
+    			attr_dev(input1, "class", "svelte-1qonizy");
+    			add_location(input1, file$3, 126, 8, 2388);
+    			add_location(div1, file$3, 124, 6, 2345);
+    			attr_dev(label2, "class", "svelte-1qonizy");
+    			add_location(label2, file$3, 132, 8, 2512);
+    			attr_dev(textarea, "class", "svelte-1qonizy");
+    			add_location(textarea, file$3, 133, 8, 2548);
+    			add_location(div2, file$3, 131, 6, 2498);
+    			attr_dev(label3, "class", "svelte-1qonizy");
+    			add_location(label3, file$3, 139, 8, 2682);
+    			attr_dev(input2, "class", "svelte-1qonizy");
+    			add_location(input2, file$3, 140, 8, 2717);
+    			add_location(div3, file$3, 138, 6, 2668);
+    			attr_dev(div4, "class", "left svelte-1qonizy");
+    			add_location(div4, file$3, 116, 4, 2163);
+    			attr_dev(label4, "class", "svelte-1qonizy");
+    			add_location(label4, file$3, 148, 8, 2909);
+    			input3.value = ctx.newApplication;
+    			attr_dev(input3, "class", "svelte-1qonizy");
+    			add_location(input3, file$3, 150, 10, 2976);
+    			attr_dev(div5, "class", "input");
+    			add_location(div5, file$3, 149, 8, 2946);
+    			set_style(div6, "margin-bottom", "1em");
+    			add_location(div6, file$3, 147, 6, 2867);
+    			attr_dev(label5, "class", "svelte-1qonizy");
+    			add_location(label5, file$3, 168, 8, 3426);
+    			input4.value = ctx.newTag;
+    			attr_dev(input4, "class", "svelte-1qonizy");
+    			add_location(input4, file$3, 170, 10, 3485);
+    			attr_dev(div7, "class", "input");
+    			add_location(div7, file$3, 169, 8, 3455);
+    			add_location(div8, file$3, 167, 6, 3412);
+    			attr_dev(div9, "class", "right svelte-1qonizy");
+    			add_location(div9, file$3, 146, 4, 2841);
+    			attr_dev(form, "class", "svelte-1qonizy");
+    			add_location(form, file$3, 115, 2, 2152);
     			attr_dev(button, "type", "button");
-    			add_location(button, file$3, 50, 4, 889);
-    			add_location(form, file$3, 35, 2, 583);
-    			add_location(div2, file$3, 34, 0, 575);
+    			attr_dev(button, "class", "svelte-1qonizy");
+    			add_location(button, file$3, 184, 2, 3825);
+    			add_location(div10, file$3, 114, 0, 2144);
 
     			dispose = [
     				listen_dev(
-    					input,
+    					input0,
     					"change",
     					function () {
     						ctx.change_handler.apply(this, arguments);
@@ -1229,7 +1560,7 @@ var app = (function () {
     					false
     				),
     				listen_dev(
-    					textarea,
+    					input1,
     					"change",
     					function () {
     						ctx.change_handler_1.apply(this, arguments);
@@ -1238,6 +1569,30 @@ var app = (function () {
     					false,
     					false
     				),
+    				listen_dev(
+    					textarea,
+    					"change",
+    					function () {
+    						ctx.change_handler_2.apply(this, arguments);
+    					},
+    					false,
+    					false,
+    					false
+    				),
+    				listen_dev(
+    					input2,
+    					"change",
+    					function () {
+    						ctx.change_handler_3.apply(this, arguments);
+    					},
+    					false,
+    					false,
+    					false
+    				),
+    				listen_dev(input3, "change", ctx.changeApplication, false, false, false),
+    				listen_dev(input3, "keyup", ctx.keyup_handler, false, false, false),
+    				listen_dev(input4, "change", ctx.changeTag, false, false, false),
+    				listen_dev(input4, "keyup", ctx.keyup_handler_1, false, false, false),
     				listen_dev(button, "click", ctx.submit, false, false, false)
     			];
     		},
@@ -1247,29 +1602,121 @@ var app = (function () {
     		m: function mount(target, anchor) {
     			insert_dev(target, h1, anchor);
     			insert_dev(target, t1, anchor);
-    			insert_dev(target, div2, anchor);
-    			append_dev(div2, form);
-    			append_dev(form, div0);
+    			insert_dev(target, div10, anchor);
+    			append_dev(div10, form);
+    			append_dev(form, div4);
+    			append_dev(div4, div0);
     			append_dev(div0, label0);
     			append_dev(div0, t3);
-    			append_dev(div0, input);
-    			append_dev(form, t4);
-    			append_dev(form, div1);
+    			append_dev(div0, input0);
+    			append_dev(div4, t4);
+    			append_dev(div4, div1);
     			append_dev(div1, label1);
     			append_dev(div1, t6);
-    			append_dev(div1, textarea);
-    			append_dev(form, t7);
-    			append_dev(form, button);
+    			append_dev(div1, input1);
+    			append_dev(div4, t7);
+    			append_dev(div4, div2);
+    			append_dev(div2, label2);
+    			append_dev(div2, t9);
+    			append_dev(div2, textarea);
+    			append_dev(div4, t10);
+    			append_dev(div4, div3);
+    			append_dev(div3, label3);
+    			append_dev(div3, t12);
+    			append_dev(div3, input2);
+    			append_dev(form, t13);
+    			append_dev(form, div9);
+    			append_dev(div9, div6);
+    			append_dev(div6, label4);
+    			append_dev(div6, t15);
+    			append_dev(div6, div5);
+    			append_dev(div5, input3);
+    			append_dev(div6, t16);
+
+    			for (let i = 0; i < each_blocks_1.length; i += 1) {
+    				each_blocks_1[i].m(div6, null);
+    			}
+
+    			append_dev(div9, t17);
+    			append_dev(div9, div8);
+    			append_dev(div8, label5);
+    			append_dev(div8, t19);
+    			append_dev(div8, div7);
+    			append_dev(div7, input4);
+    			append_dev(div8, t20);
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].m(div8, null);
+    			}
+
+    			append_dev(div10, t21);
+    			append_dev(div10, button);
     		},
     		p: function update(changed, new_ctx) {
     			ctx = new_ctx;
+
+    			if (changed.newApplication) {
+    				prop_dev(input3, "value", ctx.newApplication);
+    			}
+
+    			if (changed.removeApplication || changed.data) {
+    				each_value_1 = ctx.data.applications;
+    				let i;
+
+    				for (i = 0; i < each_value_1.length; i += 1) {
+    					const child_ctx = get_each_context_1(ctx, each_value_1, i);
+
+    					if (each_blocks_1[i]) {
+    						each_blocks_1[i].p(changed, child_ctx);
+    					} else {
+    						each_blocks_1[i] = create_each_block_1(child_ctx);
+    						each_blocks_1[i].c();
+    						each_blocks_1[i].m(div6, null);
+    					}
+    				}
+
+    				for (; i < each_blocks_1.length; i += 1) {
+    					each_blocks_1[i].d(1);
+    				}
+
+    				each_blocks_1.length = each_value_1.length;
+    			}
+
+    			if (changed.newTag) {
+    				prop_dev(input4, "value", ctx.newTag);
+    			}
+
+    			if (changed.removeTag || changed.data) {
+    				each_value = ctx.data.tags;
+    				let i;
+
+    				for (i = 0; i < each_value.length; i += 1) {
+    					const child_ctx = get_each_context$2(ctx, each_value, i);
+
+    					if (each_blocks[i]) {
+    						each_blocks[i].p(changed, child_ctx);
+    					} else {
+    						each_blocks[i] = create_each_block$2(child_ctx);
+    						each_blocks[i].c();
+    						each_blocks[i].m(div8, null);
+    					}
+    				}
+
+    				for (; i < each_blocks.length; i += 1) {
+    					each_blocks[i].d(1);
+    				}
+
+    				each_blocks.length = each_value.length;
+    			}
     		},
     		i: noop,
     		o: noop,
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(h1);
     			if (detaching) detach_dev(t1);
-    			if (detaching) detach_dev(div2);
+    			if (detaching) detach_dev(div10);
+    			destroy_each(each_blocks_1, detaching);
+    			destroy_each(each_blocks, detaching);
     			run_all(dispose);
     		}
     	};
@@ -1286,9 +1733,13 @@ var app = (function () {
     }
 
     function instance$3($$self, $$props, $$invalidate) {
-    	let data = {};
+    	let data = { tags: [], applications: [] };
+    	let newTag = "";
+    	let newApplication = "";
 
     	let submit = async () => {
+    		if (!data.name || !data.domain || !data.description) return;
+
     		await fetch("https://localhost:5001/api/lexicon", {
     			method: "POST",
     			headers: { "Content-Type": "application/json" },
@@ -1298,13 +1749,66 @@ var app = (function () {
     		navigator.navigate("lexicon");
     	};
 
+    	let changeTag = e => {
+    		$$invalidate("newTag", newTag = e.target.value);
+    	};
+
+    	let addTag = () => {
+    		$$invalidate("data", data.tags = data.tags || [], data);
+
+    		if (newTag && newTag.length > 0 && data.tags.indexOf(newTag) === -1) {
+    			data.tags.push(newTag);
+    			$$invalidate("newTag", newTag = "");
+    		}
+    	};
+
+    	let removeTag = tag => {
+    		$$invalidate("data", data.tags = data.tags.filter(t => t !== tag), data);
+    	};
+
+    	let changeApplication = e => {
+    		$$invalidate("newApplication", newApplication = e.target.value);
+    	};
+
+    	let addApplication = () => {
+    		$$invalidate("data", data.applications = data.applications || [], data);
+
+    		if (newApplication && newApplication.length > 0 && data.applications.indexOf(newApplication) === -1) {
+    			data.applications.push(newApplication);
+    			$$invalidate("newApplication", newApplication = "");
+    		}
+    	};
+
+    	let removeApplication = tag => {
+    		$$invalidate("data", data.applications = data.applications.filter(t => t !== tag), data);
+    	};
+
+    	let onkeyup = (event, f) => {
+    		if (event.code === "Enter") {
+    			if (f === "a") addApplication(); else if (f === "t") addTag();
+    		}
+    	};
+
     	const change_handler = e => {
-    		$$invalidate("data", data.name = e.target.value, data);
+    		$$invalidate("data", data.domain = e.target.value, data);
     	};
 
     	const change_handler_1 = e => {
+    		$$invalidate("data", data.name = e.target.value, data);
+    	};
+
+    	const change_handler_2 = e => {
     		$$invalidate("data", data.description = e.target.value, data);
     	};
+
+    	const change_handler_3 = e => {
+    		$$invalidate("data", data.dataOwner = e.target.value, data);
+    	};
+
+    	const keyup_handler = e => onkeyup(e, "a");
+    	const click_handler = ({ application }) => removeApplication(application);
+    	const keyup_handler_1 = e => onkeyup(e, "t");
+    	const click_handler_1 = ({ tag }) => removeTag(tag);
 
     	$$self.$capture_state = () => {
     		return {};
@@ -1312,14 +1816,36 @@ var app = (function () {
 
     	$$self.$inject_state = $$props => {
     		if ("data" in $$props) $$invalidate("data", data = $$props.data);
+    		if ("newTag" in $$props) $$invalidate("newTag", newTag = $$props.newTag);
+    		if ("newApplication" in $$props) $$invalidate("newApplication", newApplication = $$props.newApplication);
     		if ("submit" in $$props) $$invalidate("submit", submit = $$props.submit);
+    		if ("changeTag" in $$props) $$invalidate("changeTag", changeTag = $$props.changeTag);
+    		if ("addTag" in $$props) addTag = $$props.addTag;
+    		if ("removeTag" in $$props) $$invalidate("removeTag", removeTag = $$props.removeTag);
+    		if ("changeApplication" in $$props) $$invalidate("changeApplication", changeApplication = $$props.changeApplication);
+    		if ("addApplication" in $$props) addApplication = $$props.addApplication;
+    		if ("removeApplication" in $$props) $$invalidate("removeApplication", removeApplication = $$props.removeApplication);
+    		if ("onkeyup" in $$props) $$invalidate("onkeyup", onkeyup = $$props.onkeyup);
     	};
 
     	return {
     		data,
+    		newTag,
+    		newApplication,
     		submit,
+    		changeTag,
+    		removeTag,
+    		changeApplication,
+    		removeApplication,
+    		onkeyup,
     		change_handler,
-    		change_handler_1
+    		change_handler_1,
+    		change_handler_2,
+    		change_handler_3,
+    		keyup_handler,
+    		click_handler,
+    		keyup_handler_1,
+    		click_handler_1
     	};
     }
 
@@ -1337,10 +1863,651 @@ var app = (function () {
     	}
     }
 
-    /* src/App.svelte generated by Svelte v3.15.0 */
-    const file$4 = "src/App.svelte";
+    /* src/LexiconEdit.svelte generated by Svelte v3.15.0 */
+    const file$4 = "src/LexiconEdit.svelte";
 
-    // (52:2) {:else}
+    function get_each_context$3(ctx, list, i) {
+    	const child_ctx = Object.create(ctx);
+    	child_ctx.tag = list[i];
+    	return child_ctx;
+    }
+
+    function get_each_context_1$1(ctx, list, i) {
+    	const child_ctx = Object.create(ctx);
+    	child_ctx.application = list[i];
+    	return child_ctx;
+    }
+
+    // (167:8) {#each data.applications as application}
+    function create_each_block_1$1(ctx) {
+    	let div;
+    	let t0_value = ctx.application + "";
+    	let t0;
+    	let t1;
+    	let span;
+    	let t3;
+    	let dispose;
+
+    	function click_handler(...args) {
+    		return ctx.click_handler(ctx, ...args);
+    	}
+
+    	const block = {
+    		c: function create() {
+    			div = element("div");
+    			t0 = text(t0_value);
+    			t1 = space();
+    			span = element("span");
+    			span.textContent = "X";
+    			t3 = space();
+    			attr_dev(span, "class", "delete svelte-1qonizy");
+    			add_location(span, file$4, 169, 12, 3549);
+    			add_location(div, file$4, 167, 10, 3505);
+    			dispose = listen_dev(span, "click", click_handler, false, false, false);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, div, anchor);
+    			append_dev(div, t0);
+    			append_dev(div, t1);
+    			append_dev(div, span);
+    			append_dev(div, t3);
+    		},
+    		p: function update(changed, new_ctx) {
+    			ctx = new_ctx;
+    			if (changed.data && t0_value !== (t0_value = ctx.application + "")) set_data_dev(t0, t0_value);
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div);
+    			dispose();
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_each_block_1$1.name,
+    		type: "each",
+    		source: "(167:8) {#each data.applications as application}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (187:8) {#each data.tags as tag}
+    function create_each_block$3(ctx) {
+    	let div;
+    	let t0_value = ctx.tag + "";
+    	let t0;
+    	let t1;
+    	let span;
+    	let t3;
+    	let dispose;
+
+    	function click_handler_1(...args) {
+    		return ctx.click_handler_1(ctx, ...args);
+    	}
+
+    	const block = {
+    		c: function create() {
+    			div = element("div");
+    			t0 = text(t0_value);
+    			t1 = space();
+    			span = element("span");
+    			span.textContent = "X";
+    			t3 = space();
+    			attr_dev(span, "class", "delete svelte-1qonizy");
+    			add_location(span, file$4, 189, 12, 4018);
+    			add_location(div, file$4, 187, 10, 3982);
+    			dispose = listen_dev(span, "click", click_handler_1, false, false, false);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, div, anchor);
+    			append_dev(div, t0);
+    			append_dev(div, t1);
+    			append_dev(div, span);
+    			append_dev(div, t3);
+    		},
+    		p: function update(changed, new_ctx) {
+    			ctx = new_ctx;
+    			if (changed.data && t0_value !== (t0_value = ctx.tag + "")) set_data_dev(t0, t0_value);
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div);
+    			dispose();
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_each_block$3.name,
+    		type: "each",
+    		source: "(187:8) {#each data.tags as tag}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function create_fragment$4(ctx) {
+    	let h1;
+    	let t1;
+    	let div10;
+    	let form;
+    	let div4;
+    	let div0;
+    	let label0;
+    	let t3;
+    	let input0;
+    	let input0_value_value;
+    	let t4;
+    	let div1;
+    	let label1;
+    	let t6;
+    	let input1;
+    	let input1_value_value;
+    	let t7;
+    	let div2;
+    	let label2;
+    	let t9;
+    	let textarea;
+    	let textarea_value_value;
+    	let t10;
+    	let div3;
+    	let label3;
+    	let t12;
+    	let input2;
+    	let input2_value_value;
+    	let t13;
+    	let div9;
+    	let div6;
+    	let label4;
+    	let t15;
+    	let div5;
+    	let input3;
+    	let t16;
+    	let t17;
+    	let div8;
+    	let label5;
+    	let t19;
+    	let div7;
+    	let input4;
+    	let t20;
+    	let t21;
+    	let button;
+    	let dispose;
+    	let each_value_1 = ctx.data.applications;
+    	let each_blocks_1 = [];
+
+    	for (let i = 0; i < each_value_1.length; i += 1) {
+    		each_blocks_1[i] = create_each_block_1$1(get_each_context_1$1(ctx, each_value_1, i));
+    	}
+
+    	let each_value = ctx.data.tags;
+    	let each_blocks = [];
+
+    	for (let i = 0; i < each_value.length; i += 1) {
+    		each_blocks[i] = create_each_block$3(get_each_context$3(ctx, each_value, i));
+    	}
+
+    	const block = {
+    		c: function create() {
+    			h1 = element("h1");
+    			h1.textContent = "Edit your something";
+    			t1 = space();
+    			div10 = element("div");
+    			form = element("form");
+    			div4 = element("div");
+    			div0 = element("div");
+    			label0 = element("label");
+    			label0.textContent = "Domain:";
+    			t3 = space();
+    			input0 = element("input");
+    			t4 = space();
+    			div1 = element("div");
+    			label1 = element("label");
+    			label1.textContent = "Name:";
+    			t6 = space();
+    			input1 = element("input");
+    			t7 = space();
+    			div2 = element("div");
+    			label2 = element("label");
+    			label2.textContent = "Description:";
+    			t9 = space();
+    			textarea = element("textarea");
+    			t10 = space();
+    			div3 = element("div");
+    			label3 = element("label");
+    			label3.textContent = "Data owner:";
+    			t12 = space();
+    			input2 = element("input");
+    			t13 = space();
+    			div9 = element("div");
+    			div6 = element("div");
+    			label4 = element("label");
+    			label4.textContent = "Applications:";
+    			t15 = space();
+    			div5 = element("div");
+    			input3 = element("input");
+    			t16 = space();
+
+    			for (let i = 0; i < each_blocks_1.length; i += 1) {
+    				each_blocks_1[i].c();
+    			}
+
+    			t17 = space();
+    			div8 = element("div");
+    			label5 = element("label");
+    			label5.textContent = "Tags:";
+    			t19 = space();
+    			div7 = element("div");
+    			input4 = element("input");
+    			t20 = space();
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].c();
+    			}
+
+    			t21 = space();
+    			button = element("button");
+    			button.textContent = "Save";
+    			attr_dev(h1, "class", "title");
+    			add_location(h1, file$4, 119, 0, 2298);
+    			attr_dev(label0, "class", "svelte-1qonizy");
+    			add_location(label0, file$4, 125, 8, 2400);
+    			input0.value = input0_value_value = ctx.data.domain;
+    			attr_dev(input0, "class", "svelte-1qonizy");
+    			add_location(input0, file$4, 126, 8, 2431);
+    			add_location(div0, file$4, 124, 6, 2386);
+    			attr_dev(label1, "class", "svelte-1qonizy");
+    			add_location(label1, file$4, 133, 8, 2587);
+    			input1.value = input1_value_value = ctx.data.name;
+    			attr_dev(input1, "class", "svelte-1qonizy");
+    			add_location(input1, file$4, 134, 8, 2616);
+    			add_location(div1, file$4, 132, 6, 2573);
+    			attr_dev(label2, "class", "svelte-1qonizy");
+    			add_location(label2, file$4, 141, 8, 2768);
+    			textarea.value = textarea_value_value = ctx.data.description;
+    			attr_dev(textarea, "class", "svelte-1qonizy");
+    			add_location(textarea, file$4, 142, 8, 2804);
+    			add_location(div2, file$4, 140, 6, 2754);
+    			attr_dev(label3, "class", "svelte-1qonizy");
+    			add_location(label3, file$4, 149, 8, 2973);
+    			input2.value = input2_value_value = ctx.data.dataOwner;
+    			attr_dev(input2, "class", "svelte-1qonizy");
+    			add_location(input2, file$4, 150, 8, 3008);
+    			add_location(div3, file$4, 148, 6, 2959);
+    			attr_dev(div4, "class", "left svelte-1qonizy");
+    			add_location(div4, file$4, 123, 4, 2361);
+    			attr_dev(label4, "class", "svelte-1qonizy");
+    			add_location(label4, file$4, 159, 8, 3233);
+    			input3.value = ctx.newApplication;
+    			attr_dev(input3, "class", "svelte-1qonizy");
+    			add_location(input3, file$4, 161, 10, 3300);
+    			attr_dev(div5, "class", "input");
+    			add_location(div5, file$4, 160, 8, 3270);
+    			set_style(div6, "margin-bottom", "1em");
+    			add_location(div6, file$4, 158, 6, 3191);
+    			attr_dev(label5, "class", "svelte-1qonizy");
+    			add_location(label5, file$4, 179, 8, 3750);
+    			input4.value = ctx.newTag;
+    			attr_dev(input4, "class", "svelte-1qonizy");
+    			add_location(input4, file$4, 181, 10, 3809);
+    			attr_dev(div7, "class", "input");
+    			add_location(div7, file$4, 180, 8, 3779);
+    			add_location(div8, file$4, 178, 6, 3736);
+    			attr_dev(div9, "class", "right svelte-1qonizy");
+    			add_location(div9, file$4, 157, 4, 3165);
+    			attr_dev(form, "class", "svelte-1qonizy");
+    			add_location(form, file$4, 122, 2, 2350);
+    			attr_dev(button, "type", "button");
+    			attr_dev(button, "class", "svelte-1qonizy");
+    			add_location(button, file$4, 195, 2, 4149);
+    			add_location(div10, file$4, 121, 0, 2342);
+
+    			dispose = [
+    				listen_dev(
+    					input0,
+    					"change",
+    					function () {
+    						ctx.change_handler.apply(this, arguments);
+    					},
+    					false,
+    					false,
+    					false
+    				),
+    				listen_dev(
+    					input1,
+    					"change",
+    					function () {
+    						ctx.change_handler_1.apply(this, arguments);
+    					},
+    					false,
+    					false,
+    					false
+    				),
+    				listen_dev(
+    					textarea,
+    					"change",
+    					function () {
+    						ctx.change_handler_2.apply(this, arguments);
+    					},
+    					false,
+    					false,
+    					false
+    				),
+    				listen_dev(
+    					input2,
+    					"change",
+    					function () {
+    						ctx.change_handler_3.apply(this, arguments);
+    					},
+    					false,
+    					false,
+    					false
+    				),
+    				listen_dev(input3, "change", ctx.changeApplication, false, false, false),
+    				listen_dev(input3, "keyup", ctx.keyup_handler, false, false, false),
+    				listen_dev(input4, "change", ctx.changeTag, false, false, false),
+    				listen_dev(input4, "keyup", ctx.keyup_handler_1, false, false, false),
+    				listen_dev(button, "click", ctx.submit, false, false, false)
+    			];
+    		},
+    		l: function claim(nodes) {
+    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, h1, anchor);
+    			insert_dev(target, t1, anchor);
+    			insert_dev(target, div10, anchor);
+    			append_dev(div10, form);
+    			append_dev(form, div4);
+    			append_dev(div4, div0);
+    			append_dev(div0, label0);
+    			append_dev(div0, t3);
+    			append_dev(div0, input0);
+    			append_dev(div4, t4);
+    			append_dev(div4, div1);
+    			append_dev(div1, label1);
+    			append_dev(div1, t6);
+    			append_dev(div1, input1);
+    			append_dev(div4, t7);
+    			append_dev(div4, div2);
+    			append_dev(div2, label2);
+    			append_dev(div2, t9);
+    			append_dev(div2, textarea);
+    			append_dev(div4, t10);
+    			append_dev(div4, div3);
+    			append_dev(div3, label3);
+    			append_dev(div3, t12);
+    			append_dev(div3, input2);
+    			append_dev(form, t13);
+    			append_dev(form, div9);
+    			append_dev(div9, div6);
+    			append_dev(div6, label4);
+    			append_dev(div6, t15);
+    			append_dev(div6, div5);
+    			append_dev(div5, input3);
+    			append_dev(div6, t16);
+
+    			for (let i = 0; i < each_blocks_1.length; i += 1) {
+    				each_blocks_1[i].m(div6, null);
+    			}
+
+    			append_dev(div9, t17);
+    			append_dev(div9, div8);
+    			append_dev(div8, label5);
+    			append_dev(div8, t19);
+    			append_dev(div8, div7);
+    			append_dev(div7, input4);
+    			append_dev(div8, t20);
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].m(div8, null);
+    			}
+
+    			append_dev(div10, t21);
+    			append_dev(div10, button);
+    		},
+    		p: function update(changed, new_ctx) {
+    			ctx = new_ctx;
+
+    			if (changed.data && input0_value_value !== (input0_value_value = ctx.data.domain)) {
+    				prop_dev(input0, "value", input0_value_value);
+    			}
+
+    			if (changed.data && input1_value_value !== (input1_value_value = ctx.data.name)) {
+    				prop_dev(input1, "value", input1_value_value);
+    			}
+
+    			if (changed.data && textarea_value_value !== (textarea_value_value = ctx.data.description)) {
+    				prop_dev(textarea, "value", textarea_value_value);
+    			}
+
+    			if (changed.data && input2_value_value !== (input2_value_value = ctx.data.dataOwner)) {
+    				prop_dev(input2, "value", input2_value_value);
+    			}
+
+    			if (changed.newApplication) {
+    				prop_dev(input3, "value", ctx.newApplication);
+    			}
+
+    			if (changed.removeApplication || changed.data) {
+    				each_value_1 = ctx.data.applications;
+    				let i;
+
+    				for (i = 0; i < each_value_1.length; i += 1) {
+    					const child_ctx = get_each_context_1$1(ctx, each_value_1, i);
+
+    					if (each_blocks_1[i]) {
+    						each_blocks_1[i].p(changed, child_ctx);
+    					} else {
+    						each_blocks_1[i] = create_each_block_1$1(child_ctx);
+    						each_blocks_1[i].c();
+    						each_blocks_1[i].m(div6, null);
+    					}
+    				}
+
+    				for (; i < each_blocks_1.length; i += 1) {
+    					each_blocks_1[i].d(1);
+    				}
+
+    				each_blocks_1.length = each_value_1.length;
+    			}
+
+    			if (changed.newTag) {
+    				prop_dev(input4, "value", ctx.newTag);
+    			}
+
+    			if (changed.removeTag || changed.data) {
+    				each_value = ctx.data.tags;
+    				let i;
+
+    				for (i = 0; i < each_value.length; i += 1) {
+    					const child_ctx = get_each_context$3(ctx, each_value, i);
+
+    					if (each_blocks[i]) {
+    						each_blocks[i].p(changed, child_ctx);
+    					} else {
+    						each_blocks[i] = create_each_block$3(child_ctx);
+    						each_blocks[i].c();
+    						each_blocks[i].m(div8, null);
+    					}
+    				}
+
+    				for (; i < each_blocks.length; i += 1) {
+    					each_blocks[i].d(1);
+    				}
+
+    				each_blocks.length = each_value.length;
+    			}
+    		},
+    		i: noop,
+    		o: noop,
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(h1);
+    			if (detaching) detach_dev(t1);
+    			if (detaching) detach_dev(div10);
+    			destroy_each(each_blocks_1, detaching);
+    			destroy_each(each_blocks, detaching);
+    			run_all(dispose);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_fragment$4.name,
+    		type: "component",
+    		source: "",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function instance$4($$self, $$props, $$invalidate) {
+    	let data = { tags: [], applications: [] };
+
+    	let fetchData = async params => {
+    		var query = await fetch("https://localhost:5001/api/lexicon/" + params);
+    		var _data = await query.json();
+    		$$invalidate("data", data = _data);
+    	};
+
+    	navigator.$params(fetchData);
+    	let newTag = "";
+    	let newApplication = "";
+
+    	let submit = async () => {
+    		if (!data.name || !data.domain || !data.description) return;
+
+    		await fetch("https://localhost:5001/api/lexicon", {
+    			method: "PUT",
+    			headers: { "Content-Type": "application/json" },
+    			body: JSON.stringify(data)
+    		});
+
+    		navigator.navigate("lexicon");
+    	};
+
+    	let changeTag = e => {
+    		$$invalidate("newTag", newTag = e.target.value);
+    	};
+
+    	let addTag = () => {
+    		$$invalidate("data", data.tags = data.tags || [], data);
+
+    		if (newTag && newTag.length > 0 && data.tags.indexOf(newTag) === -1) {
+    			data.tags.push(newTag);
+    			$$invalidate("newTag", newTag = "");
+    		}
+    	};
+
+    	let removeTag = tag => {
+    		$$invalidate("data", data.tags = data.tags.filter(t => t !== tag), data);
+    	};
+
+    	let changeApplication = e => {
+    		$$invalidate("newApplication", newApplication = e.target.value);
+    	};
+
+    	let addApplication = () => {
+    		$$invalidate("data", data.applications = data.applications || [], data);
+
+    		if (newApplication && newApplication.length > 0 && data.applications.indexOf(newApplication) === -1) {
+    			data.applications.push(newApplication);
+    			$$invalidate("newApplication", newApplication = "");
+    		}
+    	};
+
+    	let removeApplication = tag => {
+    		$$invalidate("data", data.applications = data.applications.filter(t => t !== tag), data);
+    	};
+
+    	let onkeyup = (event, f) => {
+    		if (event.code === "Enter") {
+    			if (f === "a") addApplication(); else if (f === "t") addTag();
+    		}
+    	};
+
+    	const change_handler = e => {
+    		$$invalidate("data", data.domain = e.target.value, data);
+    	};
+
+    	const change_handler_1 = e => {
+    		$$invalidate("data", data.name = e.target.value, data);
+    	};
+
+    	const change_handler_2 = e => {
+    		$$invalidate("data", data.description = e.target.value, data);
+    	};
+
+    	const change_handler_3 = e => {
+    		$$invalidate("data", data.dataOwner = e.target.value, data);
+    	};
+
+    	const keyup_handler = e => onkeyup(e, "a");
+    	const click_handler = ({ application }) => removeApplication(application);
+    	const keyup_handler_1 = e => onkeyup(e, "t");
+    	const click_handler_1 = ({ tag }) => removeTag(tag);
+
+    	$$self.$capture_state = () => {
+    		return {};
+    	};
+
+    	$$self.$inject_state = $$props => {
+    		if ("data" in $$props) $$invalidate("data", data = $$props.data);
+    		if ("fetchData" in $$props) fetchData = $$props.fetchData;
+    		if ("newTag" in $$props) $$invalidate("newTag", newTag = $$props.newTag);
+    		if ("newApplication" in $$props) $$invalidate("newApplication", newApplication = $$props.newApplication);
+    		if ("submit" in $$props) $$invalidate("submit", submit = $$props.submit);
+    		if ("changeTag" in $$props) $$invalidate("changeTag", changeTag = $$props.changeTag);
+    		if ("addTag" in $$props) addTag = $$props.addTag;
+    		if ("removeTag" in $$props) $$invalidate("removeTag", removeTag = $$props.removeTag);
+    		if ("changeApplication" in $$props) $$invalidate("changeApplication", changeApplication = $$props.changeApplication);
+    		if ("addApplication" in $$props) addApplication = $$props.addApplication;
+    		if ("removeApplication" in $$props) $$invalidate("removeApplication", removeApplication = $$props.removeApplication);
+    		if ("onkeyup" in $$props) $$invalidate("onkeyup", onkeyup = $$props.onkeyup);
+    	};
+
+    	return {
+    		data,
+    		newTag,
+    		newApplication,
+    		submit,
+    		changeTag,
+    		removeTag,
+    		changeApplication,
+    		removeApplication,
+    		onkeyup,
+    		change_handler,
+    		change_handler_1,
+    		change_handler_2,
+    		change_handler_3,
+    		keyup_handler,
+    		click_handler,
+    		keyup_handler_1,
+    		click_handler_1
+    	};
+    }
+
+    class LexiconEdit extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+    		init(this, options, instance$4, create_fragment$4, safe_not_equal, {});
+
+    		dispatch_dev("SvelteRegisterComponent", {
+    			component: this,
+    			tagName: "LexiconEdit",
+    			options,
+    			id: create_fragment$4.name
+    		});
+    	}
+    }
+
+    /* src/App.svelte generated by Svelte v3.15.0 */
+    const file$5 = "src/App.svelte";
+
+    // (46:2) {:else}
     function create_else_block(ctx) {
     	let current;
     	const main = new Main({ $$inline: true });
@@ -1371,14 +2538,52 @@ var app = (function () {
     		block,
     		id: create_else_block.name,
     		type: "else",
-    		source: "(52:2) {:else}",
+    		source: "(46:2) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (50:36) 
+    // (44:37) 
+    function create_if_block_3(ctx) {
+    	let current;
+    	const lexiconedit = new LexiconEdit({ $$inline: true });
+
+    	const block = {
+    		c: function create() {
+    			create_component(lexiconedit.$$.fragment);
+    		},
+    		m: function mount(target, anchor) {
+    			mount_component(lexiconedit, target, anchor);
+    			current = true;
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(lexiconedit.$$.fragment, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(lexiconedit.$$.fragment, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			destroy_component(lexiconedit, detaching);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block_3.name,
+    		type: "if",
+    		source: "(44:37) ",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (42:36) 
     function create_if_block_2(ctx) {
     	let current;
     	const lexiconadd = new LexiconAdd({ $$inline: true });
@@ -1409,14 +2614,14 @@ var app = (function () {
     		block,
     		id: create_if_block_2.name,
     		type: "if",
-    		source: "(50:36) ",
+    		source: "(42:36) ",
     		ctx
     	});
 
     	return block;
     }
 
-    // (48:32) 
+    // (40:32) 
     function create_if_block_1(ctx) {
     	let current;
     	const lexicon = new Lexicon({ $$inline: true });
@@ -1447,14 +2652,14 @@ var app = (function () {
     		block,
     		id: create_if_block_1.name,
     		type: "if",
-    		source: "(48:32) ",
+    		source: "(40:32) ",
     		ctx
     	});
 
     	return block;
     }
 
-    // (46:2) {#if route === 'index'}
+    // (38:2) {#if route === 'index'}
     function create_if_block$1(ctx) {
     	let current;
     	const main = new Main({ $$inline: true });
@@ -1485,14 +2690,14 @@ var app = (function () {
     		block,
     		id: create_if_block$1.name,
     		type: "if",
-    		source: "(46:2) {#if route === 'index'}",
+    		source: "(38:2) {#if route === 'index'}",
     		ctx
     	});
 
     	return block;
     }
 
-    function create_fragment$4(ctx) {
+    function create_fragment$5(ctx) {
     	let main;
     	let span0;
     	let t1;
@@ -1502,14 +2707,23 @@ var app = (function () {
     	let if_block;
     	let current;
     	let dispose;
-    	const if_block_creators = [create_if_block$1, create_if_block_1, create_if_block_2, create_else_block];
+
+    	const if_block_creators = [
+    		create_if_block$1,
+    		create_if_block_1,
+    		create_if_block_2,
+    		create_if_block_3,
+    		create_else_block
+    	];
+
     	const if_blocks = [];
 
     	function select_block_type(changed, ctx) {
     		if (ctx.route === "index") return 0;
     		if (ctx.route === "lexicon") return 1;
     		if (ctx.route === "add-lexicon") return 2;
-    		return 3;
+    		if (ctx.route === "edit-lexicon") return 3;
+    		return 4;
     	}
 
     	current_block_type_index = select_block_type(null, ctx);
@@ -1525,12 +2739,12 @@ var app = (function () {
     			span1.textContent = "Lexicon";
     			t3 = space();
     			if_block.c();
-    			attr_dev(span0, "class", "nav-button svelte-119ywlh");
-    			add_location(span0, file$4, 38, 2, 623);
-    			attr_dev(span1, "class", "nav-button svelte-119ywlh");
-    			add_location(span1, file$4, 41, 2, 715);
-    			attr_dev(main, "class", "svelte-119ywlh");
-    			add_location(main, file$4, 36, 0, 613);
+    			attr_dev(span0, "class", "nav-button");
+    			add_location(span0, file$5, 30, 2, 530);
+    			attr_dev(span1, "class", "nav-button");
+    			add_location(span1, file$5, 33, 2, 622);
+    			attr_dev(main, "class", "svelte-1kds1eb");
+    			add_location(main, file$5, 28, 0, 520);
 
     			dispose = [
     				listen_dev(span0, "click", ctx.click_handler, false, false, false),
@@ -1590,7 +2804,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$4.name,
+    		id: create_fragment$5.name,
     		type: "component",
     		source: "",
     		ctx
@@ -1599,7 +2813,7 @@ var app = (function () {
     	return block;
     }
 
-    function instance$4($$self, $$props, $$invalidate) {
+    function instance$5($$self, $$props, $$invalidate) {
     	let route;
 
     	const unsubscribe = navigator.subscribe(value => {
@@ -1623,13 +2837,13 @@ var app = (function () {
     class App extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$4, create_fragment$4, safe_not_equal, {});
+    		init(this, options, instance$5, create_fragment$5, safe_not_equal, {});
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "App",
     			options,
-    			id: create_fragment$4.name
+    			id: create_fragment$5.name
     		});
     	}
     }

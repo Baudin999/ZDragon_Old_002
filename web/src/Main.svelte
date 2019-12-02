@@ -14,15 +14,10 @@
 </script>
 
 <style>
-  h1 {
-    color: #ff3e00;
-    text-transform: uppercase;
-    font-size: 4em;
-    font-weight: 100;
-  }
+
 </style>
 
-<h1>Welcome to ZDragon!</h1>
+<h1 class="title">Welcome to ZDragon!</h1>
 <p>
   Visit
   <a href="https://zdragon.nl">ZDragon.nl</a>

@@ -2,6 +2,7 @@
   import Main from "./Main.svelte";
   import Lexicon from "./Lexicon.svelte";
   import LexiconAdd from "./LexiconAdd.svelte";
+  import LexiconEdit from "./LexiconEdit.svelte";
   import navigator from "./navigator.js";
 
   let route;
@@ -23,15 +24,6 @@
       max-width: none;
     }
   }
-
-  .nav-button {
-    display: inline-block;
-    margin: 0 1em;
-    color: rgb(15, 82, 109);
-  }
-  .nav-button:hover {
-    cursor: pointer;
-  }
 </style>
 
 <main>
@@ -49,6 +41,8 @@
     <Lexicon />
   {:else if route === 'add-lexicon'}
     <LexiconAdd />
+  {:else if route === 'edit-lexicon'}
+    <LexiconEdit />
   {:else}
     <Main />
   {/if}

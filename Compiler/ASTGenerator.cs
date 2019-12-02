@@ -31,6 +31,7 @@ namespace Compiler
             this.AST = nodes.ToList();
             this.Code = "";
             this.ParseTree = nodes.ToList();
+            this.Errors = new List<IASTError>();
             this.Tokens = Enumerable.Empty<Token>();
             this.Parser = new Parser(this.Tokens);
         }

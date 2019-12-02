@@ -38,7 +38,7 @@
   <a alt={descriptor.module} href={`/${descriptor.module}/index.html`}>
     Module: {descriptor.module}
   </a>
-  {#if !descriptor.parent}
+  {#if !descriptor.parent && descriptor.type}
     <br />
     <a
       alt={descriptor.name}

@@ -9,9 +9,15 @@ namespace CLI.Controllers
     public class LexiconDataController
     {
         [HttpGet("/api/lexicon")]
-        public IEnumerable<LexiconEntry> GetAll()
+        public IEnumerable<LexiconEntry> GetAll([FromQuery]string query)
         {
-            return Database.GetLexicon();
+            return Database.GetLexicon(query);
+        }
+
+        [HttpGet("/api/lexicon/{id}")]
+        public LexiconEntry Get(Guid id)
+        {
+            return Database.GetLexiconItem(id);
         }
 
         [HttpPost("/api/lexicon")]

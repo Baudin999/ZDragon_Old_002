@@ -4,12 +4,19 @@
     tags: [],
     applications: []
   };
+  let fetchData = async params => {
+    var query = await fetch("https://localhost:5001/api/lexicon/" + params);
+    var _data = await query.json();
+    data = _data;
+  };
+  navigator.$params(fetchData);
+
   let newTag = "";
   let newApplication = "";
   let submit = async () => {
     if (!data.name || !data.domain || !data.description) return;
     await fetch("https://localhost:5001/api/lexicon", {
-      method: "POST",
+      method: "PUT",
       headers: {
         "Content-Type": "application/json"
       },
@@ -110,7 +117,7 @@
   }
 </style>
 
-<h1 class="title">Please describe something</h1>
+<h1 class="title">Edit your something</h1>
 
 <div>
   <form>
@@ -118,6 +125,7 @@
       <div>
         <label>Domain:</label>
         <input
+          value={data.domain}
           on:change={e => {
             data.domain = e.target.value;
           }} />
@@ -125,6 +133,7 @@
       <div>
         <label>Name:</label>
         <input
+          value={data.name}
           on:change={e => {
             data.name = e.target.value;
           }} />
@@ -132,6 +141,7 @@
       <div>
         <label>Description:</label>
         <textarea
+          value={data.description}
           on:change={e => {
             data.description = e.target.value;
           }} />
@@ -139,6 +149,7 @@
       <div>
         <label>Data owner:</label>
         <input
+          value={data.dataOwner}
           on:change={e => {
             data.dataOwner = e.target.value;
           }} />
@@ -182,5 +193,5 @@
       </div>
     </div>
   </form>
-  <button type="button" on:click={submit}>Add</button>
+  <button type="button" on:click={submit}>Save</button>
 </div>
