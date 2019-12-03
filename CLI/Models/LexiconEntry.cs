@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using LiteDB;
 
 namespace CLI.Models
@@ -8,6 +9,7 @@ namespace CLI.Models
     {
         public Guid Id { get; set; }
         public string Name { get; set; } = "";
+        [DataType(DataType.MultilineText)]
         public string Description { get; set; } = "";
         public string Domain { get; set; } = "";
         public string? DataOwner { get; set; }

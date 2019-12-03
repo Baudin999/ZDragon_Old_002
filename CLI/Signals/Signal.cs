@@ -11,9 +11,20 @@ namespace CLI
             this.subscribers.Add(subscriber);
         }
 
-        public void Dispatch()
+        public int Dispatch()
         {
-            subscribers.ForEach(s => s.Invoke());
+            try
+            {
+                Console.WriteLine("Starting application cleanup...");
+                subscribers.Reverse();
+                subscribers.ForEach(s => s.Invoke());
+                return 0;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return 1;
+            }
         }
     }
 }

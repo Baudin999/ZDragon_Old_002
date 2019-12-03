@@ -44,13 +44,7 @@ namespace CLI.Commands
 
                           project.Watch();
 
-                          // Wait for the user to quit the program.
-                          Console.WriteLine("Press 'q' to quit the sample.");
-                          while (Console.ReadKey().Key != ConsoleKey.Q) { }
-
-
                           SignalSingleton.ExitSignal.Dispatch();
-                          project.Dispose();
                           return 0;
                       });
                   });

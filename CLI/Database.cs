@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using CLI.Models;
+using CLI.Signals;
 using LiteDB;
 
 namespace CLI
@@ -21,6 +22,11 @@ namespace CLI
             if (Db is null)
             {
                 Db = new LiteDatabase(ConnectionString());
+                SignalSingleton.ExitSignal.Subscribe(() =>
+                {
+                    Console.WriteLine("Disposing of the database...");
+                    Db.Dispose();
+                });
             }
             return Db;
         }

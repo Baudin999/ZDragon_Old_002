@@ -17,7 +17,6 @@ namespace CLI
         public string Path { get; } = "";
         public string OutPath { get; } = "";
         public List<Module> Modules { get; } = new List<Module>();
-        public Action Cleanup { get; private set; } = () => { };
 
         public Project(string path)
         {
@@ -33,14 +32,23 @@ namespace CLI
                 module.Parse();
             }
 
-            
             CreateIndexPage();
             CreateAssets();
-            Cleanup = () => { };
 
             Task.Run(Parse);
 
             Project.Current = this;
+
+            SignalSingleton.ExitSignal.Subscribe(() =>
+            {
+                Console.WriteLine("Disposing of the project...");
+                Project.Current = null;
+                foreach (Module m in this.Modules)
+                {
+                    m.Dispose();
+                }
+                this.Dispose();
+            });
         }
 
         public void Parse()
@@ -77,10 +85,6 @@ namespace CLI
             Helpers.ReadAndWriteAsset("CLI.Assets.mermaid.min.js", System.IO.Path.GetFullPath("mermaid.min.js", OutPath));
         }
 
-        public void OnClose(Action cleanup)
-        {
-            this.Cleanup = cleanup;
-        }
 
         internal List<IASTNode> GetAstForModule(string moduleName)
         {
@@ -99,7 +103,7 @@ namespace CLI
             }
         }
 
-        public void Watch()
+        public int Watch()
         {
             // Create a new FileSystemWatcher and set its properties.
             using var watcher = new FileSystemWatcher
@@ -118,8 +122,6 @@ namespace CLI
                 Filter = "*.car"
             };
 
-            this.Cleanup = watcher.Dispose;
-
             // Add event handlers.
             watcher.Changed += OnChanged;
             watcher.Created += OnCreate;
@@ -128,14 +130,15 @@ namespace CLI
 
             SignalSingleton.ExitSignal.Subscribe(() =>
             {
-                watcher.Dispose();
-                Cleanup();
+                Console.WriteLine("Disposing the file watcher...");
+                watcher.Dispose();   
             });
 
             // Begin watching.
             watcher.EnableRaisingEvents = true;
-
             while (Console.ReadKey().Key != ConsoleKey.Q) { }
+
+            return SignalSingleton.ExitSignal.Dispatch();
         }
 
 

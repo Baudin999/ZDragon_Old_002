@@ -7,7 +7,7 @@ using Mapper.Application;
 
 namespace CLI
 {
-    public class Module
+    public class Module : IDisposable
     {
         public string Name { get; }
         public string Path { get; }
@@ -19,7 +19,7 @@ namespace CLI
         public ASTGenerator Generator { get; private set; }
         public DateTime LastParsed { get; private set; }
 
-        
+
         public Module(string path, string basePath, Project project)
         {
             this.Path = path;
@@ -39,7 +39,7 @@ namespace CLI
             this.LastParsed = DateTime.Now;
             this.Transpiler = new Transpiler(this.Generator, this.Project);
 
-            ReferencedModules = Generator.AST.FindAll(n => n is ASTImport).Select(i => ((ASTImport)i).ModuleName).ToList(); 
+            ReferencedModules = Generator.AST.FindAll(n => n is ASTImport).Select(i => ((ASTImport)i).ModuleName).ToList();
         }
 
         public void SaveModuleOutput(bool decend = true)
@@ -115,6 +115,7 @@ LastParsed: {LastParsed}
 ";
         }
 
+        public void Dispose(){}
     }
 
     public static class DictionaryHelpers

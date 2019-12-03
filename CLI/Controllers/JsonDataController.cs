@@ -15,10 +15,11 @@ namespace CLI.Controllers
         private Module? Module;
 
         [HttpGet("/api/data/{module}/{type}")]
-        public IActionResult GetData(string module, string type)
+        public IActionResult GetData(string module, string type, [FromQuery]bool list)
         {
+
             Module = Project.Current?.Modules.First(m => m.Name == module);
-            var result = Generate(type);
+            var result = list ? new Faker().Make(10, () => Generate(type)) : Generate(type);
             if (result is null)
             {
                 return NotFound();

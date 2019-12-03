@@ -17,7 +17,7 @@ namespace CLI
             RootPath = rootPath;
             Task.Run(async () =>
             {
-                await Task.Delay(1000);
+                await Task.Delay(1500);
                 WebServer.OpenBrowser("https://localhost:5001/index.html");
             });
             return Task.Run(() =>
