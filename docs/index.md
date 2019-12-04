@@ -9,8 +9,8 @@ in order in no time.
 
 For those who just want to jump in!
 
-[OSx - v2.0.8-beta](https://github.com/Baudin999/ZDragon.NET/releases/download/v2.0.8-beta/ckc)<br />
-[Windows - v2.0.8-beta](https://github.com/Baudin999/ZDragon.NET/releases/download/v2.0.8-beta/ckc.exe)
+[OSx - v2.0.9-beta](https://github.com/Baudin999/ZDragon.NET/releases/download/v2.0.9-beta/ckc)<br />
+[Windows - v2.0.9-beta](https://github.com/Baudin999/ZDragon.NET/releases/download/v2.0.9-beta/ckc.exe)
 
 ## How to read this documentation
 
