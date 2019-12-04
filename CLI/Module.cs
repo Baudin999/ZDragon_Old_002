@@ -97,7 +97,7 @@ namespace CLI
 
         private string CreateModuleName()
         {
-            var p = Path.Replace(BasePath, "").Replace("/", ".").Replace(".car", "");
+            var p = Path.Replace(BasePath, "").Replace("/", ".").Replace("\\", ".").Replace(".car", "");
             if (p.StartsWith(".", StringComparison.Ordinal))
             {
                 p = p.Substring(1);
