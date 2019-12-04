@@ -5,7 +5,7 @@
     applications: []
   };
   let fetchData = async params => {
-    var query = await fetch("https://localhost:5001/api/lexicon/" + params);
+    var query = await fetch("/api/lexicon/" + params);
     var _data = await query.json();
     data = _data;
   };
@@ -15,7 +15,7 @@
   let newApplication = "";
   let submit = async () => {
     if (!data.name || !data.domain || !data.description) return;
-    await fetch("https://localhost:5001/api/lexicon", {
+    await fetch("/api/lexicon", {
       method: "PUT",
       headers: {
         "Content-Type": "application/json"

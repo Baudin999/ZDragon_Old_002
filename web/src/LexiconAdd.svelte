@@ -8,7 +8,7 @@
   let newApplication = "";
   let submit = async () => {
     if (!data.name || !data.domain || !data.description) return;
-    await fetch("https://localhost:5001/api/lexicon", {
+    await fetch("/api/lexicon", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"

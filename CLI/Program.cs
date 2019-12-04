@@ -1,8 +1,6 @@
 ﻿
 using Microsoft.Extensions.CommandLineUtils;
 using CLI.Commands;
-using System.Reflection;
-using System.IO;
 using System;
 using CLI.Signals;
 
@@ -12,7 +10,11 @@ namespace CLI
     {
         static void Main(string[] args)
         {
+            Console.WriteLine(@"
+Welcome to ZDragon!
 
+To quit the application press 'q'
+");
             SignalSingleton.ExitSignal.Subscribe(() =>
             {
                 Environment.Exit(0);
@@ -38,8 +40,5 @@ namespace CLI
                 app.ShowHelp();
             }
         }
-
     }
-
-
 }

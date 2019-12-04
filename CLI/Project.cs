@@ -32,7 +32,6 @@ namespace CLI
                 module.Parse();
             }
 
-            CreateIndexPage();
             CreateAssets();
 
             Task.Run(Parse);
@@ -60,29 +59,10 @@ namespace CLI
             }
         }
 
-        private void CreateIndexPage()
-        {
-            var moduleLinks = Modules.Select(m => $"<li><a href=\"/{m.Name}/index.html\">{m.Name}</a></li>");
-            var page = $@"
-<!DOCTYPE html>
-<html>
-<head></head>
-<body>
-
-<ul>
-{string.Join("", moduleLinks)}
-</ul>
-</body>
-</html>
-";
-            var filePath = System.IO.Path.GetFullPath("index_old.html", OutPath);
-            File.WriteAllText(filePath, page);
-        }
 
         private void CreateAssets()
         {
             Helpers.ReadAndWriteAsset("CLI.Assets.style.css", System.IO.Path.GetFullPath("style.css", OutPath));
-            Helpers.ReadAndWriteAsset("CLI.Assets.mermaid.min.js", System.IO.Path.GetFullPath("mermaid.min.js", OutPath));
         }
 
 
@@ -172,7 +152,6 @@ namespace CLI
                 Modules.Add(module);
                 module.Parse();
                 module.SaveModuleOutput(false);
-                CreateIndexPage();
             }
             catch (Exception ex)
             {
@@ -186,7 +165,6 @@ namespace CLI
             {
                 Console.WriteLine($"File: {e.FullPath} {e.ChangeType}");
                 Modules.Remove(Modules.FirstOrDefault(m => m.Path == e.FullPath));
-                CreateIndexPage();
             }
             catch (Exception ex)
             {
@@ -205,7 +183,6 @@ namespace CLI
                 Modules.Add(module);
                 module.Parse();
                 module.SaveModuleOutput(false);
-                CreateIndexPage();
             }
             catch (Exception ex)
             {

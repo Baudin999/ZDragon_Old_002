@@ -3,9 +3,7 @@
   let data = [];
   const findData = async param => {
     try {
-      var descriptions = await fetch(
-        `https://localhost:5001/api/search/${param || "nothing"}`
-      );
+      var descriptions = await fetch(`/api/search/${param || "nothing"}`);
       data = await descriptions.json();
     } catch (error) {
       console.log(error);

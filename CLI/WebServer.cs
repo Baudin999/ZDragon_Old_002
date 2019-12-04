@@ -22,6 +22,11 @@ namespace CLI
             });
             return Task.Run(() =>
             {
+                System.Console.WriteLine(@"
+A local server has been started on:
+http://localhost:5000/
+https://localhost:5001/
+");
                 Host.CreateDefaultBuilder()
                     .ConfigureWebHostDefaults(webBuilder =>
                     {
@@ -35,7 +40,6 @@ namespace CLI
                     .UseContentRoot(Directory.GetCurrentDirectory())
                     .Build()
                     .Run();
-
             });
         }
 

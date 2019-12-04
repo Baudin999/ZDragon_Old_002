@@ -5,15 +5,13 @@
   let findData = async _search => {
     if (!_search) return;
     search = _search;
-    var fetchResult = await fetch(
-      "https://localhost:5001/api/lexicon?query=" + search
-    );
+    var fetchResult = await fetch("/api/lexicon?query=" + search);
     var result = await fetchResult.json();
     data = result || [];
   };
 
   let deleteItem = async entry => {
-    var result = await fetch("https://localhost:5001/api/lexicon", {
+    var result = await fetch("/api/lexicon", {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json"

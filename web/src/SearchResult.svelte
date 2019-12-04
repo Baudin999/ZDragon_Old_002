@@ -2,7 +2,7 @@
   export let descriptor;
 
   let selectNode = async descriptor => {
-    let url = `https://localhost:5001/api/svg?module=${descriptor.module}&name=${descriptor.name}&type=g`;
+    let url = `/api/svg?module=${descriptor.module}&name=${descriptor.name}&type=g`;
     let _fetchResult = await fetch(url);
     let result = await _fetchResult.text();
 
