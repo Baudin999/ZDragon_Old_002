@@ -15,11 +15,14 @@ namespace Mapper.HTML
             var _mod = astTypeField.Type.First().Value;
             var _type = astTypeField.Type.Last().Value;
 
+            var restrictions = String.Join("\n", astTypeField.Restrictions.Select(r => $"{r.Key} {r.Value}"));
+
             return $@"
 <tr>
     <td>{astTypeField.Name}</td>
     <td>{string.Join(" ", astTypeField.Type.Select(t => t.Value).ToList())}</td>
     <td>{_mod != "Maybe"}</td>
+    <td>{restrictions}</td>
     <td>{string.Join(" ", astTypeField.Annotations.Select(a => a.Value).ToList())}</td>
 </tr>
 ";
@@ -27,7 +30,6 @@ namespace Mapper.HTML
 
         public override string VisitASTType(ASTType astType)
         {
-
             return $@"
 <div class=""table-container"">
 <table>
@@ -42,6 +44,7 @@ namespace Mapper.HTML
             <th>Name</th>
             <th>Type</th>
             <th>Required</th>
+            <th>Restrictions</th>
             <th>Description</th>
         </tr>
     </thead>

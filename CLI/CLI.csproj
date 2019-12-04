@@ -34,11 +34,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Remove="Assets\style.css" />
-    <None Remove="Assets\mermaid.min.js" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Assets\style.css" />
-    <EmbeddedResource Include="Assets\mermaid.min.js" />
   </ItemGroup>
   <ItemGroup>
     <None Update="wwwroot\site.js">
@@ -74,6 +72,9 @@
     <None Update="wwwroot\fa.css">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <ExcludeFromSingleFile>false</ExcludeFromSingleFile>
+    </None>
+    <None Update="wwwroot\mermaid.min.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 </Project>

@@ -29,6 +29,10 @@
   <input type="text" on:change={e => findData(e.target.value)} />
 </div>
 
-{#each data as d}
-  <SearchResult descriptor={d} />
-{/each}
+{#if data && data.length > 0}
+  {#each data as d}
+    <SearchResult descriptor={d} />
+  {/each}
+{:else}
+  <div>Your query returned no results.</div>
+{/if}

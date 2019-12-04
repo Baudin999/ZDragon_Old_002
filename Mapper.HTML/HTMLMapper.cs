@@ -73,7 +73,7 @@ namespace Mapper.HTML
 <!DOCTYPE html>
 <html>
 <head>
-    <script src=""/mermaid.min.js""></script>
+    <script defer src=""/mermaid.min.js""></script>
     <link rel='stylesheet' type='text/css' href='/style.css' />
   </head>
 <body>

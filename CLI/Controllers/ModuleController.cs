@@ -2,6 +2,7 @@
 using System.Linq;
 using Compiler.AST;
 using Mapper.Application;
+using Mapper.HTML;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CLI.Controllers
@@ -40,18 +41,17 @@ namespace CLI.Controllers
         }
 
         [HttpGet("/api/svg")]
-        public string RenderDescriptor(Descriptor descriptor)
+        public IActionResult RenderDescriptor([FromQuery]Descriptor descriptor)
         {
-            if (descriptor.DescriptorType == DescriptorType.Type.ToString("g"))
-            {
-                var module = Project.Current?.Modules.FirstOrDefault(m => m.Name == descriptor.Module);
-                var node = module?.Transpiler.AST.FirstOrDefault(a => a is INamable && ((INamable)a).Name == descriptor.Name);
-                return "";
-            }
-            else
-            {
-                return "";
-            }
+            
+            var module = Project.Current?.Modules.FirstOrDefault(m => m.Name == descriptor.Module);
+            var node = module?.Transpiler.AST.FirstOrDefault(a => a is INamable && ((INamable)a).Name == descriptor.Name);
+            if (node is null) return NotFound(descriptor);
+
+            var mapper = new MermaidMapper(new Compiler.ASTGenerator(new List<IASTNode> { node }));
+            mapper.Start().ToList();
+            return Ok(mapper.ToString());
+            
         }
     }
 
