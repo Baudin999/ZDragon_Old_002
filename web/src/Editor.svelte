@@ -1,5 +1,5 @@
 <script>
-  import { onMount } from "svelte";
+  import { onMount, onDestroy } from "svelte";
   import navigator from "./navigator.js";
 
   let flask;
@@ -22,21 +22,24 @@
     });
   };
 
+  function keypress(e) {
+    let key = String.fromCharCode(event.which).toLowerCase();
+    if (key === "s" && e.metaKey === true) {
+      saveCode();
+      e.preventDefault();
+      return false;
+    }
+  }
   onMount(() => {
     flask = new CodeFlask("#editor", {
       language: "carlang",
       tabSize: 4
     });
     getcode();
-
-    window.addEventListener("keydown", function(e) {
-      let key = String.fromCharCode(event.which).toLowerCase();
-      if (key === "s" && e.metaKey === true) {
-        saveCode();
-        e.preventDefault();
-        return false;
-      }
-    });
+    window.addEventListener("keypress", keypress);
+  });
+  onDestroy(() => {
+    window.removeEventListener("keypress", keypress);
   });
 </script>
 
@@ -48,6 +51,8 @@
     width: 100%;
   }
 </style>
+
+<span class="nav-button" on:click={saveCode}>Save</span>
 
 <div class="editor-container">
   <div id="editor" />
