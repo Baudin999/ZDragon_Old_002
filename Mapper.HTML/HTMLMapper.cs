@@ -79,6 +79,7 @@ namespace Mapper.HTML
 <body>
 
 <a href='/index.html'>Home</a>
+<a href='/index.html?path=editor&module={this.Generator.ModuleName}'>Edit</a>
 
 <ul>
 <li><a href=""model.xsd"" alt=""XSD"">XSD</a></li>

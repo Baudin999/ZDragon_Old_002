@@ -71,6 +71,11 @@
   form {
     display: flex;
     flex-direction: row;
+    min-width: 450px;
+    max-width: 1024px;
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
   }
   label {
     font-weight: bold;
@@ -110,77 +115,72 @@
   }
 </style>
 
-<h1 class="title">Please describe something</h1>
-
-<div>
-  <form>
-    <div class="left">
-      <div>
-        <label>Domain:</label>
-        <input
-          on:change={e => {
-            data.domain = e.target.value;
-          }} />
-      </div>
-      <div>
-        <label>Name:</label>
-        <input
-          on:change={e => {
-            data.name = e.target.value;
-          }} />
-      </div>
-      <div>
-        <label>Description:</label>
-        <textarea
-          on:change={e => {
-            data.description = e.target.value;
-          }} />
-      </div>
-      <div>
-        <label>Data owner:</label>
-        <input
-          on:change={e => {
-            data.dataOwner = e.target.value;
-          }} />
-      </div>
+<h1 class="title">Create your Lexicon entry!</h1>
+<form>
+  <div class="left">
+    <div>
+      <label>Domain:</label>
+      <input
+        on:change={e => {
+          data.domain = e.target.value;
+        }} />
     </div>
-    <div class="right">
-      <div style="margin-bottom: 1em;">
-        <label>Applications:</label>
-        <div class="input">
-          <input
-            value={newApplication}
-            on:change={changeApplication}
-            on:keyup={e => onkeyup(e, 'a')} />
-        </div>
-        {#each data.applications as application}
-          <div>
-            {application}
-            <span
-              class="delete"
-              on:click={() => removeApplication(application)}>
-              X
-            </span>
-          </div>
-        {/each}
-      </div>
-
-      <div>
-        <label>Tags:</label>
-        <div class="input">
-          <input
-            value={newTag}
-            on:change={changeTag}
-            on:keyup={e => onkeyup(e, 't')} />
-        </div>
-        {#each data.tags as tag}
-          <div>
-            {tag}
-            <span class="delete" on:click={() => removeTag(tag)}>X</span>
-          </div>
-        {/each}
-      </div>
+    <div>
+      <label>Name:</label>
+      <input
+        on:change={e => {
+          data.name = e.target.value;
+        }} />
     </div>
-  </form>
-  <button type="button" on:click={submit}>Add</button>
-</div>
+    <div>
+      <label>Description:</label>
+      <textarea
+        on:change={e => {
+          data.description = e.target.value;
+        }} />
+    </div>
+    <div>
+      <label>Data owner:</label>
+      <input
+        on:change={e => {
+          data.dataOwner = e.target.value;
+        }} />
+    </div>
+  </div>
+  <div class="right">
+    <div style="margin-bottom: 1em;">
+      <label>Applications:</label>
+      <div class="input">
+        <input
+          value={newApplication}
+          on:change={changeApplication}
+          on:keyup={e => onkeyup(e, 'a')} />
+      </div>
+      {#each data.applications as application}
+        <div>
+          {application}
+          <span class="delete" on:click={() => removeApplication(application)}>
+            X
+          </span>
+        </div>
+      {/each}
+    </div>
+
+    <div>
+      <label>Tags:</label>
+      <div class="input">
+        <input
+          value={newTag}
+          on:change={changeTag}
+          on:keyup={e => onkeyup(e, 't')} />
+      </div>
+      {#each data.tags as tag}
+        <div>
+          {tag}
+          <span class="delete" on:click={() => removeTag(tag)}>X</span>
+        </div>
+      {/each}
+    </div>
+  </div>
+</form>
+<button type="button" on:click={submit}>Add</button>

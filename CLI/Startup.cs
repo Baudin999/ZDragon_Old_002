@@ -57,7 +57,6 @@ namespace CLI
                     Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? "", "wwwroot")),
                 RequestPath = ""
             });
-            //app.UseHttpsRedirection();
             app.UseRouting();
             app.UseAuthorization();
             app.UseEndpoints(endpoints =>

@@ -10,6 +10,12 @@ namespace CLI
     {
         static void Main(string[] args)
         {
+
+            if (args.Length == 0)
+			{
+                args = new []{ "watch", "-s" };
+			}
+
             Console.WriteLine(@"
 Welcome to ZDragon!
 

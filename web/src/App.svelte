@@ -1,8 +1,10 @@
 <script>
-  import Main from "./Main.svelte";
+  import Home from "./Home.svelte";
   import Lexicon from "./Lexicon.svelte";
   import LexiconAdd from "./LexiconAdd.svelte";
   import LexiconEdit from "./LexiconEdit.svelte";
+  import Editor from "./Editor.svelte";
+  import LexiconAdmin from "./LexiconAdmin.svelte";
   import navigator from "./navigator.js";
 
   let route;
@@ -34,17 +36,24 @@
   <span class="nav-button" on:click={() => navigator.navigate('lexicon')}>
     Lexicon
   </span>
+  <span class="nav-button" on:click={() => navigator.navigate('editor')}>
+    Editor
+  </span>
 
   {#if route === 'index'}
-    <Main />
+    <Home />
   {:else if route === 'lexicon'}
     <Lexicon />
   {:else if route === 'add-lexicon'}
     <LexiconAdd />
   {:else if route === 'edit-lexicon'}
     <LexiconEdit />
+  {:else if route === 'lexicon-admin'}
+    <LexiconAdmin />
+  {:else if route === 'editor'}
+    <Editor />
   {:else}
-    <Main />
+    <Home />
   {/if}
 
 </main>

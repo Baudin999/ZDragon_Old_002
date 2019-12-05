@@ -83,6 +83,20 @@ namespace CLI
             yield break;
         }
 
+        public bool SaveCode(string source)
+        {
+            try
+            {
+                System.IO.File.WriteAllText(this.Path, source);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                return false;
+            }
+        }
+
         private string ReadModuleText()
         {
             return System.IO.File.ReadAllText(Path) + "\n";

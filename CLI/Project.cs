@@ -9,19 +9,23 @@ using Compiler.AST;
 
 namespace CLI
 {
-    public class Project : IDisposable
+    public partial class Project : IDisposable
     {
 
         public static Project? Current { get; private set; }
 
         public string Path { get; } = "";
         public string OutPath { get; } = "";
+        public string ConfigPath { get; } = "";
+        public CarConfig? CarConfig { get; private set; }
         public List<Module> Modules { get; } = new List<Module>();
 
         public Project(string path)
         {
             this.Path = path;
             this.OutPath = System.IO.Path.GetFullPath($"out", this.Path);
+            this.ConfigPath = System.IO.Path.GetFullPath("zdragon.json", this.OutPath);
+
             Directory.CreateDirectory(OutPath);
 
             var allfiles = Directory.GetFiles(path, "*.car", SearchOption.AllDirectories);
@@ -32,6 +36,7 @@ namespace CLI
                 module.Parse();
             }
 
+            InitCarConfig();
             CreateAssets();
 
             Task.Run(Parse);
@@ -59,10 +64,31 @@ namespace CLI
             }
         }
 
-
         private void CreateAssets()
         {
             Helpers.ReadAndWriteAsset("CLI.Assets.style.css", System.IO.Path.GetFullPath("style.css", OutPath));
+        }
+
+        public void CreateModule(string name)
+        {
+            try
+            {
+                var fileName = String.Join("/", name.Split(".").Select(UppercaseFirst)) + ".car";
+                var modulePath = System.IO.Path.GetFullPath(fileName, this.Path);
+                var directoryName = System.IO.Path.GetDirectoryName(modulePath);
+                Directory.CreateDirectory(directoryName);
+                File.WriteAllText(modulePath, $@"
+# {name}
+
+Have fun with your module!
+
+
+");
+            }
+            catch (Exception ex )
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
 
 
@@ -81,6 +107,11 @@ namespace CLI
                 }
                 return module?.Generator?.AST ?? new List<IASTNode>();
             }
+        }
+
+        public Module? FindModule(string name)
+        {
+            return this.Modules.FirstOrDefault(m => m.Name == name);
         }
 
         public int Watch()
@@ -222,6 +253,17 @@ namespace CLI
             {
                 Helpers.WriteAsset(outPath, Helpers.ReadAsset(assetName));
             }
+        }
+
+        static string UppercaseFirst(string s)
+        {
+            // Check for empty string.
+            if (string.IsNullOrEmpty(s))
+            {
+                return string.Empty;
+            }
+            // Return char and concat substring.
+            return char.ToUpper(s[0]) + s.Substring(1);
         }
     }
 

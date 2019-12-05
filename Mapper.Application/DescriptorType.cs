@@ -8,6 +8,7 @@
         Choice,
         Field,
         Other,
+        Module,
         DataOption
     }
 }

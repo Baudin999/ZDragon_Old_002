@@ -78,3 +78,34 @@ button:not(:disabled):active {
 button:focus {
 	border-color: #666;
 }
+
+/* EDITOR */
+.token.chapter {
+    color: hotpink;
+    
+}
+
+
+/*
+    HELP
+*/
+
+.help {
+    position: fixed;
+    left: 10px;
+    top: 10px;
+    bottom: 10px;
+    background: #fef6e1;
+    color: rgb(180, 132, 68);
+    width: 200px;
+    border: 1px solid burlywood;
+    padding: 1em;
+    font-size: 12px;
+    text-align: left;
+  }
+  .help .command {
+    font-weight: bold;
+  }
+  .help .command-container {
+    margin-bottom: 1em;
+  }

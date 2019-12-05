@@ -11,6 +11,10 @@
   };
 
   let deleteItem = async entry => {
+    // TODO: add logic to detect admin user.
+    alert("Only administrators are allowed to delete lexicon items.");
+    if (true) return;
+
     var result = await fetch("/api/lexicon", {
       method: "DELETE",
       headers: {
@@ -79,6 +83,13 @@
       navigator.navigate('add-lexicon');
     }}>
     Create
+  </span>
+  <span
+    class="nav-button"
+    on:click={() => {
+      navigator.navigate('lexicon-admin');
+    }}>
+    Admin
   </span>
   <h2>Search your lexicon:</h2>
   <input
