@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Compiler.AST;
 
@@ -54,7 +55,7 @@ namespace Mapper.HTML
                             return $"{step.To} -->> {step.From} : {to}";
                          })
                         .ToList();
-                return string.Join("\n", froms.Concat(tos));
+                return String.Join(Environment.NewLine, froms.Concat(tos));
             }
             else if (flowstep is ASTFlowStepLoop l_step)
             {
@@ -75,7 +76,7 @@ end
 <div>
 <h2>{this.Flow.Name}</h2>
 <div class=""mermaid"">sequenceDiagram
-{string.Join("\n", this.Flow.Steps.Select(StepToString).ToList())}
+{String.Join(Environment.NewLine, this.Flow.Steps.Select(StepToString).ToList())}
 </div>
 </div>".Trim();
         }

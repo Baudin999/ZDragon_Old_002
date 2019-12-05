@@ -59,7 +59,7 @@ namespace Mapper.HTML
         public string ToHtmlString(Dictionary<string, string> links)
         {
             //
-            var errorBlock = string.Join("\n", this.Errors.Select(error =>
+            var errorBlock = string.Join(Environment.NewLine, this.Errors.Select(error =>
             {
                 return $@"
 <div class=""error"">
@@ -74,21 +74,24 @@ namespace Mapper.HTML
 <html>
 <head>
     <script defer src=""/mermaid.min.js""></script>
+    <link rel='stylesheet' type='text/css' href='/global.css' />
     <link rel='stylesheet' type='text/css' href='/style.css' />
   </head>
 <body>
 
-<a href='/index.html'>Home</a>
-<a href='/index.html?path=editor&module={this.Generator.ModuleName}'>Edit</a>
+<main>
+    <a class=""nav-button"" href='/index.html'>Home</a>
+    <a class=""nav-button"" href='/index.html?path=editor&module={this.Generator.ModuleName}'>Edit</a>
 
-<ul>
-<li><a href=""model.xsd"" alt=""XSD"">XSD</a></li>
-{string.Join("\n", links.Select(l => $"<li><a href=\"{l.Value}\">{l.Key}</a></li>").ToList())}
-</ul>
+    <ul>
+    <li><a href=""model.xsd"" alt=""XSD"">XSD</a></li>
+    {string.Join(Environment.NewLine, links.Select(l => $"<li><a href=\"{l.Value}\">{l.Key}</a></li>").ToList())}
+    </ul>
+</main>
 
 { errorBlock }
 
-{ string.Join("\n", Parts)}
+{ string.Join(Environment.NewLine, Parts)}
 
 <h2>ERD</h2>
 
@@ -96,7 +99,7 @@ namespace Mapper.HTML
 
 <h2>Tables</h2>
 
-{ string.Join("\n\n", this.TableMapper.Start().ToList()) }
+{ string.Join(Environment.NewLine + Environment.NewLine, this.TableMapper.Start().ToList()) }
 
 <script>
 mermaid.initialize({{

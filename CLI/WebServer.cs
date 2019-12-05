@@ -18,14 +18,13 @@ namespace CLI
             Task.Run(async () =>
             {
                 await Task.Delay(1500);
-                WebServer.OpenBrowser("https://localhost:5001/index.html");
+                WebServer.OpenBrowser("http://localhost:5000/index.html");
             });
             return Task.Run(() =>
             {
                 System.Console.WriteLine(@"
 A local server has been started on:
 http://localhost:5000/
-https://localhost:5001/
 ");
                 Host.CreateDefaultBuilder()
                     .ConfigureWebHostDefaults(webBuilder =>

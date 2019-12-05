@@ -56,7 +56,7 @@ namespace Mapper.JSON
 
         internal static string Annotate(IEnumerable<ASTAnnotation> annotations)
         {
-            return string.Join("\n", annotations.Select(a => a.Value).ToList());
+            return String.Join(Environment.NewLine, annotations.Select(a => a.Value).ToList());
         }
 
         internal static bool IsBasicType(string t)

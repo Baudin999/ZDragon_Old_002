@@ -8,6 +8,7 @@ namespace CLI
     public class CarConfig
     {
         public string Version { get; set; } = "v0";
+        public string PortNumber { get; set; } = "5000";
 
         public LexiconConfig LexiconConfig { get; set; } = new LexiconConfig();
 

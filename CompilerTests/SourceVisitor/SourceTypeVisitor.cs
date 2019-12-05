@@ -23,7 +23,7 @@ type Person
 ";
             var generator = new ASTGenerator(code);
             var visitor = new VisitorSource(generator);
-            var result = string.Join("\n\n", visitor.Start());
+            var result = string.Join(Environment.NewLine + Environment.NewLine, visitor.Start());
 
             Assert.Equal("type Person", result);
         }
@@ -38,7 +38,7 @@ type Person
 ";
             var generator = new ASTGenerator(code);
             var visitor = new VisitorSource(generator);
-            var result = string.Join("\n\n", visitor.Start());
+            var result = string.Join(Environment.NewLine + Environment.NewLine, visitor.Start());
 
             Assert.Equal(@"@ The Person
 @ Another annotation
@@ -55,7 +55,7 @@ type Person
 ";
             var generator = new ASTGenerator(code);
             var visitor = new VisitorSource(generator);
-            var result = string.Join("\n\n", visitor.Start());
+            var result = string.Join(Environment.NewLine + Environment.NewLine, visitor.Start());
             Assert.Equal(@"
 % api: /root/{param}
 type Person".Trim(), result);
@@ -73,7 +73,7 @@ type Person =
 ";
             var generator = new ASTGenerator(code);
             var visitor = new VisitorSource(generator);
-            var result = string.Join("\n\n", visitor.Start());
+            var result = string.Join(Environment.NewLine + Environment.NewLine, visitor.Start());
             var resultTest = @"
 type Person =
     FirstName: String;
@@ -99,7 +99,7 @@ type Person =
 ";
             var generator = new ASTGenerator(code);
             var visitor = new VisitorSource(generator);
-            var result = string.Join("\n\n", visitor.Start());
+            var result = string.Join(Environment.NewLine + Environment.NewLine, visitor.Start());
             var resultTest = @"
 type Person =
     FirstName: String;
@@ -130,7 +130,7 @@ type Other =
 ";
             var generator = new ASTGenerator(code);
             var visitor = new VisitorSource(generator);
-            var result = string.Join("\n\n", visitor.Start());
+            var result = string.Join(Environment.NewLine + Environment.NewLine, visitor.Start());
             var resultTest = @"
 type Person =
     FirstName: String;

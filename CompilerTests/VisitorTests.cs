@@ -19,7 +19,7 @@ type Person
 ";
             var generator = new ASTGenerator(code);
             var visitor = new VisitorSource(generator);
-            var result = string.Join("\n\n", visitor.Start());
+            var result = string.Join(Environment.NewLine + Environment.NewLine, visitor.Start());
 
             Assert.True(result.Length > 0);
         }

@@ -15,7 +15,7 @@ namespace Mapper.HTML
             var _mod = astTypeField.Type.First().Value;
             var _type = astTypeField.Type.Last().Value;
 
-            var restrictions = String.Join("\n", astTypeField.Restrictions.Select(r => $"{r.Key} {r.Value}"));
+            var restrictions = String.Join(Environment.NewLine, astTypeField.Restrictions.Select(r => $"{r.Key} {r.Value}"));
 
             return $@"
 <tr>
@@ -49,7 +49,7 @@ namespace Mapper.HTML
         </tr>
     </thead>
     <tbody>
-        {string.Join("\n", astType.Fields.Select(Visit).ToList())}
+        {String.Join(Environment.NewLine, astType.Fields.Select(Visit).ToList())}
     <tbody>
 </table>
 </div>

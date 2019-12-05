@@ -5,26 +5,21 @@
   let flask;
 
   let getcode = async () => {
-    var codeRequest = await fetch(
-      "https://localhost:5001/api/module/" + navigator.module
-    );
+    var codeRequest = await fetch("/api/module/" + navigator.module);
     var code = await codeRequest.text();
     flask.updateCode(code);
   };
 
   let saveCode = async () => {
     var code = flask.getCode();
-    var codeRequest = await fetch(
-      "https://localhost:5001/api/module/" + navigator.module,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "text/plain",
-          "Content-Length": code.length.toString()
-        },
-        body: code
-      }
-    );
+    var codeRequest = await fetch("/api/module/" + navigator.module, {
+      method: "POST",
+      headers: {
+        "Content-Type": "text/plain",
+        "Content-Length": code.length.toString()
+      },
+      body: code
+    });
   };
 
   onMount(() => {

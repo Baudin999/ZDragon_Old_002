@@ -36,9 +36,16 @@
   <span class="nav-button" on:click={() => navigator.navigate('lexicon')}>
     Lexicon
   </span>
-  <span class="nav-button" on:click={() => navigator.navigate('editor')}>
-    Editor
-  </span>
+  {#if navigator.module}
+    <span class="nav-button" on:click={() => navigator.navigate('editor')}>
+      Editor
+    </span>
+    <span
+      class="nav-button"
+      on:click={() => (window.location.href = `/${navigator.module}/index.html`)}>
+      Preview
+    </span>
+  {/if}
 
   {#if route === 'index'}
     <Home />

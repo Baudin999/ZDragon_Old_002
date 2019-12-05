@@ -27,10 +27,10 @@ namespace Compiler
                 parts.Add($@"alias {astAlias.Name} = {typeDef}");
             } else
             {
-                var restrictions = string.Join("\n", astAlias.Restrictions.Select(Visit));
+                var restrictions = String.Join(Environment.NewLine, astAlias.Restrictions.Select(Visit));
                 parts.Add($"alias {astAlias.Name} = {typeDef}\n{restrictions}");
             }
-            return string.Join("\n", parts.ToArray());
+            return String.Join(Environment.NewLine, parts.ToArray());
         }
 
         public override string VisitASTAnnotation(ASTAnnotation astAnnotation)
@@ -77,7 +77,7 @@ namespace Compiler
                     .Annotations
                     .Select(Visit)
                     .Select(a => indent + a);
-            var a = string.Join("\n", annotations);
+            var a = String.Join(Environment.NewLine, annotations);
 
             if (annotations.Count() > 0)
             {
@@ -105,7 +105,7 @@ namespace Compiler
                 parts.AddRange(astType.Fields.Select(Visit));
             }
 
-            return string.Join("\n", parts.ToArray());
+            return String.Join(Environment.NewLine, parts.ToArray());
         }
 
         public override string VisitASTTypeDefinition(ASTTypeDefinition astTypeDefinition)
@@ -116,7 +116,7 @@ namespace Compiler
         public override string VisitASTTypeField(ASTTypeField astTypeField)
         {
             var typeDef = string.Join(" ", astTypeField.Type.Select(Visit));
-            var restrictions = string.Join("\n", astTypeField.Restrictions.Select(Visit));
+            var restrictions = String.Join(Environment.NewLine, astTypeField.Restrictions.Select(Visit));
 
             if (astTypeField.Restrictions.Count() > 0)
             {

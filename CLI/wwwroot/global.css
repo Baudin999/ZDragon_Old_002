@@ -1,15 +1,27 @@
-﻿html, body {
+﻿
+*, *:before, *:after {
+    box-sizing: border-box;
+}
+
+html, body {
 	position: relative;
 	width: 100%;
 	height: 100%;
+    margin: 0;
+    padding: 0;
 }
 
 body {
 	color: #333;
-	margin: 0;
-	padding: 8px;
+	padding: 1rem;
 	box-sizing: border-box;
 	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+}
+
+main {
+    text-align: center;
+    padding: 1em;
+    margin: 0 auto;
 }
 
 h1.title {
@@ -109,3 +121,78 @@ button:focus {
   .help .command-container {
     margin-bottom: 1em;
   }
+
+div.table-container {
+    width: 100%;
+    overflow: hidden;
+}
+
+table {
+  background: #012B39;
+  border-radius: 0.25em;
+  border-collapse: collapse;
+  margin: 1em;
+  width: calc(100% - 2em);
+}
+th {
+  border-bottom: 1px solid #364043;
+  color: #E2B842;
+  font-size: 0.85em;
+  font-weight: 600;
+  padding: 0.5em 1em;
+  text-align: left;
+}
+td {
+  color: #fff;
+  font-weight: 400;
+  padding: 0.65em 1em;
+}
+.disabled td {
+  color: #4F5F64;
+}
+tbody tr {
+  transition: background 0.25s ease;
+}
+tbody tr:hover {
+  background: #014055;
+}
+
+/* Error Styling */
+.error {
+    background: #fccbc7;
+    border: 1px solid #7d0d02;
+    min-width: 350px;
+    max-width: 750px;
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 1em;
+    margin-bottom: 1em;
+}
+
+.error .title {
+    background: #c91604;
+    color: white;
+    margin: -1em -1em 1em -1em;
+    padding: 0.5em;
+    font-weight: bold;
+}
+
+
+/* Mermaid Styling */
+
+
+.mermaid .classGroup rect {
+  fill: #fdf6e3 !important;
+  stroke: gray !important;
+}
+.mermaid .classGroup text {
+  fill: gray !important;
+}
+.mermaid .classGroup text.title {
+   fill: black !important;
+}
+.mermaid .classGroup line {
+  fill: gray !important;
+  stroke: gray !important;
+}

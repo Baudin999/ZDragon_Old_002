@@ -87,6 +87,7 @@ namespace CLI
         {
             try
             {
+
                 System.IO.File.WriteAllText(this.Path, source);
                 return true;
             }

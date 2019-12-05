@@ -66,7 +66,7 @@ namespace CLI
 
         private void CreateAssets()
         {
-            Helpers.ReadAndWriteAsset("CLI.Assets.style.css", System.IO.Path.GetFullPath("style.css", OutPath));
+            // Nothing yet
         }
 
         public void CreateModule(string name)

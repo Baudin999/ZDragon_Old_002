@@ -24,7 +24,7 @@ alias Name = String
 ";
             var generator = new ASTGenerator(code);
             var visitor = new VisitorSource(generator);
-            var result = string.Join("\n\n", visitor.Start());
+            var result = string.Join(Environment.NewLine + Environment.NewLine, visitor.Start());
 
             Assert.Equal("alias Name = String", result);
         }
@@ -38,7 +38,7 @@ alias Name = String;
 ";
             var generator = new ASTGenerator(code);
             var visitor = new VisitorSource(generator);
-            var result = string.Join("\n\n", visitor.Start());
+            var result = string.Join(Environment.NewLine + Environment.NewLine, visitor.Start());
             var resultExpected = @"
 @ This is the Name alias
 alias Name = String
@@ -58,7 +58,7 @@ alias Name = String;
 ";
             var generator = new ASTGenerator(code);
             var visitor = new VisitorSource(generator);
-            var result = string.Join("\n\n", visitor.Start());
+            var result = string.Join(Environment.NewLine + Environment.NewLine, visitor.Start());
             var resultExpected = @"
 @ This is the Name alias
 % xsd: nnnNaname
@@ -79,7 +79,7 @@ alias Name =
 ";
             var generator = new ASTGenerator(code);
             var visitor = new VisitorSource(generator);
-            var result = string.Join("\n\n", visitor.Start());
+            var result = string.Join(Environment.NewLine + Environment.NewLine, visitor.Start());
             var resultExpected = @"
 @ This is the Name alias
 alias Name = String
@@ -102,7 +102,7 @@ alias Name = String
 ";
             var generator = new ASTGenerator(code);
             var visitor = new VisitorSource(generator);
-            var result = string.Join("\n\n", visitor.Start());
+            var result = string.Join(Environment.NewLine + Environment.NewLine, visitor.Start());
             var resultExpected = @"
 alias Name = String
 

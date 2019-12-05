@@ -30,7 +30,7 @@ namespace Mapper.Application.TypeScript
             {
                 return $@"
 public interface {astType.Name} {{
-{string.Join("\n", astType.Fields.Select(Visit).ToList())}
+{String.Join(Environment.NewLine, astType.Fields.Select(Visit).ToList())}
 }}
 ";
             }
