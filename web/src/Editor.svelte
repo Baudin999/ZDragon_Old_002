@@ -22,24 +22,25 @@
     });
   };
 
-  function keypress(e) {
-    let key = String.fromCharCode(event.which).toLowerCase();
-    if (key === "s" && e.metaKey === true) {
-      saveCode();
-      e.preventDefault();
-      return false;
-    }
-  }
   onMount(() => {
     flask = new CodeFlask("#editor", {
       language: "carlang",
       tabSize: 4
     });
     getcode();
-    window.addEventListener("keypress", keypress);
+
+    window.addEventListener("keypress", function(e) {
+      let key = String.fromCharCode(e.keyCode).toLowerCase();
+      if (key === "s" && (e.ctrlKey === true || e.metaKey == true)) {
+        console.log("Saving your code!");
+        saveCode();
+        e.preventDefault();
+        return false;
+      }
+    });
   });
   onDestroy(() => {
-    window.removeEventListener("keypress", keypress);
+    // window.removeEventListener("keyup", keyup, true);
   });
 </script>
 

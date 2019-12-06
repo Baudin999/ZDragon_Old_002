@@ -35,7 +35,7 @@ namespace CLI
 
         public void Parse()
         {
-            var code = ReadModuleText();
+            var code = ReadModuleText() + Environment.NewLine;
             this.Generator = new ASTGenerator(code, this.Name);
             this.LastParsed = DateTime.Now;
             this.Transpiler = new Transpiler(this.Generator, this.Project);

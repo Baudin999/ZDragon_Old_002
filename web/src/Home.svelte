@@ -7,7 +7,7 @@
   const fireCommand = async param => {
     let [command, name, ...params] = param.split(":");
     if (!name) findData(command);
-    if (command.trim() == "modules") {
+    else if (command.trim() == "modules") {
       findData("modules:");
     } else if (command.trim() == "new" && name) {
       createNewModule(name.trim());
@@ -27,7 +27,7 @@
         method: "POST"
       });
       let descriptors = await request.json();
-      data = [...descriptors, ...data];
+      data = descriptors;
 
       setTimeout(() => {
         window.location.href = `/index.html?path=editor&module=${name}`;
@@ -36,7 +36,7 @@
       console.log(error);
     }
   };
-  let keyup = event => {
+  let keypress = event => {
     if (event.code === "Enter") {
       fireCommand(event.target.value);
     }
@@ -58,7 +58,7 @@
 
 <div>
   <h2>Search your models:</h2>
-  <input type="text" on:keyup={keyup} />
+  <input type="text" on:keypress={keypress} />
 </div>
 
 {#if data && data.length > 0}
