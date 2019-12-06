@@ -29,7 +29,7 @@ To quit the application press 'q'
             var app = new CommandLineApplication();
             app.Name = "ckc";
             app.HelpOption("-?|-h|--help");
-            app.VersionOption("-v|--version", "v2.1.3-beta");
+            app.VersionOption("-v|--version", "v2.1.4-beta");
 
             app.OnExecute(() => 0);
 
