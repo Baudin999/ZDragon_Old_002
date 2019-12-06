@@ -26,7 +26,9 @@
       var request = await fetch("/api/modules/" + name, {
         method: "POST"
       });
-      await request.json();
+      let descriptors = await request.json();
+      data = [...descriptors, ...data];
+
       setTimeout(() => {
         window.location.href = `/index.html?path=editor&module=${name}`;
       }, 500);
@@ -34,7 +36,7 @@
       console.log(error);
     }
   };
-  let onkeyup = event => {
+  let keyup = event => {
     if (event.code === "Enter") {
       fireCommand(event.target.value);
     }
@@ -56,7 +58,7 @@
 
 <div>
   <h2>Search your models:</h2>
-  <input type="text" on:keyup={e => onkeyup(e)} />
+  <input type="text" on:keyup={keyup} />
 </div>
 
 {#if data && data.length > 0}

@@ -20,6 +20,7 @@ namespace CLI
         public CarConfig? CarConfig { get; private set; }
         public List<Module> Modules { get; } = new List<Module>();
 
+
         public Project(string path)
         {
             this.Path = path;
@@ -71,23 +72,41 @@ namespace CLI
 
         public void CreateModule(string name)
         {
+            var fileName = String.Join("/", name.Split(".").Select(UppercaseFirst)) + ".car";
+            var modulePath = System.IO.Path.GetFullPath(fileName, this.Path);
+            var directoryName = System.IO.Path.GetDirectoryName(modulePath);
+            var filePath = System.IO.Path.GetFullPath(fileName, directoryName ?? this.Path);
+            Directory.CreateDirectory(directoryName);
             try
             {
-                var fileName = String.Join("/", name.Split(".").Select(UppercaseFirst)) + ".car";
-                var modulePath = System.IO.Path.GetFullPath(fileName, this.Path);
-                var directoryName = System.IO.Path.GetDirectoryName(modulePath);
-                Directory.CreateDirectory(directoryName);
-                File.WriteAllText(modulePath, $@"
+                using (var fs = new FileStream(filePath, FileMode.CreateNew, FileAccess.Write, FileShare.ReadWrite))
+                {
+                    using (var sr = new StreamWriter(fs))
+                    {
+                        sr.Write($@"
 # {name}
 
 Have fun with your module!
 
 
 ");
+                        sr.Flush();
+                        sr.Close();
+                        sr.Dispose();
+                    }
+                    fs.Close();
+                    fs.Dispose();
+
+
+
+                    return;
+                }
+                throw new IOException("ReadModule failed with unknown exception.");
             }
-            catch (Exception ex )
+            catch (IOException ioe)
             {
-                Console.WriteLine(ex.Message);
+                Console.WriteLine("ReadModuleText: Caught Exception reading file [{0}]", ioe.ToString());
+                throw ioe;
             }
         }
 
@@ -158,6 +177,7 @@ Have fun with your module!
         {
             try
             {
+
                 var module = Modules.FirstOrDefault(m => m.Path == e.FullPath);
                 if (module is null)
                 {
@@ -180,9 +200,12 @@ Have fun with your module!
             {
                 Console.WriteLine($"File: {e.FullPath} {e.ChangeType}");
                 var module = new Module(e.FullPath, this.Path, this);
-                Modules.Add(module);
-                module.Parse();
-                module.SaveModuleOutput(false);
+                if (FindModule(module.Name) is null)
+                {
+                    Modules.Add(module);
+                    module.Parse();
+                    module.SaveModuleOutput();
+                }
             }
             catch (Exception ex)
             {
@@ -233,14 +256,22 @@ Have fun with your module!
                 var assembly = Assembly.GetExecutingAssembly();
                 var resourceName = name;
 
-                using var stream = assembly.GetManifestResourceStream(resourceName);
-                if (!(stream is null))
+                using (var stream = assembly.GetManifestResourceStream(resourceName))
                 {
-                    using var reader = new StreamReader(stream);
-                    return reader.ReadToEnd();
-                } else
-                {
-                    return "";
+                    if (!(stream is null))
+                    {
+                        using (var reader = new StreamReader(stream))
+                        {
+                            var result = reader.ReadToEnd();
+                            reader.Close();
+                            reader.Dispose();
+                            return result;
+                        }
+                    }
+                    else
+                    {
+                        return "";
+                    }
                 }
             }
 

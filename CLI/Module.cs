@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Compiler;
 using Compiler.AST;
@@ -100,7 +101,22 @@ namespace CLI
 
         private string ReadModuleText()
         {
-            return System.IO.File.ReadAllText(Path) + "\n";
+            try
+            {
+                using (var fs = new FileStream(this.Path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                {
+                    using (var sr = new StreamReader(fs))
+                    {
+                        return sr.ReadToEnd();
+                    }
+                }
+                throw new IOException("ReadModule failed with unknown exception.");
+            }
+            catch (IOException ioe)
+            {
+                Console.WriteLine("ReadModuleText: Caught Exception reading file [{0}]", ioe.ToString());
+                throw ioe;
+            }
         }
 
         private void SaveResult(string fileName, string source)

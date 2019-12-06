@@ -99,7 +99,9 @@ namespace CLI.Controllers
                 {
                     var code = await reader.ReadToEndAsync();
                     m.SaveCode(code);
-                    return Ok(m.Generator.Code);
+                    var result = Ok(m.Generator.Code);
+                    reader.Close();
+                    reader.Dispose();
                 }
             }
 
