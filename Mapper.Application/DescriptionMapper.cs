@@ -19,7 +19,7 @@ namespace Mapper.Application
         }
 
         public override IEnumerable<Descriptor> VisitASTType(ASTType astType) {
-            yield return new Descriptor
+            yield return new Descriptor($"{astType.Name}")
             {
                 Module = ModuleName,
                 Name = astType.Name,
@@ -28,23 +28,23 @@ namespace Mapper.Application
             };
 
 
-            //foreach (var field in astType.Fields)
-            //{
-            //    yield return new Descriptor
-            //    {
-            //        Module = ModuleName,
-            //        Name = field.Name,
-            //        Description = MapAnnotations(field.Annotations),
-            //        Parent = astType.Name,
-            //        Type = MapTypes(field.Type),
-            //        DescriptorType = DescriptorType.Field.ToString("g")
-            //    };
-            //}
+            foreach (var field in astType.Fields)
+            {
+                yield return new Descriptor(field.Name)
+                {
+                    Module = ModuleName,
+                    Name = field.Name,
+                    Description = MapAnnotations(field.Annotations),
+                    Parent = astType.Name,
+                    Type = MapTypes(field.Type),
+                    DescriptorType = DescriptorType.Field.ToString("g")
+                };
+            }
         }
 
         public override IEnumerable<Descriptor> VisitASTAlias(ASTAlias astAlias)
         {
-            yield return new Descriptor
+            yield return new Descriptor(astAlias.Name)
             {
                 Module = ModuleName,
                 Name = astAlias.Name,
@@ -56,34 +56,28 @@ namespace Mapper.Application
 
         public override IEnumerable<Descriptor> VisitASTData(ASTData astData)
         {
-            yield return new Descriptor
+            yield return new Descriptor(astData.Name)
             {
                 Module = ModuleName,
                 Name = astData.Name,
                 Description = MapAnnotations(astData.Annotations),
                 DescriptorType = DescriptorType.Data.ToString("g")
             };
-
-            //foreach (var option in astData.Options)
-            //{
-            //    yield return new Descriptor
-            //    {
-            //        Module = ModuleName,
-            //        Name = option.Name,
-            //        Parent = astData.Name,
-            //        Description = MapAnnotations(option.Annotations),
-            //        DescriptorType = DescriptorType.DataOption.ToString("g")
-            //    };
-            //}
         }
 
         public override IEnumerable<Descriptor> VisitASTChoice(ASTChoice astChoice)
         {
-            yield return new Descriptor
+            var description = $@"
+{MapAnnotations(astChoice.Annotations)}
+
+Options:
+{String.Join(Environment.NewLine, astChoice.Options.Select(o => o.Value))}
+";
+            yield return new Descriptor(astChoice.Name)
             {
                 Module = ModuleName,
                 Name = astChoice.Name,
-                Description = MapAnnotations(astChoice.Annotations),
+                Description = description,
                 DescriptorType = DescriptorType.Choice.ToString("g")
             };
         }

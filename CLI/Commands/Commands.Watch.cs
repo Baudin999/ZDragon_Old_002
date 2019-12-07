@@ -13,6 +13,7 @@ namespace CLI.Commands
         {
             _ = app.Command("watch", (command) =>
                   {
+
                       command.Description = "Watch a .car Project";
                       command.HelpOption("-?|-h|--help");
 
@@ -28,6 +29,11 @@ namespace CLI.Commands
 
                       command.OnExecute(() =>
                       {
+                          Console.WriteLine(@"
+Welcome to ZDragon!
+
+To quit the application press 'q'
+");
                           var directory = fileOption.HasValue() switch
                           {
                               false => Directory.GetCurrentDirectory(),

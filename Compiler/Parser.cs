@@ -11,6 +11,13 @@ namespace Compiler
         private readonly List<Token> tokenStream;
         private int position;
 
+        private Parser()
+        {
+            length = 0;
+            tokenStream = new List<Token>();
+            position = 0;
+            Errors = new List<IASTError>();
+        }
         public Parser(IEnumerable<Token> tokenStream)
         {
             this.tokenStream = tokenStream.ToList();
@@ -26,7 +33,7 @@ namespace Compiler
         public bool HasPeek(int index = 1) => (position + index) < length;
         public Token Peek(int index = 1) => tokenStream[position + index];
 
-
+        public static Parser Empty() => new Parser();
         public static string[] BaseTypes = { "String", "Number", "Boolean", "Date", "Time", "DateTime" };
 
         public IEnumerable<IASTNode> Parse()
@@ -121,6 +128,11 @@ namespace Compiler
             yield break;
         }
 
+        public Token? Previous(int index = -1)
+        {
+            return this.HasPeek(index) ? this.Peek(index) : null;
+        }
+
         /// <summary>
         /// Consume a token of a type but ignore newlines, indentation or whitespace.
         /// This is a convenience method which can let you focus on the core of the
@@ -145,8 +157,29 @@ namespace Compiler
                 }
                 else
                 {
-                    throw new InvalidTokenException("Invalid Token");
-                    
+                    var previous1 = this.Previous(-2)?.Value ?? "";
+                    var previous = this.Previous()?.Value ?? "";
+                    var value = this.Current.Value;
+                    var next = this.Peek()?.Value ?? "";
+                    var next1 = this.Peek(2)?.Value ?? "";
+                    var message = tokenType switch
+                    {
+                        TokenType.Identifier => $@"
+Expected an Identifier but found a {this.Current.TokenType}: '{value}'.
+Line {this.Current.StartLine}, Column {this.Current.StartColumn}
+...{previous1} {previous} {value} {next} {next1}...
+
+In ZDragon we expect types to be represented by an Identifier and
+identifiers always start with a capital letter and have no spaces
+or other symbols.
+",
+                        TokenType.EndStatement => $@"
+Expected an Enstatement but found a {this.Current.TokenType}: '{value}'.
+...{previous1} {previous} {value} {next} {next1}...
+",
+                        _ => $"Invalid Token: Expected a {tokenType} but found {this.Current.TokenType} on line {this.Current.StartLine} and column {this.Current.StartColumn}"
+                    };
+                    throw new InvalidTokenException(message);
                 }
             }
         }

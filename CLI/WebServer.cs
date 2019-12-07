@@ -14,17 +14,18 @@ namespace CLI
         public static string RootPath = "";
         public static Task Start(string rootPath)
         {
+            var portNumber = Project.Current?.CarConfig?.PortNumber ?? "5000";
             RootPath = rootPath;
             Task.Run(async () =>
             {
                 await Task.Delay(1500);
-                WebServer.OpenBrowser("http://localhost:5000/index.html");
+                WebServer.OpenBrowser($"http://localhost:{portNumber}/index.html");
             });
             return Task.Run(() =>
             {
-                System.Console.WriteLine(@"
+                System.Console.WriteLine($@"
 A local server has been started on:
-http://localhost:5000/
+http://localhost:{portNumber}/
 ");
                 Host.CreateDefaultBuilder()
                     .ConfigureWebHostDefaults(webBuilder =>
@@ -32,6 +33,7 @@ http://localhost:5000/
                         webBuilder
                             .UseStartup<Startup>()
                             .UseWebRoot(rootPath)
+                            .UseUrls($"http://localhost:{portNumber}/")
                             .UseSetting(WebHostDefaults.SuppressStatusMessagesKey, "True")
                             .ConfigureLogging(logging => logging.ClearProviders());
 

@@ -30,15 +30,17 @@ namespace Mapper.HTML
 
         public override string VisitASTType(ASTType astType)
         {
+            var typeDescription = string.Join(" ", astType.Annotations.Select(a => a.Value).ToList()).Trim();
+            if (typeDescription.Length == 0) typeDescription = "No Description";
             return $@"
 <div class=""table-container"">
 <table>
     <thead>
         <tr>
-            <th colspan=""4"">{astType.Name}</th>
+            <th colspan=""5"">{astType.Name}</th>
         </tr>
         <tr class=""description"">
-            <th colspan=""4"">{string.Join(" ", astType.Annotations.Select(a => a.Value).ToList())}</th>
+            <th colspan=""5"">{typeDescription}</th>
         </tr>
         <tr>
             <th>Name</th>

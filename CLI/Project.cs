@@ -25,7 +25,7 @@ namespace CLI
         {
             this.Path = path;
             this.OutPath = System.IO.Path.GetFullPath($"out", this.Path);
-            this.ConfigPath = System.IO.Path.GetFullPath("zdragon.json", this.OutPath);
+            this.ConfigPath = System.IO.Path.GetFullPath("zdragon.json", this.Path);
 
             Directory.CreateDirectory(OutPath);
 

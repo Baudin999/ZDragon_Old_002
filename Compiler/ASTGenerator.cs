@@ -50,14 +50,25 @@ namespace Compiler
         public ASTGenerator(string code, string moduleName = "")
         {
             this.ModuleName = moduleName;
-            this.Code = code; 
-            this.Tokens = new Lexer().Lex(code);
-            this.Parser = new Parser(this.Tokens);
-            this.ParseTree = this.Parser.Parse().ToList();
-            var (errors, nodes) = new Resolver(this.ParseTree).Resolve();
-            var verificationErrors = new Verificator(nodes).Verify();
-            this.AST = nodes.ToList();
-            this.Errors = this.Parser.Errors.Concat(errors).Concat(verificationErrors).ToList();
+            this.Code = code;
+            if (code.Length == 0)
+            {
+                this.Tokens = Enumerable.Empty<Token>();
+                this.Parser = Parser.Empty();
+                this.ParseTree = new List<IASTNode>();
+                this.AST = new List<IASTNode>();
+                this.Errors = new List<IASTError>();
+            }
+            else
+            {
+                this.Tokens = new Lexer().Lex(code);
+                this.Parser = new Parser(this.Tokens);
+                this.ParseTree = this.Parser.Parse().ToList();
+                var (errors, nodes) = new Resolver(this.ParseTree).Resolve();
+                var verificationErrors = new Verificator(nodes).Verify();
+                this.AST = nodes.ToList();
+                this.Errors = this.Parser.Errors.Concat(errors).Concat(verificationErrors).ToList();
+            }
         }
 
         public IASTNode Find(string name)

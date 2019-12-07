@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CLI.Controllers
 {
-    public class LexiconDataController
+    public class LexiconDataController : ControllerBase
     {
         [HttpGet("/api/lexicon")]
         public IEnumerable<LexiconEntry> GetAll([FromQuery]string query)
@@ -36,6 +36,16 @@ namespace CLI.Controllers
         public void Delete([FromBody]LexiconEntry entry)
         {
             Database.DeleteLexiconEntry(entry);
+        }
+
+        [HttpGet("/api/lexicon/config")]
+        public IActionResult ConfigurationData()
+        {
+            var project = Project.Current;
+            if (project is null) return NotFound();
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+            else return Ok(project.CarConfig.LexiconConfig);
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
         }
     }   
 }

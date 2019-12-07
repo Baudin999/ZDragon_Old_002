@@ -73,15 +73,11 @@ namespace CLI
             }
         }
 
-        public IEnumerable<Descriptor> GetDescriptions(string param)
+        public IEnumerable<Descriptor> GetDescriptions()
         {
             var mapper = new DescriptionMapper(this.Generator, this.Name);
             var nodes = mapper.Start().SelectMany(s => s);
-            foreach (var node in nodes)
-            {
-                if (node.Is(param)) yield return node;
-            }
-            yield break;
+            return nodes.ToList();
         }
 
         public bool SaveCode(string source)

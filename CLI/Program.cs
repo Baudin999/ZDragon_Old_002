@@ -16,11 +16,6 @@ namespace CLI
                 args = new []{ "watch", "-s" };
 			}
 
-            Console.WriteLine(@"
-Welcome to ZDragon!
-
-To quit the application press 'q'
-");
             SignalSingleton.ExitSignal.Subscribe(() =>
             {
                 Environment.Exit(0);

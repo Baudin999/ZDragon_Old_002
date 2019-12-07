@@ -6,10 +6,13 @@ class Navigator {
     this.params = writable([]);
     this.module = getUrlParameter("module") || null;
   }
-  navigate(route, ...params) {
+  navigate(route, ...p) {
     this.route.update(n => route);
-    this.params.update(n => params || []);
-    UpdateQueryString("path", route);
+    this.params.update(n => p);
+
+    if (route !== "edit-lexicon") {
+      UpdateQueryString("path", route);
+    }
   }
 
   subscribe(f) {
@@ -17,7 +20,9 @@ class Navigator {
   }
 
   $params(f) {
-    this.params.subscribe(f);
+    this.params.subscribe(newParams => {
+      f(newParams || []);
+    });
   }
 }
 

@@ -5,6 +5,7 @@
   import LexiconEdit from "./LexiconEdit.svelte";
   import Editor from "./Editor.svelte";
   import LexiconAdmin from "./LexiconAdmin.svelte";
+  import Preview from "./Preview.svelte";
   import navigator from "./navigator.js";
 
   let route;
@@ -40,27 +41,26 @@
     <span class="nav-button" on:click={() => navigator.navigate('editor')}>
       Editor
     </span>
-    <span
-      class="nav-button"
-      on:click={() => (window.location.href = `/${navigator.module}/index.html`)}>
+    <span class="nav-button" on:click={() => navigator.navigate('preview')}>
       Preview
     </span>
   {/if}
-
-  {#if route === 'index'}
-    <Home />
-  {:else if route === 'lexicon'}
-    <Lexicon />
-  {:else if route === 'add-lexicon'}
-    <LexiconAdd />
-  {:else if route === 'edit-lexicon'}
-    <LexiconEdit />
-  {:else if route === 'lexicon-admin'}
-    <LexiconAdmin />
-  {:else if route === 'editor'}
-    <Editor />
-  {:else}
-    <Home />
-  {/if}
-
 </main>
+
+{#if route === 'index'}
+  <Home />
+{:else if route === 'lexicon'}
+  <Lexicon />
+{:else if route === 'add-lexicon'}
+  <LexiconAdd />
+{:else if route === 'edit-lexicon'}
+  <LexiconEdit />
+{:else if route === 'lexicon-admin'}
+  <LexiconAdmin />
+{:else if route === 'preview'}
+  <Preview />
+{:else if route === 'editor'}
+  <Editor />
+{:else}
+  <Home />
+{/if}

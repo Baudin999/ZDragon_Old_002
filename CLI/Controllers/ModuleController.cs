@@ -24,7 +24,7 @@ namespace CLI.Controllers
         {
             Project.Current?.CreateModule(name);
             return new List<Descriptor> {
-                new Descriptor
+                new Descriptor(name)
                 {
                     Module = name,
                     Description = "Your newly created module!",
@@ -40,25 +40,27 @@ namespace CLI.Controllers
 
             var moduleDescriptions = Project.Current?.Modules.Select(m =>
             {
-                return new Descriptor
+                return new Descriptor(m.Name)
                 {
                     Module = m.Name,
                     Name = m.Name,
-                    Description = "The " + m
+                    Description = "The \"" + m.Name + "\" module",
+                    DescriptorType = DescriptorType.Module.ToString("g")
                 };
             }) ?? Enumerable.Empty<Descriptor>();
 
-            var descriptors = Project
-                .Current?
-                .Modules
-                .SelectMany(m => m.GetDescriptions(param));
-
-            if (param == "modules:")
+            if (param == "modules:" || param == "modules")
             {
                 return moduleDescriptions;
             }
 
+            var descriptors = Project
+               .Current?
+               .Modules
+               .SelectMany(m => m.GetDescriptions());
+
             return moduleDescriptions.Concat(descriptors)
+                .Where(d => d.Title.Contains(param, System.StringComparison.OrdinalIgnoreCase))
                 .OrderBy(d => d.Module)
                 .ThenBy(d => d.Parent)
                 .ThenBy(d => d.Name) ?? Enumerable.Empty<Descriptor>();
@@ -92,9 +94,12 @@ namespace CLI.Controllers
         {
             var m = Project.Current?.FindModule(module);
 
-            
-            if (!(m is null))
+
+            if (m is null)
             {
+                return await Task.Run(() => NotFound());
+            }
+            else { 
                 using (var reader = new StreamReader(Request.Body, Encoding.UTF8))
                 {
                     var code = await reader.ReadToEndAsync();
@@ -102,10 +107,17 @@ namespace CLI.Controllers
                     var result = Ok(m.Generator.Code);
                     reader.Close();
                     reader.Dispose();
+                    return result;
                 }
             }
+        }
 
-            return NotFound();
+        [HttpGet("/api/module/{module}/errors")]
+        public IActionResult GetModuleErrors(string module)
+        {
+            var m = Project.Current?.FindModule(module);
+            if (m is null) return NotFound();
+            return Ok(m.Generator.Errors);
         }
 
     }

@@ -50,7 +50,7 @@ namespace Mapper.HTML
             var mermaidMapper = new MermaidMapper(new ASTGenerator(ast));
             mermaidMapper.Start().ToList();
             var mermaidString = mermaidMapper.ToString().Trim();
-            var result = $@"<div class=""mermaid"">{mermaidString}</div>";
+            var result = $@"<div class=""svg-container""><div class=""mermaid"">{mermaidString}</div></div>";
             Parts.Add(result);
             return result;
         }
@@ -80,12 +80,9 @@ namespace Mapper.HTML
 <body>
 
 <main>
-    <a class=""nav-button"" href='/index.html'>Home</a>
-    <a class=""nav-button"" href='/index.html?path=editor&module={this.Generator.ModuleName}'>Edit</a>
-
-    <ul>
-    <li><a href=""model.xsd"" alt=""XSD"">XSD</a></li>
-    {string.Join(Environment.NewLine, links.Select(l => $"<li><a href=\"{l.Value}\">{l.Key}</a></li>").ToList())}
+    <ul style=""list-style=none;"">
+    <li><a target=""_blank"" href=""model.xsd"" alt=""XSD"">XSD</a></li>
+    {string.Join(Environment.NewLine, links.Select(l => $"<li><a target=\"_blank\" href=\"{l.Value}\">{l.Key}</a></li>").ToList())}
     </ul>
 </main>
 
@@ -95,7 +92,9 @@ namespace Mapper.HTML
 
 <h2>ERD</h2>
 
-<div class=""mermaid"">{this.MermaidMapper.ToString()}</div>
+<div class=""svg-container"">
+    <div class=""mermaid"">{this.MermaidMapper.ToString()}</div>
+</div>
 
 <h2>Tables</h2>
 

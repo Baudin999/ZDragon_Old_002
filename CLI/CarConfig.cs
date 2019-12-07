@@ -9,6 +9,7 @@ namespace CLI
     {
         public string Version { get; set; } = "v0";
         public string PortNumber { get; set; } = "5000";
+        public string Remote { get; set; } = "";
 
         public LexiconConfig LexiconConfig { get; set; } = new LexiconConfig();
 
@@ -42,7 +43,7 @@ namespace CLI
     public class LexiconConfig
     {
         public List<string> FunctionalOwners { get; set; } = new List<string>();
-        public List<string> TechinicalOwners { get; set; } = new List<string>();
+        public List<string> TechnicalOwners { get; set; } = new List<string>();
         public List<string> Domains { get; set; } = new List<string>();
     }
 }

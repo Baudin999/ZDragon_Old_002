@@ -4,6 +4,17 @@
     tags: [],
     applications: []
   };
+  let config = {
+    functionalOwners: [],
+    technicalOwners: [],
+    domains: []
+  };
+  let getConfiguration = async () => {
+    var response = await fetch("/api/lexicon/config");
+    config = await response.json();
+  };
+  getConfiguration();
+
   let newTag = "";
   let newApplication = "";
   let submit = async () => {
@@ -59,128 +70,97 @@
 </script>
 
 <style>
-  input,
-  textarea {
-    max-width: 450px;
-    width: 100%;
-  }
-  textarea {
-    height: 250px;
-  }
 
-  form {
-    display: flex;
-    flex-direction: row;
-    min-width: 450px;
-    max-width: 1024px;
-    position: relative;
-    left: 50%;
-    transform: translateX(-50%);
-  }
-  label {
-    font-weight: bold;
-  }
-  input,
-  textarea,
-  button {
-    outline: none;
-    border-radius: 0;
-  }
-  button:hover {
-    cursor: pointer;
-  }
-  input:active,
-  textarea:active {
-    outline: none;
-  }
-  .left,
-  .right {
-    flex: 50%;
-    margin: 0;
-    padding: 1em;
-    position: relative;
-  }
-
-  .delete {
-    color: red;
-  }
-  .delete:hover {
-    cursor: pointer;
-  }
-
-  @media (max-width: 750px) {
-    form {
-      flex-direction: column;
-    }
-  }
 </style>
 
-<h1 class="title">Create your Lexicon entry!</h1>
-<form>
-  <div class="left">
-    <div>
-      <label>Domain:</label>
-      <input
-        on:change={e => {
-          data.domain = e.target.value;
-        }} />
-    </div>
-    <div>
-      <label>Name:</label>
-      <input
-        on:change={e => {
-          data.name = e.target.value;
-        }} />
-    </div>
-    <div>
-      <label>Description:</label>
-      <textarea
-        on:change={e => {
-          data.description = e.target.value;
-        }} />
-    </div>
-    <div>
-      <label>Data owner:</label>
-      <input
-        on:change={e => {
-          data.dataOwner = e.target.value;
-        }} />
-    </div>
+{#if !config || !config.domains || config.domains.length < 1}
+  <div class="error">
+    The configuration seems to be incomplete. There are no domains defined.
+    Without a domain it is impossible to create a Lexicon entry. Please ask you
+    administrator to complete the configuration.
   </div>
-  <div class="right">
-    <div style="margin-bottom: 1em;">
-      <label>Applications:</label>
-      <div class="input">
-        <input
-          value={newApplication}
-          on:change={changeApplication}
-          on:keyup={e => onkeyup(e, 'a')} />
-      </div>
-      {#each data.applications as application}
-        <div>
-          {application}
-          <span class="delete" on:click={() => removeApplication(application)}>
-            X
-          </span>
-        </div>
-      {/each}
-    </div>
+{/if}
 
-    <div>
-      <label>Tags:</label>
-      <div class="input">
-        <input
-          value={newTag}
-          on:change={changeTag}
-          on:keyup={e => onkeyup(e, 't')} />
+<div class="content--center">
+  <h1 class="title">Create your Lexicon entry!</h1>
+  <span class="nav-button" on:click={submit}>Save</span>
+
+  <form sobmit="() => ">
+    <div class="left">
+      <div>
+        <label>Domain:</label>
+        <select bind:value={data.domain}>
+          <option />
+          {#each config.domains as domain}
+            <option>{domain}</option>
+          {/each}
+        </select>
       </div>
-      {#each data.tags as tag}
-        <div>
-          {tag}
-          <span class="delete" on:click={() => removeTag(tag)}>X</span>
-        </div>
-      {/each}
+      <div>
+        <label>Name:</label>
+        <input bind:value={data.name} />
+      </div>
+      <div>
+        <label>Description:</label>
+        <textarea bind:value={data.description} />
+      </div>
     </div>
-  </div>
-</form>
-<button type="button" on:click={submit}>Add</button>
+    <div class="right">
+      <div>
+        <label>Functional Owner:</label>
+        <select bind:value={data.domain}>
+          <option />
+          {#each config.functionalOwners as owner}
+            <option>{owner}</option>
+          {/each}
+        </select>
+      </div>
+      <div>
+        <label>Technical Owner:</label>
+        <select bind:value={data.domain}>
+          <option />
+          {#each config.technicalOwners as owner}
+            <option>{owner}</option>
+          {/each}
+        </select>
+      </div>
+
+      <h2>Tag your entry</h2>
+      <div style="margin-bottom: 1em;">
+        <label>Applications:</label>
+        <div class="input">
+          <input
+            value={newApplication}
+            on:change={changeApplication}
+            on:keyup={e => onkeyup(e, 'a')} />
+        </div>
+        {#each data.applications as application}
+          <div>
+            {application}
+            <span
+              class="delete"
+              on:click={() => removeApplication(application)}>
+              X
+            </span>
+          </div>
+        {/each}
+      </div>
+
+      <div>
+        <label>Tags:</label>
+        <div class="input">
+          <input
+            value={newTag}
+            on:change={changeTag}
+            on:keyup={e => onkeyup(e, 't')} />
+        </div>
+        {#each data.tags as tag}
+          <div>
+            {tag}
+            <span class="delete" on:click={() => removeTag(tag)}>X</span>
+          </div>
+        {/each}
+      </div>
+    </div>
+  </form>
+</div>

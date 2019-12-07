@@ -43,7 +43,7 @@
     cursor: pointer;
   }
   .descriptor h2 {
-    background: #174372;
+    background: #3083db;
     color: white;
     padding: 0.5em;
     font-size: 1em;
@@ -61,21 +61,29 @@
     border-radius: 50%;
     font-size: 10px;
     text-transform: lowercase;
-    padding: 0.5em;
+    padding: 0.5em 1em 0.6em 1em;
     position: absolute;
     left: 10px;
     top: 50%;
     transform: translateY(-50%);
   }
+  .pill.type {
+    background: purple;
+  }
+  .pill.field {
+    background: darkgreen;
+  }
 </style>
 
 <div class="descriptor" on:click={() => selectNode(descriptor)}>
   <h2>
-    <span class="pill">{descriptor.descriptorType}</span>
+    <span class="pill {descriptor.descriptorType.toLowerCase()}">
+      {descriptor.descriptorType}
+    </span>
     {descriptor.module} - {descriptor.parent ? descriptor.parent + '.' : ''}{descriptor.name}
   </h2>
   <p class="description">{descriptor.description || 'No Description'}</p>
-  <a alt={descriptor.module} href={`/${descriptor.module}/index.html`}>
+  <a alt={descriptor.module} href={`?path=preview&module=${descriptor.module}`}>
     Module: {descriptor.module}
   </a>
   {#if descriptor.descriptorType === 'Type'}

@@ -28,95 +28,46 @@
   let onkeyup = query => {
     findData(query);
   };
+
+  findData("all:");
 </script>
 
 <style>
-  .items {
-    display: block;
-    width: 1024px;
-    position: relative;
-    left: 50%;
-    transform: translateX(-50%);
-  }
-  .item {
-    position: relative;
-    display: flex;
-    flex-direction: row;
-    border: 1px solid lightgray;
-    margin: 3px;
-  }
-  .item--name {
-    flex: 150px;
-    text-align: left;
-    border-right: 1px solid lightgray;
-    padding: 0.5em;
-    font-weight: bold;
-    text-decoration: underline;
-  }
-  .item--description {
-    flex: 500px;
-    text-align: justify;
-    padding: 0.5em;
-    padding-right: 3em;
-  }
-  .item--description__owner {
-    margin-top: 0.5em;
-    font-size: 0.7em;
-  }
-  .item__delete {
-    color: red;
-    font-weight: bolder;
-    position: absolute;
-    right: 10px;
+  tr:hover {
     cursor: pointer;
-    top: 50%;
-    transform: translateY(-50%);
   }
 </style>
 
-<h1 class="title">Search your lexicon!</h1>
-
-<div>
-  <span
-    class="nav-button"
-    on:click={() => {
-      navigator.navigate('add-lexicon');
-    }}>
-    Create
-  </span>
-  <span
-    class="nav-button"
-    on:click={() => {
-      navigator.navigate('lexicon-admin');
-    }}>
-    Admin
-  </span>
-  <h2>Search your lexicon:</h2>
-  <input
-    type="text"
-    on:keyup={e => e.code === 'Enter' && onkeyup(e.target.value)}
-    on:change={e => findData(e.target.value)} />
-</div>
-
-<div class="items">
-  <div class="item">
-    <div class="item--name">Domain</div>
-    <div class="item--name">Name</div>
-    <div class="item--description">Description</div>
+<div class="content--center">
+  <h1 class="title">Search your lexicon!</h1>
+  <div>
+    <span
+      class="nav-button"
+      on:click={() => {
+        navigator.navigate('add-lexicon');
+      }}>
+      Create
+    </span>
+    <h2>Search your lexicon:</h2>
+    <input
+      type="text"
+      on:keyup={e => e.code === 'Enter' && onkeyup(e.target.value)}
+      on:change={e => findData(e.target.value)} />
   </div>
-  {#each data as d}
-    <div class="item">
-      <div class="item--name">{d.domain}</div>
-      <div
-        class="item--name"
-        on:click={() => navigator.navigate('edit-lexicon', d.id)}>
-        {d.name}
-      </div>
-      <div class="item--description">
-        {d.description}
-        <div class="item--description__owner">Owner: {d.dataOwner}</div>
-      </div>
-      <span class="item__delete" on:click={() => deleteItem(d)}>X</span>
-    </div>
-  {/each}
 </div>
+<table>
+  <thead>
+    <th>Domain</th>
+    <th>Name</th>
+    <th>Description</th>
+  </thead>
+  <tbody>
+    {#each data as d}
+      <tr on:click={() => navigator.navigate('edit-lexicon', d.id)}>
+        <td>{d.domain}</td>
+        <td>{d.name}</td>
+        <td>{d.description}</td>
+      </tr>
+    {/each}
+  </tbody>
+</table>

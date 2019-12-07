@@ -3,7 +3,9 @@
   import FileTree from "./FileTree.svelte";
   import HomeHelp from "./Controls/HomeHelp.svelte";
 
-  let data = [];
+  let storedData = sessionStorage.getItem("search-results");
+
+  let data = storedData ? JSON.parse(storedData) : [];
   const fireCommand = async param => {
     let [command, name, ...params] = param.split(":");
     if (!name) findData(command);
@@ -15,8 +17,10 @@
   };
   const findData = async param => {
     try {
+      data = [];
       var descriptions = await fetch(`/api/search/${param || "nothing"}`);
       data = await descriptions.json();
+      sessionStorage.setItem("search-results", JSON.stringify(data));
     } catch (error) {
       console.log(error);
     }
@@ -37,7 +41,7 @@
     }
   };
   let keypress = event => {
-    if (event.code === "Enter") {
+    if (event.key === "Enter") {
       fireCommand(event.target.value);
     }
   };
@@ -47,26 +51,27 @@
 
 </style>
 
-<h1 class="title">Welcome to ZDragon!</h1>
-<p>
-  Visit
-  <a href="https://zdragon.nl" target="_blank" rel="noopener noreferrer">
-    ZDragon.nl
-  </a>
-  to learn more about zdragon!
-</p>
+<div class="content--center">
+  <h1 class="title">Welcome to ZDragon!</h1>
+  <p>
+    Visit
+    <a href="https://zdragon.nl" target="_blank" rel="noopener noreferrer">
+      ZDragon.nl
+    </a>
+    to learn more about zdragon!
+  </p>
 
-<div>
-  <h2>Search your models:</h2>
-  <input type="text" on:keypress={keypress} />
+  <div>
+    <h2>Search your models:</h2>
+    <input autocomplete="off" type="text" on:keypress={keypress} />
+  </div>
+
+  {#if data && data.length > 0}
+    {#each data as d}
+      <SearchResult descriptor={d} />
+    {/each}
+  {:else}
+    <div>Your query returned no results.</div>
+  {/if}
 </div>
-
-{#if data && data.length > 0}
-  {#each data as d}
-    <SearchResult descriptor={d} />
-  {/each}
-{:else}
-  <div>Your query returned no results.</div>
-{/if}
-
-<HomeHelp />
+<!-- <HomeHelp /> -->

@@ -12,7 +12,8 @@ namespace CLI.Models
         [DataType(DataType.MultilineText)]
         public string Description { get; set; } = "";
         public string Domain { get; set; } = "";
-        public string? DataOwner { get; set; }
+        public string? FunctionalOwner { get; set; }
+        public string? TechnicalOwner { get; set; }
         public string? Version { get; set; }
 
         public List<string> Applications { get; set; } = new List<string>();

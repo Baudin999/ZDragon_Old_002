@@ -48,6 +48,7 @@ namespace Compiler.AST
 
                 parser.Next();
                 var name = parser.Consume(TokenType.Identifier).Value;
+  
                 var parameters =
                     parser
                         .ConsumeWhile(TokenType.GenericParameter)
