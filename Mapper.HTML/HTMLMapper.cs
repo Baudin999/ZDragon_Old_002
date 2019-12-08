@@ -75,10 +75,10 @@ namespace Mapper.HTML
 <head>
     <script defer src=""/mermaid.min.js""></script>
     <link rel='stylesheet' type='text/css' href='/global.css' />
-    <link rel='stylesheet' type='text/css' href='/style.css' />
   </head>
 <body>
 
+<div class=""content-scrollable"">
 <main>
     <ul style=""list-style=none;"">
     <li><a target=""_blank"" href=""model.xsd"" alt=""XSD"">XSD</a></li>
@@ -99,7 +99,7 @@ namespace Mapper.HTML
 <h2>Tables</h2>
 
 { string.Join(Environment.NewLine + Environment.NewLine, this.TableMapper.Start().ToList()) }
-
+</div>
 <script>
 mermaid.initialize({{
     startOnLoad: false,
@@ -107,14 +107,8 @@ mermaid.initialize({{
 }});
 
 [...document.getElementsByClassName(""mermaid"")].reverse().forEach((element, i) => {{
-    const id = ""mermaid-"" + i;				
-	mermaid.render(
-        id,
-        element.textContent.trim(),
-        (svg, bind) => {{
-            element.innerHTML = svg;
-        }},
-        element);
+    const id = `mermaid-${{Date.now()}}`;	
+	mermaid.render(id, element.textContent.trim(), (svg, bind) => {{element.innerHTML = svg;}}, element);
 }});
 
 </script>

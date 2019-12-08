@@ -44,8 +44,7 @@
   onMount(() => {
     flask = new CodeFlask("#editor", {
       language: "carlang",
-      tabSize: 4,
-      lineNumbers: true
+      tabSize: 4
     });
     getcode();
 
@@ -63,10 +62,15 @@
     top: 6rem;
   }
   .error {
-    width: 300px;
+    min-width: 300px;
+    max-width: 700px;
   }
   .error pre {
     overflow-wrap: break-word;
+  }
+
+  .editor textarea {
+    max-width: none !important;
   }
 </style>
 

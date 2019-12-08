@@ -128,9 +128,16 @@ namespace Compiler
             yield break;
         }
 
-        public Token? Previous(int index = -1)
+        private Token? TryTake(int index = -1)
         {
-            return this.HasPeek(index) ? this.Peek(index) : null;
+            if (length + index > 0 && length + index < length)
+            {
+                return this.HasPeek(index) ? this.Peek(index) : null;
+            }
+            else
+            {
+                return null;
+            }
         }
 
         /// <summary>
@@ -157,11 +164,11 @@ namespace Compiler
                 }
                 else
                 {
-                    var previous1 = this.Previous(-2)?.Value ?? "";
-                    var previous = this.Previous()?.Value ?? "";
-                    var value = this.Current.Value;
-                    var next = this.Peek()?.Value ?? "";
-                    var next1 = this.Peek(2)?.Value ?? "";
+                    var previous1 = this.TryTake(-2)?.Value ?? "";
+                    var previous = this.TryTake()?.Value ?? "";
+                    var value = this.TryTake(0)?.Value ?? "";
+                    var next = this.TryTake(1)?.Value ?? "";
+                    var next1 = this.TryTake(2)?.Value ?? "";
                     var message = tokenType switch
                     {
                         TokenType.Identifier => $@"
