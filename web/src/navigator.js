@@ -14,6 +14,9 @@ class Navigator {
       UpdateQueryString("path", route);
     }
   }
+  preview(module) {
+    window.location.href = `/index.html?path=preview&module=${module}`;
+  }
 
   subscribe(f) {
     this.route.subscribe(f);

@@ -129,6 +129,18 @@ namespace Compiler
 
         public override string VisitASTView(ASTView astView) => throw new NotImplementedException();
 
+        public override string VisitASTImport(ASTImport astImport)
+        {
+            if (astImport.Imports.Any())
+            {
+                return $"open {astImport} importing ({String.Join(", ", astImport.Imports)})";
+            }
+            else
+            {
+                return $"open {astImport}";
+            }
+        }
+
         public override string VisitDefault(IASTNode node)
         {
             return "";

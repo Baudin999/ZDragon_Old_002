@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace Compiler.AST
 {
-    public class ASTTypeField : IASTNode, IRestrictable, IElement, INamable, ICloneable
+    public class ASTTypeField : IASTNode, IRestrictable, IElement, INamable, ICloneable, IEqualityComparer<ASTTypeField>
     {
         public string Name { get; }
         public string Module { get;  }
@@ -95,6 +96,11 @@ namespace Compiler.AST
                 Restrictions = Restrictions.Concat(new ASTRestriction[] { original });
             }
         }
+
+        public bool Equals([AllowNull] ASTTypeField x, [AllowNull] ASTTypeField y) => x.Name == y.Name;
+        public int GetHashCode([DisallowNull] ASTTypeField obj) => ((object)obj).GetHashCode();
+
+        public override string ToString() => $"{Name}: {String.Join(" ", Type)};";
     }
 
     public class ASTPluckedField : ASTTypeField

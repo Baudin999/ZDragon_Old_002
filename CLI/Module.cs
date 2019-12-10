@@ -43,10 +43,13 @@ namespace CLI
             ReferencedModules = Generator.AST.FindAll(n => n is ASTImport).Select(i => ((ASTImport)i).ModuleName).ToList();
         }
 
-        public void SaveModuleOutput(bool decend = true)
+        public void SaveModuleOutput(bool decend = true, bool suppressMessage = false)
         {
             this.Transpiler.StartTranspilation(this.Name);
-            Console.WriteLine($"Perfectly parsed: {Name}");
+            if (!suppressMessage)
+            {
+                Console.WriteLine($"Perfectly parsed: {Name}");
+            }
             SaveResult("Model.xsd", Transpiler.XsdToString());
             SaveResult("index.html", Transpiler.HtmlToString());
 
@@ -64,6 +67,7 @@ namespace CLI
                 // regenerated and their output changed.
                 this.Project
                     .Modules
+                    .ToList()
                     .FindAll(m => m.ReferencedModules.FirstOrDefault(r => r == this.Name) != null)
                     .ForEach(m =>
                         {

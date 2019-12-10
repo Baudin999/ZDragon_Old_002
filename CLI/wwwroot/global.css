@@ -129,6 +129,9 @@ form button {
 .svg-container {
     overflow-x: auto;
 }
+.vis-network:focus {
+    outline: none;
+}
 
 
 /* EDITOR */

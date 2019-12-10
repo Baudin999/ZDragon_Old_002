@@ -33,6 +33,7 @@ namespace Compiler
         {
             return node switch
             {
+                ASTImport n => VisitASTImport(n),
                 ASTType n => VisitASTType(n),
                 ASTTypeField n => VisitASTTypeField(n),
                 ASTTypeDefinition n => VisitASTTypeDefinition(n),
@@ -64,6 +65,7 @@ namespace Compiler
         public abstract T VisitASTOption(ASTOption astOption);
 
         // Other
+        public abstract T VisitASTImport(ASTImport astImport);
         public abstract T VisitASTView(ASTView astView);
 
         // flows

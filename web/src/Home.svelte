@@ -2,6 +2,7 @@
   import SearchResult from "./SearchResult.svelte";
   import FileTree from "./FileTree.svelte";
   import HomeHelp from "./Controls/HomeHelp.svelte";
+  import navigator from "./navigator.js";
 
   let storedData = sessionStorage.getItem("search-results");
 
@@ -52,6 +53,11 @@
 </style>
 
 <div class="content--center">
+  <span
+    class="nav-button"
+    on:click={() => navigator.navigate('module-topology')}>
+    Topology
+  </span>
   <h1 class="title">Welcome to ZDragon!</h1>
   <p>
     Visit

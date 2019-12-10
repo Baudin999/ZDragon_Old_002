@@ -47,5 +47,17 @@ namespace CLI.Controllers
             else return Ok(project.CarConfig.LexiconConfig);
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
         }
+
+
+        [HttpGet("/api/lexicon/remote")]
+        public IActionResult GetRemoteLexiconData()
+        {
+            var config = Project.Current?.CarConfig;
+            if (config is null) return NotFound();
+            else
+            {
+                return Ok();
+            }
+        }
     }   
 }

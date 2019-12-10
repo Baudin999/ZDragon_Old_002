@@ -18,12 +18,12 @@ This documentation is written for people new to ZDragon. If you already know how
 you can skip these pages and just go to the downloads and language features.
 
 For those of you who want to learn about ZDragon, these pages are for you! ZDragon is a
-documentation language with some small features from real programming languages. Let me be clear.
-ZDragon is _not_ a Turing complete programming language. Nor does it try to be one. ZDragon lets you
-write down your thought and it will spit out models and diagrams.
+documentation language with some small features taken from real programming languages. Let me be
+clear. ZDragon is _not_ a Turing complete programming language. Nor does it try to be one. ZDragon
+lets you write down your thought and it will spit out models and diagrams.
 
-[The CLI too](./cli.html) <br /> [The Language](./language.html) <br />
-[Flows (Sequence Diagrams)](./flows.html) <br />
+[Running ZDragon](./running_zdragon.md)<br />[The CLI too](./cli.html) <br />
+[The Language](./language.html) <br /> [Flows (Sequence Diagrams)](./flows.html) <br />
 
 ## Roadmap
 
@@ -38,11 +38,8 @@ On the current roadmap we have the following features:
 - Information Architecture
 - LaTeX support
 - BPMN Diagrams
-- Templating (True Generics)
 - Versioning
-- Configuration
-- Live Example Data
-- Turing Completeness \_('_')_/
+- Turing Completeness `\_('_')_/`
 - Much, much more
 
 When we look at the features it is safe to say that ZDragon has the very big goal of transforming

@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -18,7 +20,7 @@ namespace CLI
         public string OutPath { get; } = "";
         public string ConfigPath { get; } = "";
         public CarConfig? CarConfig { get; private set; }
-        public List<Module> Modules { get; } = new List<Module>();
+        public ObservableCollection<Module> Modules { get; } = new ObservableCollection<Module>();
 
 
         public Project(string path)
@@ -40,8 +42,6 @@ namespace CLI
             InitCarConfig();
             CreateAssets();
 
-            Task.Run(Parse);
-
             Project.Current = this;
 
             SignalSingleton.ExitSignal.Subscribe(() =>
@@ -54,6 +54,8 @@ namespace CLI
                 }
                 this.Dispose();
             });
+
+            Task.Run(Parse);
         }
 
         public void Parse()
@@ -72,14 +74,14 @@ namespace CLI
 
         public void CreateModule(string name)
         {
+            
             var fileName = String.Join("/", name.Split(".").Select(UppercaseFirst)) + ".car";
             var modulePath = System.IO.Path.GetFullPath(fileName, this.Path);
             var directoryName = System.IO.Path.GetDirectoryName(modulePath);
-            var filePath = System.IO.Path.GetFullPath(fileName, directoryName ?? this.Path);
             Directory.CreateDirectory(directoryName);
             try
             {
-                using (var fs = new FileStream(filePath, FileMode.CreateNew, FileAccess.Write, FileShare.ReadWrite))
+                using (var fs = new FileStream(modulePath, FileMode.CreateNew, FileAccess.Write, FileShare.ReadWrite))
                 {
                     using (var sr = new StreamWriter(fs))
                     {
@@ -97,8 +99,6 @@ Have fun with your module!
                     fs.Close();
                     fs.Dispose();
 
-
-
                     return;
                 }
                 throw new IOException("ReadModule failed with unknown exception.");
@@ -109,7 +109,6 @@ Have fun with your module!
                 throw ioe;
             }
         }
-
 
         internal List<IASTNode> GetAstForModule(string moduleName)
         {
@@ -154,19 +153,20 @@ Have fun with your module!
 
             // Add event handlers.
             watcher.Changed += OnChanged;
-            watcher.Created += OnCreate;
+            //watcher.Created += OnCreate;
             watcher.Deleted += OnDelete;
             watcher.Renamed += OnRenamed;
 
             SignalSingleton.ExitSignal.Subscribe(() =>
             {
                 Console.WriteLine("Disposing the file watcher...");
-                watcher.Dispose();   
+                watcher.Dispose();
             });
 
             // Begin watching.
             watcher.EnableRaisingEvents = true;
             while (Console.ReadKey().Key != ConsoleKey.Q) { }
+            Console.WriteLine();
 
             return SignalSingleton.ExitSignal.Dispatch();
         }
@@ -177,34 +177,18 @@ Have fun with your module!
         {
             try
             {
-
                 var module = Modules.FirstOrDefault(m => m.Path == e.FullPath);
-                if (module is null)
+                if (!(module is null))
                 {
-                    Console.WriteLine("Non Module changed, something went wrong, please restart your project.");
-                    return;
-                }
-
-                module.Parse();
-                module.SaveModuleOutput();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-        }
-
-        private void OnCreate(object source, FileSystemEventArgs e)
-        {
-            try
-            {
-                Console.WriteLine($"File: {e.FullPath} {e.ChangeType}");
-                var module = new Module(e.FullPath, this.Path, this);
-                if (FindModule(module.Name) is null)
-                {
-                    Modules.Add(module);
                     module.Parse();
                     module.SaveModuleOutput();
+                }
+                else
+                {
+                    module = new Module(e.FullPath, this.Path, this);
+                    module.Parse();
+                    module.SaveModuleOutput();
+                    Modules.Add(module);
                 }
             }
             catch (Exception ex)

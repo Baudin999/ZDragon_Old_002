@@ -84,8 +84,11 @@
 <div class="content--center">
   <h1 class="title">Create your Lexicon entry!</h1>
   <span class="nav-button" on:click={submit}>Save</span>
+  <span class="nav-button" on:click={() => navigator.navigate('lexicon')}>
+    Cancel
+  </span>
 
-  <form sobmit="() => ">
+  <form submit="() => ">
     <div class="left">
       <div>
         <label>Domain:</label>
@@ -108,7 +111,7 @@
     <div class="right">
       <div>
         <label>Functional Owner:</label>
-        <select bind:value={data.domain}>
+        <select bind:value={data.functionalOwner}>
           <option />
           {#each config.functionalOwners as owner}
             <option>{owner}</option>
@@ -117,7 +120,7 @@
       </div>
       <div>
         <label>Technical Owner:</label>
-        <select bind:value={data.domain}>
+        <select bind:value={data.technicalOwner}>
           <option />
           {#each config.technicalOwners as owner}
             <option>{owner}</option>

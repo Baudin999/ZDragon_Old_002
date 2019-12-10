@@ -22,6 +22,7 @@ namespace Compiler
         public override T VisitASTTypeDefinition(ASTTypeDefinition astTypeDefinition) => d;
         public override T VisitASTTypeField(ASTTypeField astTypeField) => d;
         public override T VisitASTView(ASTView astView) => d;
+        public override T VisitASTImport(ASTImport astImport) => d;
         public override T VisitDefault(IASTNode node) => d;
 
         private T d

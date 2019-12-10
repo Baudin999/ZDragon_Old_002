@@ -5,8 +5,8 @@
     applications: []
   };
   let config = {
-    functional_owners: [],
-    technical_owners: [],
+    functionalOwners: [],
+    technicalOwners: [],
     domains: []
   };
   let getConfiguration = async () => {
@@ -90,9 +90,12 @@
   <div class="content--center">
     <h1 class="title">Edit your Lexicon Entry!</h1>
     <span class="nav-button" on:click={submit}>Save</span>
-
+    <span class="nav-button" on:click={() => navigator.navigate('lexicon')}>
+      Cancel
+    </span>
     <div class="edit-form">
-      <form sobmit="() => ">
+
+      <form submit="() => ">
         <div class="left">
           <div>
             <label>Domain:</label>
@@ -111,15 +114,11 @@
             <label>Description:</label>
             <textarea bind:value={data.description} />
           </div>
-          <div>
-            <label>Data owner:</label>
-            <input bind:value={data.dataOwner} />
-          </div>
         </div>
         <div class="right">
           <div>
             <label>Functional Owner:</label>
-            <select bind:value={data.domain}>
+            <select bind:value={data.functionalOwner}>
               <option />
               {#each config.functionalOwners as owner}
                 <option>{owner}</option>
@@ -128,13 +127,15 @@
           </div>
           <div>
             <label>Technical Owner:</label>
-            <select bind:value={data.domain}>
+            <select bind:value={data.technicalOwner}>
               <option />
-              {#each config.technicalOwner as owner}
+              {#each config.technicalOwners as owner}
                 <option>{owner}</option>
               {/each}
             </select>
           </div>
+
+          <h2>Tag your entry</h2>
           <div style="margin-bottom: 1em;">
             <label>Applications:</label>
             <div class="input">

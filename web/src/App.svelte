@@ -6,6 +6,8 @@
   import Editor from "./Editor.svelte";
   import LexiconAdmin from "./LexiconAdmin.svelte";
   import Preview from "./Preview.svelte";
+  import ZDragonConfig from "./ZDragonConfig.svelte";
+  import ModuleTopology from "./ModuleTopology.svelte";
   import navigator from "./navigator.js";
 
   let route;
@@ -61,6 +63,10 @@
   <Preview />
 {:else if route === 'editor'}
   <Editor />
+{:else if route === 'config'}
+  <ZDragonConfig />
+{:else if route === 'module-topology'}
+  <ModuleTopology />
 {:else}
   <Home />
 {/if}

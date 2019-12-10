@@ -58,7 +58,14 @@ namespace Mapper.HTML
 
         public string ToHtmlString(Dictionary<string, string> links)
         {
-            //
+            
+
+            var tables = this.TableMapper.Start().ToList();
+            var tablesBlock = tables.Any() ? $@"
+<h2>Tables</h2>
+{string.Join(Environment.NewLine + Environment.NewLine, tables)}
+": "";
+
             var errorBlock = string.Join(Environment.NewLine, this.Errors.Select(error =>
             {
                 return $@"
@@ -96,9 +103,8 @@ namespace Mapper.HTML
     <div class=""mermaid"">{this.MermaidMapper.ToString()}</div>
 </div>
 
-<h2>Tables</h2>
+{ tablesBlock }
 
-{ string.Join(Environment.NewLine + Environment.NewLine, this.TableMapper.Start().ToList()) }
 </div>
 <script>
 mermaid.initialize({{

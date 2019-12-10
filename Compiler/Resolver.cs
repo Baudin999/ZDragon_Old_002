@@ -194,26 +194,45 @@ namespace Compiler
 
         private (IEnumerable<IASTError>, ASTType) ResolveType(ASTType t)
         {
+            var fieldNames = t.Fields.Select(f => f.Name).ToList();
             var errors = new List<IASTError>();
-            var extended_fields = t.Extensions.SelectMany(e =>
+            var fields = new List<ASTTypeField>();
+            t.Extensions.ToList().ForEach(e =>
             {
-                var t = FindNode(e) as ASTType;
-                if (t is null) return Enumerable.Empty<ASTTypeField>();
-                return ObjectCloner.CloneList(t.Fields);
+                var xt = FindNode(e) as ASTType;
+
+                // Bah, recursive resolving, tolopogical order needs to be added. This is depth first...
+                if (!(xt is null) && xt.Extensions.Any())
+                {
+                    var (_errors, _xt) = ResolveType(xt);
+                    xt = _xt;
+                }
+                xt?.Fields.ToList().ForEach(xfield =>
+                {
+                    if (!fieldNames.Contains(xfield.Name))
+                    {
+                        fields.Add((ASTTypeField)xfield.Clone());
+                    }
+                });
             });
 
-            var fields = t.Fields.Select(f =>
+            t.Fields.ToList().ForEach(f =>
             {
                 if (f is ASTPluckedField field)
                 {
                     var (errors, pluckedField) = PluckField(field);
                     errors = errors.Concat(errors);
-                    return pluckedField;
+                    fields.Add(pluckedField);
+                } else
+                {
+
+                    fields.Add((ASTTypeField)f.Clone());
                 }
-                return f;
             });
 
-            return (errors, t.Clone(extended_fields.Concat(fields)));
+            var result = t.Clone(fields);
+
+            return (errors, t.Clone(fields));
         }
     }
 }

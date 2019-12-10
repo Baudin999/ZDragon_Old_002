@@ -76,6 +76,11 @@ namespace Compiler
             return this.AST.FirstOrDefault(n => !(n is null) && n is INamable && ((INamable)n).Name == name);
         }
 
+        public T Find<T>(string name) where T : IASTNode
+        {
+            return (T)this.AST.FirstOrDefault(n => !(n is null) && n is INamable && ((INamable)n).Name == name);
+        }
+
         /// <summary>
         /// Re-resolve the types in the AST based extra nodes. Usually used after
         /// resolving some imported types.

@@ -48,5 +48,7 @@ namespace Compiler.AST
                 (string)this.Value.Clone(),
                 (string)this.Module.Clone());
         }
+
+        public override string ToString() => Value;
     }
 }
