@@ -7,38 +7,24 @@ namespace Compiler
 {
     public class Resolver
     {
-        public IEnumerable<IASTNode> ParseTree { get; }
-
-        public Resolver(IEnumerable<IASTNode> parseTree)
+        public IEnumerable<IASTNode> AST { get; }
+        
+        public Resolver(IEnumerable<IASTNode> ast)
         {
-            this.ParseTree = parseTree;
+            this.AST = ast;
         }
-
+        
         public (IEnumerable<IASTError>, IEnumerable<IASTNode>) Resolve()
         {
             var errors = new List<IASTError>();
             var nodes = new List<IASTNode>();
-            foreach (var node in ParseTree)
+            foreach (var node in AST)
             {
                 if (node is ASTData dataNode)
                 {
-                    foreach (var option in dataNode.Options)
-                    {
-                        var existingNode = FindNode(option.Name);
-                        if (existingNode is null)
-                        {
-                            nodes.Add(new ASTType(
-                                option.Name,
-                                dataNode.Module,
-                                option.Parameters,
-                                Enumerable.Empty<string>(),
-                                Enumerable.Empty<ASTTypeField>(),
-                                Enumerable.Empty<ASTAnnotation>(),
-                                Enumerable.Empty<ASTDirective>())
-                                );
-                        }
-                    }
-                    nodes.Add(node);
+                    var (resolve_data_errors, resolvedNodes) = ResolveData(dataNode);
+                    errors.AddRange(resolve_data_errors);
+                    nodes.AddRange(resolvedNodes);
                 }
                 else if (node is ASTAlias alias)
                 {
@@ -58,12 +44,12 @@ namespace Compiler
                 }
 
             }
-            return (errors, nodes.ToList());
+            return (errors, nodes);
         }
 
-        private IASTNode FindNode(string name)
+        private IASTNode? FindNode(string name)
         {
-            return ParseTree.FirstOrDefault(n =>
+            return this.AST.FirstOrDefault(n =>
             {
                 // Oh my dotnet, what have you done!!
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
@@ -72,9 +58,31 @@ namespace Compiler
             });
         }
 
+        private (IEnumerable<IASTError>, IEnumerable<IASTNode>) ResolveData(ASTData dataNode)
+        {
+            var nodes = new List<IASTNode>();
+            foreach (var option in dataNode.Options)
+            {
+                var existingNode = FindNode(option.Name);
+                if (existingNode is null)
+                {
+                    nodes.Add(new ASTType(
+                        option.Name,
+                        dataNode.Module,
+                        option.Parameters,
+                        Enumerable.Empty<string>(),
+                        Enumerable.Empty<ASTTypeField>(),
+                        Enumerable.Empty<ASTAnnotation>(),
+                        Enumerable.Empty<ASTDirective>())
+                        );
+                }
+            }
+            nodes.Add(dataNode);
+            return (Enumerable.Empty<IASTError>(), nodes);
+        }
+
         private (IEnumerable<IASTError>, ASTTypeField) PluckField(ASTPluckedField field)
         {
-
             var _ref = field.Type.First();
             var _field = field.Type.Last();
             var referencedNode = FindNode(_ref.Value);
@@ -82,7 +90,7 @@ namespace Compiler
 
             if (referencedField != null)
             {
-                var clone = (ASTTypeField)referencedField.Clone();
+                var clone = (ASTTypeField)referencedField.Clone(FieldOrigin.Plucked);
                 field.Restrictions.ToList().ForEach(r =>
                 {
                     clone.SetRestriction(r.Key, r.Value, r);
@@ -211,7 +219,7 @@ namespace Compiler
                 {
                     if (!fieldNames.Contains(xfield.Name))
                     {
-                        fields.Add((ASTTypeField)xfield.Clone());
+                        fields.Add((ASTTypeField)xfield.Clone(FieldOrigin.Extended));
                     }
                 });
             });
@@ -225,7 +233,6 @@ namespace Compiler
                     fields.Add(pluckedField);
                 } else
                 {
-
                     fields.Add((ASTTypeField)f.Clone());
                 }
             });

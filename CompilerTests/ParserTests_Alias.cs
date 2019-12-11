@@ -41,7 +41,7 @@ alias Name = String
             Assert.Single(parseTree);
 
 
-            ASTAlias alias = parseTree[0] as ASTAlias;
+            var alias = parseTree[0] as ASTAlias;
             Assert.Equal(2, alias.Restrictions.Count());
 
         }
@@ -52,12 +52,11 @@ alias Name = String
             var code = @"
 alias Name = List String;
 ";
-            var tokens = new Lexer().Lex(code);
-            var parseTree = new Parser(tokens).Parse().ToList();
-            Assert.NotNull(parseTree);
-            Assert.Single(parseTree);
-
-            ASTAlias alias = parseTree[0] as ASTAlias;
+            var g = new ASTGenerator(code);
+            Assert.NotNull(g.AST);
+            Assert.Empty(g.Errors);
+            Assert.IsType<ASTAlias>(g.AST.First());
+            var alias = (ASTAlias)g.AST.First();
             Assert.Equal(Helpers.ToTypeDefinition(new[] { "List", "String" }), alias.Type.ToList());
 
         }
@@ -74,7 +73,7 @@ alias Name = String;
             var parseTree = new Parser(tokens).Parse().ToList();
             Assert.NotNull(parseTree);
             Assert.Single(parseTree);
-            ASTAlias alias = parseTree[0] as ASTAlias;
+            var alias = parseTree[0] as ASTAlias;
             Assert.Empty(alias.Restrictions);
             Assert.Single(alias.Annotations.ToList());
             Assert.Equal("This alias represents a name", alias.Annotations.First().Value);
@@ -99,7 +98,7 @@ alias Name = String
             Assert.NotNull(parseTree);
             Assert.Single(parseTree);
 
-            ASTAlias alias = parseTree[0] as ASTAlias;
+            var alias = parseTree[0] as ASTAlias;
 
             foreach (ASTRestriction restriction in alias.Restrictions) { 
                 Assert.Single(restriction.Annotations);

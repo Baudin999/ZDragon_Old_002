@@ -22,7 +22,7 @@ namespace Compiler
         public Token? TryConsume(TokenType tokenType, out Token? t);
         public bool IsNext(TokenType tokenType);
 
-        public IEnumerable<IASTNode> Parse();
+        public IEnumerable<IASTNode> Parse(string moduleName = "");
     }
 
 

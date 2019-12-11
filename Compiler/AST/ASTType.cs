@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Compiler.AST
 {
-    public class ASTType : IASTNode, INamable, IRootNode
+    public class ASTType : IASTNode, INamable, IRootNode, ICloneable
     {
         public string Name { get; }
         public string Module { get; }
@@ -158,5 +158,8 @@ Missing type body. If you use an '=' sign you should have at least one field.", 
                 ObjectCloner.CloneList(this.Directives)
                 );
         }
+
+        public override string ToString() => $"type {Module}.{Name}";
+        object ICloneable.Clone() => this.Clone();
     }
 }

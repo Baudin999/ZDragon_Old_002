@@ -57,24 +57,87 @@ open Customer importing (Customer, Person, Product)
         [Fact]
         public void ImportAndParseAST()
         {
-            
+
             var baseCode = @"
+type Address =
+    Street: String;
 type Person =
     FirstName: String;
 ";
-            var _g = new ASTGenerator(baseCode);
-            
-            var code = @"
-open Sample;
+            var _g = new ASTGenerator(baseCode, "Base");
 
-type Student extends Person;
+            var code = @"
+open Base;
+
+type Student extends Person =
+    pluck Address.Street;
+    Registration: Number;
 ";
-            var g = new ASTGenerator(code);
-            g.Resolve(_g.AST);
+            var g = new ASTGenerator(code, "MyModule", _g.AST);
+            Assert.Empty(g.Errors);
+            //g.Resolve(_g.AST);
 
             var student = (ASTType)g.Find("Student");
             Assert.Equal("Student", student.Name);
-            Assert.Single(student.Fields);
+            Assert.Equal(3, student.Fields.Count());
+
+            var fields = student.Fields.ToList();
+            var firstName = fields.Find(f => f.Name == "FirstName");
+            var street = fields.Find(f => f.Name == "Street");
+            var registration = fields.Find(f => f.Name == "Registration");
+
+            Assert.Equal(FieldOrigin.Extended, firstName.Origin);
+            Assert.Equal(FieldOrigin.Plucked, street.Origin);
+            Assert.Equal(FieldOrigin.Original, registration.Origin);
+        }
+
+        [Fact]
+        public void ImportOnlyUsedTypes_Extensions()
+        {
+
+            var baseCode = @"
+type Address =
+    Street: String;
+type Person =
+    FirstName: String;
+";
+            var _g = new ASTGenerator(baseCode, "Base");
+
+            var code = @"
+open Base;
+
+type Student extends Person;
+";
+            var g = new ASTGenerator(code, "MyModule");
+            g.Resolve(_g.AST);
+
+            Assert.Empty(g.Errors);
+            Assert.Equal(3, g.AST.Count);
+        }
+
+        [Fact]
+        public void ImportOnlyUsedTypes_FieldResolution()
+        {
+
+            var baseCode = @"
+type Address =
+    Street: String;
+type Person =
+    FirstName: String;
+    Address: Address;
+";
+            var _g = new ASTGenerator(baseCode, "Base");
+
+            var code = @"
+open Base;
+
+type Student extends Person;
+";
+            var g = new ASTGenerator(code, "MyModule");
+            g.Resolve(_g.AST);
+
+            Assert.Empty(g.Errors);
+            Assert.Equal(4, g.AST.Count);
         }
     }
 }

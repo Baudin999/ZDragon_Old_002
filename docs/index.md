@@ -1,5 +1,7 @@
 ﻿# ZDragon
 
+<img src="./assets/logo.jpg" style="width: 250px" />
+
 So, you've come to understand the dragon? Software is a monster waiting to be tamed. It's a a
 dragon. A Dragon which breathes fire, runs in circles and can defeat the best of knights; but don't
 worry, ZDragon is here to help you out. With the help of this tool you will have your documentation

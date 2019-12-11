@@ -47,7 +47,7 @@ namespace Compiler
             this.Parser = new Parser(this.Tokens);
         }
 
-        public ASTGenerator(string code, string moduleName = "")
+        public ASTGenerator(string code, string moduleName = "", IEnumerable<IASTNode>? imports = null)
         {
             this.ModuleName = moduleName;
             this.Code = code;
@@ -63,7 +63,12 @@ namespace Compiler
             {
                 this.Tokens = new Lexer().Lex(code);
                 this.Parser = new Parser(this.Tokens);
-                this.ParseTree = this.Parser.Parse().ToList();
+                var parseTree = this.Parser.Parse(moduleName).ToList();
+                if (imports != null)
+                {
+                    parseTree = new TreeShakeAST(parseTree, imports ?? Enumerable.Empty<IASTNode>()).Shake();
+                }
+                this.ParseTree = parseTree;
                 var (errors, nodes) = new Resolver(this.ParseTree).Resolve();
                 var verificationErrors = new Verificator(nodes).Verify();
                 this.AST = nodes.ToList();
@@ -90,7 +95,8 @@ namespace Compiler
         /// <returns></returns>
         public (List<IASTError> Errors, List<IASTNode> AST) Resolve(IEnumerable<IASTNode> imports)
         {
-            var (errors, nodes) = new Resolver(this.ParseTree.Concat(imports)).Resolve();
+            var parseTree = new TreeShakeAST(this.ParseTree, imports).Shake();
+            var (errors, nodes) = new Resolver(parseTree).Resolve();
             var verificationErrors = new Verificator(nodes).Verify();
             this.AST = nodes.ToList();
             this.Errors = this.Parser.Errors.Concat(errors).Concat(verificationErrors).ToList();

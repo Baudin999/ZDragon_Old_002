@@ -22,7 +22,10 @@ namespace CLI
                     if (node is ASTImport)
                     {
                         var _import = ((ASTImport)node);
-                        edges.Add(new TopologyEdge(m.Name, _import.ModuleName, ""));
+                        edges.Add(new TopologyEdge(m.Name, _import.ModuleName, "")
+                        {
+                            Arrows = "to"
+                        });
                     } else if (node is ASTType)
                     {
                         var _type = ((ASTType)node);
@@ -38,3 +41,10 @@ namespace CLI
     }
 
 }
+
+
+/*
+ * The Network
+ *
+ * A network is the topology of the types and modules.
+ */ 

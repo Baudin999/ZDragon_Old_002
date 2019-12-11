@@ -8,12 +8,13 @@ namespace Compiler.AST
     public class ASTTypeField : IASTNode, IRestrictable, IElement, INamable, ICloneable, IEqualityComparer<ASTTypeField>
     {
         public string Name { get; }
-        public string Module { get;  }
+        public string Module { get; }
         public IEnumerable<ASTAnnotation> Annotations { get; }
         public IEnumerable<ASTDirective> Directives { get; }
 
         public IEnumerable<ASTTypeDefinition> Type { get; }
         public IEnumerable<ASTRestriction> Restrictions { get; private set; }
+        public FieldOrigin Origin { get; }
 
         public ASTTypeField(
             string name,
@@ -21,14 +22,17 @@ namespace Compiler.AST
             IEnumerable<ASTAnnotation> annotations,
             IEnumerable<ASTDirective> directives,
             IEnumerable<ASTTypeDefinition> types,
-            IEnumerable<ASTRestriction> restrictions
-            ) {
+            IEnumerable<ASTRestriction> restrictions,
+            FieldOrigin origin = FieldOrigin.Original
+            )
+        {
             this.Name = name;
             this.Module = module;
             this.Annotations = annotations;
             this.Directives = directives;
             this.Type = types;
             this.Restrictions = restrictions;
+            this.Origin = origin;
         }
 
         public static (IEnumerable<IASTError>, ASTTypeField) Parse(IParser parser, string module = "")
@@ -41,7 +45,7 @@ namespace Compiler.AST
             if (pluck is null)
             {
                 name = parser.Consume(TokenType.Identifier).Value;
-                Token Separator = parser.Consume(TokenType.Separator);
+                parser.Consume(TokenType.Separator);
             }
 
             var types = ASTTypeDefinition.Parse(parser, module);
@@ -57,9 +61,11 @@ namespace Compiler.AST
                     annotations,
                     directives,
                     types,
-                    restrictions
+                    restrictions,
+                    FieldOrigin.Original
                     ));
-            } else
+            }
+            else
             {
                 return (d_errors, new ASTPluckedField(
                     name,
@@ -72,16 +78,59 @@ namespace Compiler.AST
             }
         }
 
-        public object Clone()
+        public object Clone(FieldOrigin origin)
         {
-            return new ASTTypeField(
+            if (this is ASTPluckedField)
+            {
+                return new ASTPluckedField(
                 (string)this.Name.Clone(),
                 (string)this.Module.Clone(),
                 ObjectCloner.CloneList(this.Annotations.ToList()),
                 ObjectCloner.CloneList(this.Directives.ToList()),
                 ObjectCloner.CloneList(this.Type.ToList()),
-                ObjectCloner.CloneList(this.Restrictions.ToList())
+                ObjectCloner.CloneList(this.Restrictions.ToList()),
+                origin
                 );
+            }
+            else
+            {
+                return new ASTTypeField(
+                    (string)this.Name.Clone(),
+                    (string)this.Module.Clone(),
+                    ObjectCloner.CloneList(this.Annotations.ToList()),
+                    ObjectCloner.CloneList(this.Directives.ToList()),
+                    ObjectCloner.CloneList(this.Type.ToList()),
+                    ObjectCloner.CloneList(this.Restrictions.ToList()),
+                    origin
+                    );
+            }
+        }
+        public object Clone()
+        {
+            if (this is ASTPluckedField)
+            {
+                return new ASTPluckedField(
+                (string)this.Name.Clone(),
+                (string)this.Module.Clone(),
+                ObjectCloner.CloneList(this.Annotations.ToList()),
+                ObjectCloner.CloneList(this.Directives.ToList()),
+                ObjectCloner.CloneList(this.Type.ToList()),
+                ObjectCloner.CloneList(this.Restrictions.ToList()),
+                this.Origin
+                );
+            }
+            else
+            {
+                return new ASTTypeField(
+                    (string)this.Name.Clone(),
+                    (string)this.Module.Clone(),
+                    ObjectCloner.CloneList(this.Annotations.ToList()),
+                    ObjectCloner.CloneList(this.Directives.ToList()),
+                    ObjectCloner.CloneList(this.Type.ToList()),
+                    ObjectCloner.CloneList(this.Restrictions.ToList()),
+                    this.Origin
+                    );
+            }
         }
 
         public void SetRestriction(string key, string value, ASTRestriction original)
@@ -111,7 +160,8 @@ namespace Compiler.AST
             IEnumerable<ASTAnnotation> annotations,
             IEnumerable<ASTDirective> directives,
             IEnumerable<ASTTypeDefinition> types,
-            IEnumerable<ASTRestriction> restrictions) : base(name, module, annotations, directives, types, restrictions)
+            IEnumerable<ASTRestriction> restrictions,
+            FieldOrigin origin = FieldOrigin.Original) : base(name, module, annotations, directives, types, restrictions, origin)
         {
         }
     }

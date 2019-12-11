@@ -23,7 +23,6 @@ namespace CLI.Models
         public string? Module { get; set; }
         public string Shape { get; set; } = "hexagon";
 
-
         public TopologyNode(string id, string label, TopologyColor? color = null)
         {
             this.Id = id;
@@ -37,6 +36,7 @@ namespace CLI.Models
         public string From { get; set; }
         public string To { get; set; }
         public string Label { get; set; }
+        public string Arrows { get; set; } = "";
 
         public TopologyEdge(string fromId, string toId, string label)
         {
@@ -62,4 +62,5 @@ namespace CLI.Models
             this.Border = color;
         }
     }
+
 }

@@ -36,7 +36,7 @@ namespace Compiler
         public static Parser Empty() => new Parser();
         public static string[] BaseTypes = { "String", "Number", "Boolean", "Date", "Time", "DateTime" };
 
-        public IEnumerable<IASTNode> Parse()
+        public IEnumerable<IASTNode> Parse(string moduleName = "")
         {
             var annotations = new List<ASTAnnotation>();
             var directives = new List<ASTDirective>();
@@ -45,7 +45,7 @@ namespace Compiler
                 
                 if (Current.TokenType == TokenType.KW_Type)
                 {
-                    var (errors, t) = ASTType.Parse(this, annotations, directives);
+                    var (errors, t) = ASTType.Parse(this, annotations, directives, moduleName);
                     Errors.AddRange(errors);
                     annotations = new List<ASTAnnotation>();
                     directives = new List<ASTDirective>();
@@ -53,7 +53,7 @@ namespace Compiler
                 }
                 else if (Current.TokenType == TokenType.KW_Alias)
                 {
-                    var (errors, alias) = ASTAlias.Parse(this, annotations, directives);
+                    var (errors, alias) = ASTAlias.Parse(this, annotations, directives, moduleName);
                     Errors.AddRange(errors);
                     annotations = new List<ASTAnnotation>();
                     directives = new List<ASTDirective>();
@@ -61,7 +61,7 @@ namespace Compiler
                 }
                 else if (Current.TokenType == TokenType.KW_Choice)
                 {
-                    var (errors, result) = ASTChoice.Parse(this, annotations, directives);
+                    var (errors, result) = ASTChoice.Parse(this, annotations, directives, moduleName);
                     Errors.AddRange(errors);
                     yield return result;
                     annotations = new List<ASTAnnotation>();
@@ -69,7 +69,7 @@ namespace Compiler
                 }
                 else if (Current.TokenType == TokenType.KW_Data)
                 {
-                    var (errors, data) = ASTData.Parse(this, annotations, directives);
+                    var (errors, data) = ASTData.Parse(this, annotations, directives, moduleName);
                     Errors.AddRange(errors);
                     yield return data;
                     annotations = new List<ASTAnnotation>();
@@ -77,7 +77,7 @@ namespace Compiler
                 }
                 else if (Current.TokenType == TokenType.KW_View)
                 {
-                    var (errors, data) = ASTView.Parse(this, annotations, directives);
+                    var (errors, data) = ASTView.Parse(this, annotations, directives, moduleName);
                     Errors.AddRange(errors);
                     yield return data;
                     annotations = new List<ASTAnnotation>();
@@ -85,7 +85,7 @@ namespace Compiler
                 }
                 else if (Current.TokenType == TokenType.KW_Open)
                 {
-                    var (errors, data) = ASTImport.Parse(this);
+                    var (errors, data) = ASTImport.Parse(this, moduleName);
                     Errors.AddRange(errors);
                     yield return data;
                     annotations = new List<ASTAnnotation>();
