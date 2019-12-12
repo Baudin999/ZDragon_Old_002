@@ -4,7 +4,7 @@
     <TargetFramework>netcoreapp3.0</TargetFramework>
 
     <IsPackable>false</IsPackable>
-    <ReleaseVersion>v2.1.6-beta</ReleaseVersion>
+    <ReleaseVersion>v2.1.8-beta</ReleaseVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -20,5 +20,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CLI\CLI.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="CSharp\" />
   </ItemGroup>
 </Project>

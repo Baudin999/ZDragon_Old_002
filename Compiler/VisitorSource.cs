@@ -24,11 +24,11 @@ namespace Compiler
 
             if (astAlias.Restrictions.Count() == 0)
             {
-                parts.Add($@"alias {astAlias.Name} = {typeDef}");
+                parts.Add($@"alias {astAlias.Name} = {typeDef};");
             } else
             {
                 var restrictions = String.Join(Environment.NewLine, astAlias.Restrictions.Select(Visit));
-                parts.Add($"alias {astAlias.Name} = {typeDef}\n{restrictions}");
+                parts.Add($"alias {astAlias.Name} = {typeDef}\n{restrictions};");
             }
             return String.Join(Environment.NewLine, parts.ToArray());
         }
@@ -40,7 +40,7 @@ namespace Compiler
 
         public override string VisitASTChapter(ASTChapter astChapter)
         {
-            throw new NotImplementedException();
+            return astChapter.Content;
         }
 
         public override string VisitASTChoice(ASTChoice astChoice)
@@ -58,7 +58,10 @@ namespace Compiler
             return $"% {astDirective.Key}: {astDirective.Value}";
         }
 
-        public override string VisitASTFlow(ASTFlow astFlow) => throw new NotImplementedException();
+        public override string VisitASTFlow(ASTFlow astFlow)
+        {
+            return "";
+        }
 
         public override string VisitASTOption(ASTOption astOption)
         {
@@ -67,7 +70,7 @@ namespace Compiler
 
         public override string VisitASTParagraph(ASTParagraph astParagraph)
         {
-            return "";
+            return astParagraph.Content;
         }
 
         public override string VisitASTRestriction(ASTRestriction astRestriction)

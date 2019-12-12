@@ -32,6 +32,11 @@ namespace CLI
                         var _id = $"{m.Name}.{_type.Name}";
                         nodes.Add(new TopologyNode(_id, _type.Name));
                         edges.Add(new TopologyEdge(m.Name, _id, ""));
+                    } else if (node is ASTAlias alias)
+                    {
+                        var _id = $"{m.Name}.{alias.Name}";
+                        nodes.Add(new TopologyNode(_id, alias.Name, new TopologyColor("#0096a0")));
+                        edges.Add(new TopologyEdge(m.Name, _id, ""));
                     }
                 });
             });

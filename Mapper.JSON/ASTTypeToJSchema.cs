@@ -9,32 +9,39 @@ namespace Mapper.JSON
 {
     public class ASTTypeToJSchema
     {
+        private List<string> NodeNames = new List<string>();
         private JObject References = new JObject();
         public List<IASTNode> Nodes { get; private set; } = new List<IASTNode>();
 
-        public JSchema Create(ASTType astType, IEnumerable<IASTNode> nodes)
+        public JSchema? Create(ASTType astType, IEnumerable<IASTNode> nodes)
         {
             this.Nodes = nodes.ToList();
             var schema = MapAstNode(astType.Name);
-            schema.SchemaVersion = new Uri("http://json-schema.org/draft-07/schema#");
-            schema.Title = astType.Name;
-            schema.Description = JsonMapper.Annotate(astType.Annotations);
-            schema.ExtensionData.Add("references", References);
+            if (schema != null)
+            {
+                schema.SchemaVersion = new Uri("http://json-schema.org/draft-07/schema#");
+                schema.Title = astType.Name;
+                schema.Description = JsonMapper.Annotate(astType.Annotations);
+                schema.ExtensionData.Add("references", References);
+            }
             return schema;
         }
 
-        public JSchema Create(ASTData astData, IEnumerable<IASTNode> nodes)
+        public JSchema? Create(ASTData astData, IEnumerable<IASTNode> nodes)
         {
             this.Nodes = nodes.ToList();
             var schema = MapAstNode(astData.Name);
-            schema.SchemaVersion = new Uri("http://json-schema.org/draft-07/schema#");
-            schema.Title = astData.Name;
-            schema.Description = JsonMapper.Annotate(astData.Annotations);
-            schema.ExtensionData.Add("references", References);
+            if (schema != null)
+            {
+                schema.SchemaVersion = new Uri("http://json-schema.org/draft-07/schema#");
+                schema.Title = astData.Name;
+                schema.Description = JsonMapper.Annotate(astData.Annotations);
+                schema.ExtensionData.Add("references", References);
+            }
             return schema;
         }
 
-        private JSchema MapTypeField(ASTTypeField field)
+        private JSchema? MapTypeField(ASTTypeField field)
         {
             var _mod = field.Type.First().Value;
             var _type = field.Type.Last().Value;
@@ -54,7 +61,7 @@ namespace Mapper.JSON
 
         private JSchema MapASTType(ASTType astType)
         {
-            JSchema schema = new JSchema
+            var schema = new JSchema
             {
                 Description = JsonMapper.Annotate(astType.Annotations),
                 Type = JSchemaType.Object,
@@ -73,12 +80,15 @@ namespace Mapper.JSON
             return schema;
         }
 
-        private JSchema MapASTAlias(ASTAlias astAlias)
+        private JSchema? MapASTAlias(ASTAlias astAlias)
         {
             var _mod = astAlias.Type.First().Value;
             var _type = astAlias.Type.Last().Value;
             var result = MapDefinition(_mod, _type);
-            result.Title = astAlias.Name;
+            if (result != null)
+            {
+                result.Title = astAlias.Name;
+            } 
             return result;
         }
 
@@ -112,13 +122,13 @@ namespace Mapper.JSON
 
         private void AddReference(string name, JSchema jSchema)
         {
-            References.TryAdd(name, jSchema);
+            var success = References.TryAdd(name, jSchema);
         }
 
-        private JSchema MapDefinition(string _mod, string _type)
+        private JSchema? MapDefinition(string _mod, string _type)
         {
             var isBasicType = JsonMapper.IsBasicType(_type);
-            JSchema result;
+            JSchema? result;
 
             if (_mod == "List" && isBasicType)
             {
@@ -144,8 +154,12 @@ namespace Mapper.JSON
             return result;
         }
 
-        private JSchema MapAstNode(string name)
+        private JSchema? MapAstNode(string name)
         {
+            if (NodeNames.Contains(name))
+            {
+                return (JSchema)References.GetValue(name);
+            }
             var refNode = JsonMapper.Find(Nodes, name);
             var result = refNode switch
             {
@@ -155,7 +169,11 @@ namespace Mapper.JSON
                 ASTData n => MapASTData(n),
                 _ => throw new NotImplementedException("Not implemented.")
             };
-            AddReference(name, result);
+
+            if (result != null)
+            {
+                AddReference(name, result);
+            }
             return result;
         }
 

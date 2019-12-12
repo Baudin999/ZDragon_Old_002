@@ -11,8 +11,8 @@ namespace CLI
         public string PortNumber { get; set; } = "5000";
         public string Remote { get; set; } = "";
 
-        public LexiconConfig LexiconConfig { get; set; } = new LexiconConfig();
 
+        public LexiconConfig LexiconConfig { get; set; } = new LexiconConfig();
 
         public static CarConfig? Load(string path)
         {
@@ -46,5 +46,7 @@ namespace CLI
         public List<string> TechnicalOwners { get; set; } = new List<string>();
         public List<string> Domains { get; set; } = new List<string>();
     }
+
+
 }
  

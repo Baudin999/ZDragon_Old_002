@@ -65,16 +65,8 @@ namespace Compiler
                     }
                     foreach (var field in t.Fields)
                     {
-                        string name;
-                        if (field is ASTPluckedField)
-                        {
-                            name = field.Type.First().Value;
-                        }
-                        else
-                        {
-                            name = field.Type.Last().Value;
-                        }
-                        resolveNode(name);
+                        var name = field.OfType(false);
+                        if (name != null) resolveNode(name);
                     }
                 }
                 else

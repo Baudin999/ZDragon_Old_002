@@ -23,15 +23,20 @@ namespace Mapper.HTML
     <td>{string.Join(" ", astTypeField.Type.Select(t => t.Value).ToList())}</td>
     <td>{_mod != "Maybe"}</td>
     <td>{restrictions}</td>
-    <td>{string.Join(" ", astTypeField.Annotations.Select(a => a.Value).ToList())}</td>
+    <td>
+        From module: <a href=""/index.html?path=preview&module={astTypeField.Module}"" target='_parent'>{astTypeField.Module}</a>
+        <br />
+        {string.Join(" ", astTypeField.Annotations.Select(a => a.Value).ToList())}
+    </td>
 </tr>
 ";
         }
 
         public override string VisitASTType(ASTType astType)
         {
-            var typeDescription = string.Join(" ", astType.Annotations.Select(a => a.Value).ToList()).Trim();
-            if (typeDescription.Length == 0) typeDescription = "No Description";
+            var typeDescription = $@"From module: <a href=""/index.html?path=preview&module={astType.Module}"" target='_parent'>{astType.Module}</a>
+{string.Join(" ", astType.Annotations.Select(a => a.Value).ToList()).Trim()}";
+
             return $@"
 <div class=""table-container"">
 <table>

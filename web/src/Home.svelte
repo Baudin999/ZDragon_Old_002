@@ -53,11 +53,6 @@
 </style>
 
 <div class="content--center">
-  <span
-    class="nav-button"
-    on:click={() => navigator.navigate('module-topology')}>
-    Topology
-  </span>
   <h1 class="title">Welcome to ZDragon!</h1>
   <p>
     Visit

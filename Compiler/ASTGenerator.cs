@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Compiler;
 using Compiler.AST;
@@ -36,15 +37,24 @@ namespace Compiler
             this.Parser = new Parser(this.Tokens);
         }
 
-        public ASTGenerator(string name, IEnumerable<IASTNode> nodes)
+        /// <summary>
+        /// Initialise an ASTGenerator with a module name and a list of nodes.
+        /// </summary>
+        /// <param name="moduleName"></param>
+        /// <param name="nodes"></param>
+        public ASTGenerator(string moduleName, IEnumerable<IASTNode> nodes)
         {
-            this.ModuleName = name;
+            this.ModuleName = moduleName;
             this.Code = "";
             this.AST = nodes.ToList();
             this.Errors = new List<IASTError>();
             this.ParseTree = nodes.ToList();
             this.Tokens = Enumerable.Empty<Token>();
             this.Parser = new Parser(this.Tokens);
+
+            var sourceVisitor = new VisitorSource(this);
+            var parts = sourceVisitor.Start().ToList();
+            this.Code = string.Join(Environment.NewLine + Environment.NewLine, parts);
         }
 
         public ASTGenerator(string code, string moduleName = "", IEnumerable<IASTNode>? imports = null)

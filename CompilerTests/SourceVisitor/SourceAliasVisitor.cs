@@ -26,7 +26,7 @@ alias Name = String
             var visitor = new VisitorSource(generator);
             var result = string.Join(Environment.NewLine + Environment.NewLine, visitor.Start());
 
-            Assert.Equal("alias Name = String", result);
+            Assert.Equal("alias Name = String;", result);
         }
 
         [Fact]
@@ -41,7 +41,7 @@ alias Name = String;
             var result = string.Join(Environment.NewLine + Environment.NewLine, visitor.Start());
             var resultExpected = @"
 @ This is the Name alias
-alias Name = String
+alias Name = String;
 ".Trim();
 
             Assert.Equal(resultExpected, result);
@@ -62,7 +62,7 @@ alias Name = String;
             var resultExpected = @"
 @ This is the Name alias
 % xsd: nnnNaname
-alias Name = String
+alias Name = String;
 ".Trim();
 
             Assert.Equal(resultExpected, result);
@@ -84,7 +84,7 @@ alias Name =
 @ This is the Name alias
 alias Name = String
     & min 12
-    & max 40
+    & max 40;
 ".Trim();
 
             Assert.Equal(resultExpected, result);
@@ -110,7 +110,7 @@ alias Name = String
     & min 12
 
     @ Maximum of 40
-    & max 40
+    & max 40;
 ".Trim();
 
             Assert.Equal(resultExpected, result);

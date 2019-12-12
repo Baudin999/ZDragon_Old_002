@@ -36,6 +36,11 @@
   <span class="nav-button" on:click={() => navigator.navigate('index')}>
     Home
   </span>
+  <span
+    class="nav-button"
+    on:click={() => navigator.navigate('module-topology')}>
+    Topology
+  </span>
   <span class="nav-button" on:click={() => navigator.navigate('lexicon')}>
     Lexicon
   </span>

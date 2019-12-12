@@ -27,8 +27,8 @@ namespace Mapper.JSON
                     var apiDirective = astType.Directives.FirstOrDefault(d => d.Key == "api");
                     if (!(apiDirective is null))
                     {
-                        this.Schemas.Add($"{astType.Name}.schema.json",
-                            new ASTTypeToJSchema().Create(astType, this.Generator.AST));
+                        var schema = new ASTTypeToJSchema().Create(astType, this.Generator.AST);
+                        if (schema != null) this.Schemas.Add($"{astType.Name}.schema.json", schema);
                     }
                 }
                 else if (node is ASTData && ((ASTData)node).Directives.Any())
@@ -37,8 +37,8 @@ namespace Mapper.JSON
                     var apiDirective = astType.Directives.FirstOrDefault(d => d.Key == "api");
                     if (!(apiDirective is null))
                     {
-                        this.Schemas.Add($"{astType.Name}.schema.json",
-                            new ASTTypeToJSchema().Create(astType, this.Generator.AST));
+                        var schema = new ASTTypeToJSchema().Create(astType, this.Generator.AST);
+                        if (schema != null) this.Schemas.Add($"{astType.Name}.schema.json", schema);
                     }
                 }
             }

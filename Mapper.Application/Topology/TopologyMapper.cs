@@ -10,7 +10,6 @@ namespace Mapper.Application.Topology
         public TopologyMapper(ASTGenerator generator)
         {
             this.Generator = generator;
-            int i = 0;
         }
 
     }

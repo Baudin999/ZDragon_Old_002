@@ -78,6 +78,29 @@ namespace Compiler.AST
             }
         }
 
+        public string? OfType(bool nullIfBaseType = true)
+        {
+            string _type;
+            if (this is ASTPluckedField)
+            {
+                _type = this.Type.First().Value;
+            }
+            else
+            {
+                _type = this.Type.Last().Value;
+            }
+
+
+            if (nullIfBaseType)
+            {
+                return Parser.BaseTypes.Contains(_type) ? null : _type;
+            }
+            else
+            {
+                return _type;
+            }
+        }
+
         public object Clone(FieldOrigin origin)
         {
             if (this is ASTPluckedField)

@@ -21,7 +21,7 @@ namespace CLI.Models
         public string Label { get; set; }
         public TopologyColor? Color { get; set; }
         public string? Module { get; set; }
-        public string Shape { get; set; } = "hexagon";
+        public string Shape { get; set; } = "box";
 
         public TopologyNode(string id, string label, TopologyColor? color = null)
         {

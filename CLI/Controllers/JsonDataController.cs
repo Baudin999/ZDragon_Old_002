@@ -107,10 +107,19 @@ namespace CLI.Controllers
 
         private object GenerateBaseValue(string _type, string? fakerDirective = null)
         {
-            var faker = new Bogus.Faker();
+            var faker = new Bogus.Faker("nl");
             if (!(fakerDirective is null))
             {
-                return faker.GetPropValue(fakerDirective) ?? "Not a valid faker directive";
+
+                return fakerDirective.ToLower() switch
+                {
+                    "person.firstname" => faker.Person.FirstName,
+                    "lastname" => BogusWrapper.Person.FirstName,
+                    "person.lastname" => BogusWrapper.Person.LastName,
+                    _ => "Not a faker directive"
+                };
+                
+                //return faker.GetPropValue(fakerDirective) ?? "Not a valid faker directive";
             }
             return _type switch
             {
@@ -139,6 +148,29 @@ namespace CLI.Controllers
                 expandoDict.Add(propertyName, propertyValue);
         }
     }
+
+
+    public static class BogusWrapper
+    {
+        private static Faker Bogus { get => new Faker("nl"); }
+        public static class Person
+        {
+            public static string FirstName => BogusWrapper.Bogus.Person.FirstName;
+            public static string LastName => BogusWrapper.Bogus.Person.LastName;
+            public static string FullName => BogusWrapper.Bogus.Person.FullName;
+        }
+        public static class Address
+        {
+            public static string Street => BogusWrapper.Bogus.Address.StreetName();
+            public static string HouseNumber => BogusWrapper.Bogus.Random.Number(0, 100).ToString();
+        }
+
+        public static class Finance
+        {
+            public static string Number => BogusWrapper.Bogus.Finance.Account();
+        }
+    }
+
 
     public static class DataHelpers
     {
