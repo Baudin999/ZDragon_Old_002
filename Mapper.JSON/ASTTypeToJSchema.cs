@@ -68,6 +68,8 @@ namespace Mapper.JSON
                 Title = astType.Name
             };
 
+            AddReference(astType.Name, schema);
+
             astType.Fields.ToList().ForEach(field =>
             {
                 schema.Properties.Add(field.Name, MapTypeField(field));
@@ -123,6 +125,7 @@ namespace Mapper.JSON
         private void AddReference(string name, JSchema jSchema)
         {
             var success = References.TryAdd(name, jSchema);
+            if (success) NodeNames.Add(name);
         }
 
         private JSchema? MapDefinition(string _mod, string _type)
