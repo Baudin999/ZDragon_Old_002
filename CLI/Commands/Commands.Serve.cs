@@ -23,8 +23,6 @@ namespace CLI.Commands
                 command.OnExecute(() =>
                 {
                     Console.WriteLine(@"
-Welcome to ZDragon!
-
 To quit the application press 'q'
 ");
                     var directory = fileOption.HasValue() switch
