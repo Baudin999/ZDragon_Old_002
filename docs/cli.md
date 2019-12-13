@@ -30,7 +30,7 @@ which will give you output along the lines of:
 
 ```
 $ ckc -h
- v2.1.7-beta
+ v2.1.9-beta
 
 Usage: ckc [options] [command]
 
@@ -59,7 +59,7 @@ Which will give you something like:
 ```
 $ ckc -v
 
-v2.1.7-beta
+v2.1.9-beta
 ```
 
 > DISCLAIMER: Versions are really important, even though the language is stable a lot of features
