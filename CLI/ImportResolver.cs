@@ -20,7 +20,7 @@ namespace CLI
                 if (!import.Imports.Any())
                 {
                     var copies = ast?
-                        .FindAll(a => a is ASTType || a is ASTAlias || a is ASTData || a is ASTChoice)
+                        .FindAll(a => a is ASTType || a is ASTAlias || a is ASTData || a is ASTChoice || a is ASTView)
                         .Select(a =>
                         {
                             return a switch
@@ -29,6 +29,7 @@ namespace CLI
                                 ASTAlias t => t.Clone() as IASTNode,
                                 ASTData t => t.Clone() as IASTNode,
                                 ASTChoice t => t.Clone() as IASTNode,
+                                ASTView t => t.Clone() as IASTNode,
                                 _ => null
                             };
                         })
@@ -57,6 +58,7 @@ namespace CLI
                                 ASTAlias n => n.Name == import,
                                 ASTData n => n.Name == import,
                                 ASTChoice n => n.Name == import,
+                                ASTView n => n.Name == import,
                                 _ => false
                             };
                         });

@@ -25,8 +25,8 @@ namespace Compiler.AST
             var imports = new List<string>();
             
             if (parser.HasNext()) parser.Next();
-            var nameId = parser.Consume(TokenType.Identifier);
-            var name = nameId.Value;
+            var names = parser.ConsumeWhile(TokenType.Identifier).Select(name => name.Value);
+            var name = string.Join(".", names);
 
             parser.TryConsume(TokenType.ContextStarted);
             var importing = parser.TryConsume(TokenType.KW_Importing);

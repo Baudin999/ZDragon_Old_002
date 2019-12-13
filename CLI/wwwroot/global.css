@@ -41,7 +41,10 @@ h1.title {
         cursor: pointer;
     }
 
+
+
 /* FOMRS */
+input.search,
 form input,
 form select,
 form option,

@@ -14,7 +14,7 @@ if (!Prism || !Prism.languages) {
 }
 Prism.languages.carlang = {
   prolog: /<\?[\s\S]+?\?>/,
-  keyword: /\b(?:type|alias|choice|data|flow|compose|loop)\b/,
+  keyword: /\b(?:type|alias|choice|data|flow|view|compose|loop)\b/,
   number: /\b0x[\da-f]+\b|(?:\b\d+\.?\d*|\B\.\d+)(?:e[+-]?\d+)?/i,
   operator: /[<>]=?|[!=]=?=?|--?|\+\+?|&&?|\|\|?|[?*/~^%]/,
   chapter: /#.*\n/

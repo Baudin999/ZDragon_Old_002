@@ -24,6 +24,34 @@ open Prelude
         }
 
         [Fact]
+        public void ImportNested()
+        {
+            var code = @"
+open Base.Person
+";
+            var g = new ASTGenerator(code);
+            Assert.Empty(g.Errors);
+
+            var import = (ASTImport)g.AST[0];
+            Assert.Equal("Base.Person", import.ModuleName);
+            Assert.Empty(import.Imports);
+        }
+
+        [Fact]
+        public void ImportNested4()
+        {
+            var code = @"
+open Base.Person.Other.Something
+";
+            var g = new ASTGenerator(code);
+            Assert.Empty(g.Errors);
+
+            var import = (ASTImport)g.AST[0];
+            Assert.Equal("Base.Person.Other.Something", import.ModuleName);
+            Assert.Empty(import.Imports);
+        }
+
+        [Fact]
         public void SingleImport()
         {
             var code = @"
@@ -35,6 +63,21 @@ open Customer importing (Customer)
             var import = (ASTImport)g.AST[0];
             Assert.Equal("Customer", import.ModuleName);
             Assert.Single(import.Imports);
+        }
+
+        [Fact]
+        public void SingleImportFromPath()
+        {
+            var code = @"
+open Customer.Contract importing (Customer)
+";
+            var g = new ASTGenerator(code);
+            Assert.Empty(g.Parser.Errors.ToList());
+
+            var import = (ASTImport)g.AST[0];
+            Assert.Equal("Customer.Contract", import.ModuleName);
+            Assert.Single(import.Imports);
+            Assert.Equal("Customer", import.Imports.First());
         }
 
 

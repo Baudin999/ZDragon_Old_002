@@ -25,6 +25,8 @@ namespace ApplicationTests
             {
                 project.Watch();
             });
+
+            
         }
 
         [Fact]

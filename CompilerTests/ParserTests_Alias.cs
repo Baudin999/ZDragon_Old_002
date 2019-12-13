@@ -158,7 +158,7 @@ alias Name = String
             Assert.NotNull(parseTree);
             Assert.Single(parseTree);
 
-            ASTAlias alias = parseTree[0] as ASTAlias;
+            var alias = parseTree[0] as ASTAlias;
             Assert.Single(alias.Restrictions);
             ASTRestriction restriction = alias.Restrictions.First();
             Assert.Equal(TokenType.String, restriction.Token.TokenType);
@@ -184,6 +184,32 @@ alias FooBar = School;
             var name = t.Fields.First();
             Assert.Equal("Name", name.Name);
             Assert.Equal("String", name.Type.First().Value);
+        }
+
+        [Fact]
+        public void AliasOfAView()
+        {
+            var code = @"
+type School =
+    Name: String;
+
+view SchoolView =
+    School
+
+alias AnotherSchoolView = SchoolView;
+";
+            var g = new ASTGenerator(code);
+            Assert.Empty(g.Errors);
+
+            var school = g.Find<ASTType>("School");
+            var schoolView = g.Find<ASTView>("SchoolView");
+            var anotherShoolView = g.Find<ASTView>("AnotherSchoolView");
+
+            Assert.NotNull(school);
+            Assert.NotNull(schoolView);
+            Assert.NotNull(anotherShoolView);
+
+            Assert.Equal(3, g.AST.Count);
         }
     }
 }

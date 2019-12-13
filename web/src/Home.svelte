@@ -64,7 +64,11 @@
 
   <div>
     <h2>Search your models:</h2>
-    <input autocomplete="off" type="text" on:keypress={keypress} />
+    <input
+      class="search"
+      autocomplete="off"
+      type="text"
+      on:keypress={keypress} />
   </div>
 
   {#if data && data.length > 0}

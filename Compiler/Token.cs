@@ -107,6 +107,7 @@ namespace Compiler
         Op_Next,
         Op_Def,
         KW_Compose,
-        KW_Loop
+        KW_Loop,
+        QualifiedIdentifier
     }
 }

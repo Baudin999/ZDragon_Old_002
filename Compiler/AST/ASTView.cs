@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Compiler.AST
 {
-    public class ASTView : IASTNode, INamable
+    public class ASTView : IASTNode, INamable, ICloneable
     {
         public string Name { get; }
         public string Module { get; }
@@ -45,6 +45,27 @@ namespace Compiler.AST
                 directives);
 
             return (errors, result);
+        }
+
+        public object Clone() {
+            return new ASTView(
+                (string)this.Name.Clone(),
+                (string)this.Module.Clone(),
+                ObjectCloner.CloneList(this.Nodes),
+                ObjectCloner.CloneList(this.Annotations),
+                ObjectCloner.CloneList(this.Directives)
+                );
+        }
+
+        public object Clone(string name)
+        {
+            return new ASTView(
+                name,
+                (string)this.Module.Clone(),
+                ObjectCloner.CloneList(this.Nodes),
+                ObjectCloner.CloneList(this.Annotations),
+                ObjectCloner.CloneList(this.Directives)
+                );
         }
     }
 }

@@ -123,24 +123,31 @@ namespace Compiler
                 // alias Foo = Bar;
                 // let's create a new type cloned from the old one...
                 var errors = new List<IASTError>();
-                var source = FindNode(_mod) as ASTType;
+                var source = FindNode(_mod);
                 if (source is null)
                 {
                     errors.Add(new ASTError($"Cannot find type {_mod} to rename. You can only alias existing types.", "Invalid Syntax"));
                     return (errors, alias);
                 }
-                else
+                else if (source is ASTView)
+                {
+                    return (errors, (IASTNode)((ASTView)source).Clone(alias.Name));
+                }
+                else if (source is ASTType type)
                 {
                     var newType = new ASTType(
                         alias.Name,
                         alias.Module,
                         Enumerable.Empty<string>(),
                         Enumerable.Empty<string>(),
-                        ObjectCloner.CloneList(source.Fields),
+                        ObjectCloner.CloneList(type.Fields),
                         ObjectCloner.CloneList(alias.Annotations),
                         ObjectCloner.CloneList(alias.Directives)
                         );
                     return (errors, newType);
+                } else
+                {
+                    return (errors, alias);
                 }
 
             }

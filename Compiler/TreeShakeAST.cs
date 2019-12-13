@@ -69,6 +69,18 @@ namespace Compiler
                         if (name != null) resolveNode(name);
                     }
                 }
+                else if (node is ASTView view)
+                {
+                    CombinedNodes.Add(view);
+                    foreach (var viewNode in view.Nodes)
+                    {
+                        resolveNode(viewNode);
+                    }
+                }
+                else if (node is ASTChoice choice)
+                {
+                    CombinedNodes.Add(choice);
+                }
                 else
                 {
                     CombinedNodes.Add(node);

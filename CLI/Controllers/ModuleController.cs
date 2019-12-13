@@ -20,10 +20,17 @@ namespace CLI.Controllers
         }
 
         [HttpPost("/api/modules/{name}")]
-        public IEnumerable<Descriptor> CreateModule(string name)
+        public IActionResult CreateModule(string name)
         {
+            var module = Project.Current?.FindModule(name);
+            if (module != null)
+            {
+                return BadRequest($"Module: {name}, already exists and cannot be created.");
+            }
+
+
             Project.Current?.CreateModule(name);
-            return new List<Descriptor> {
+            return Ok(new List<Descriptor> {
                 new Descriptor(name)
                 {
                     Module = name,
@@ -31,7 +38,7 @@ namespace CLI.Controllers
                     Name = name,
                     DescriptorType = DescriptorType.Module.ToString("g")
                 }
-            };
+            });
         }
 
         [HttpGet("/api/search/{param}")]

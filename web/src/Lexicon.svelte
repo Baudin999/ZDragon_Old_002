@@ -50,6 +50,7 @@
     </span>
     <h2>Search your lexicon:</h2>
     <input
+      class="search"
       type="text"
       on:keyup={e => e.code === 'Enter' && onkeyup(e.target.value)}
       on:change={e => findData(e.target.value)} />

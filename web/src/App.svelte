@@ -8,8 +8,8 @@
   import Preview from "./Preview.svelte";
   import ZDragonConfig from "./ZDragonConfig.svelte";
   import ModuleTopology from "./ModuleTopology.svelte";
+  import ModuleCreate from "./ModuleCreate.svelte";
   import navigator from "./navigator.js";
-
   let route;
 
   const unsubscribe = navigator.subscribe(value => {
@@ -72,6 +72,8 @@
   <ZDragonConfig />
 {:else if route === 'module-topology'}
   <ModuleTopology />
+{:else if route === 'module-create'}
+  <ModuleCreate />
 {:else}
   <Home />
 {/if}
