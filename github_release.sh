@@ -8,9 +8,20 @@
      # clean working dir
      read -p "This will replace $EXISTINGTAG with "$1". Are you sure? (y/n)" -n 1 -r
      if [[ $REPLY =~ ^[Yy]$ ]]; then
-         FILES=("ZDragon.NET.sln" "CLI/CLI.csproj" "Compiler/Compiler.csproj" "CompilerTests/CompilerTests.csproj" "Mapper.XSD/Mapper.XSD.csproj" "README.md"
-         "Mapper.HTML/Mapper.HTML.csproj" "Mapper.JSON/Mapper.JSON.csproj"
-         "CLI/Program.cs" "docs/index.md" "ApplicationTests/ApplicationTests.csproj" "Mapper.Application/Mapper.Application.csproj")
+         FILES=(
+             "ZDragon.NET.sln" 
+             "CLI/CLI.csproj" 
+             "CLI/Program.cs" 
+             "Compiler/Compiler.csproj" 
+             "Mapper.Application/Mapper.Application.csproj"
+             "Mapper.XSD/Mapper.XSD.csproj" 
+             "Mapper.HTML/Mapper.HTML.csproj" 
+             "Mapper.JSON/Mapper.JSON.csproj"
+             "README.md"
+             "docs/index.md" 
+             "docs/cli.md"
+             "CompilerTests/CompilerTests.csproj" 
+             "ApplicationTests/ApplicationTests.csproj" )
 
          for FILE in "${FILES[@]}"
          do

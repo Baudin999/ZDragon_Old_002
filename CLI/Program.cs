@@ -3,6 +3,7 @@ using Microsoft.Extensions.CommandLineUtils;
 using CLI.Commands;
 using System;
 using CLI.Signals;
+using System.Linq;
 
 namespace CLI
 {
@@ -27,6 +28,9 @@ namespace CLI
             app.VersionOption("-v|--version", "v2.1.7-beta");
 
             app.OnExecute(() => 0);
+
+            Console.WriteLine("Welcome to ZDragon!");
+            if (!args.Contains("-v")) app.ShowVersion();
 
             CommandsBuilder.CreateBuildCommand(app);
             CommandsBuilder.CreateWatchCommand(app);
