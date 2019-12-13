@@ -11,7 +11,7 @@
          FILES=(
              "ZDragon.NET.sln" 
              "CLI/CLI.csproj" 
-             "CLI/Program.cs" 
+             "CLI/Program.cs"
              "Compiler/Compiler.csproj" 
              "Mapper.Application/Mapper.Application.csproj"
              "Mapper.XSD/Mapper.XSD.csproj" 
