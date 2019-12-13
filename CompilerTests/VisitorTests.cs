@@ -14,15 +14,14 @@ namespace CompilerTests
         [Fact]
         public void TestASTVisitor()
         {
-            Lexer lexer = new Lexer();
-            var tokenStream = lexer.Lex(@"
+            var code = @"
 type Person
-");
-            IParser parser = new Parser(tokenStream);
-            IEnumerable<IASTNode> nodeTree = parser.Parse();
+";
+            var generator = new ASTGenerator(code);
+            var visitor = new VisitorSource(generator);
+            var result = string.Join(Environment.NewLine + Environment.NewLine, visitor.Start());
 
-            VisitorSource visitor = new VisitorSource(nodeTree);
-            string result = string.Join("\n\n", visitor.Start());
+            Assert.True(result.Length > 0);
         }
     }
 }

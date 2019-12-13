@@ -8,16 +8,18 @@ namespace Compiler.AST
     public class ASTFlow : IASTNode
     {
         public string Name { get; }
+        public string Module { get; }
         public IEnumerable<IFlowStep> Steps { get; } = Enumerable.Empty<IFlowStep>();
 
-        public ASTFlow(string name, IEnumerable<IFlowStep> steps)
+        public ASTFlow(string name, string module, IEnumerable<IFlowStep> steps)
         {
             this.Name = name;
             this.Steps = steps;
+            this.Module = module;
         }
 
 
-        public static (List<ASTError>, ASTFlow) Parse(IParser parser)
+        public static (List<ASTError>, ASTFlow) Parse(IParser parser, string module = "")
         {
             var errors = new List<ASTError>();
             parser.Next();
@@ -33,7 +35,7 @@ namespace Compiler.AST
                     errors.AddRange(_errors);
                 }
             }
-            return (errors, new ASTFlow(name.Value.Replace("\"", ""), steps));
+            return (errors, new ASTFlow(name.Value.Replace("\"", ""), module, steps));
         }
     }
 }

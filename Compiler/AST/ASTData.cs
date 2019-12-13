@@ -6,49 +6,65 @@ namespace Compiler.AST
 {
     public class ASTData : IASTNode, INamable, ICloneable
     {
-        public string Name { get; set; } = "";
-        public IEnumerable<string> Parameters { get; set; } = Enumerable.Empty<string>();
-        public IEnumerable<ASTAnnotation> Annotations { get; set; } = Enumerable.Empty<ASTAnnotation>();
-        public IEnumerable<ASTDirective> Directives { get; set; } = Enumerable.Empty<ASTDirective>();
-        public IEnumerable<ASTDataOption> Options { get; set; } = Enumerable.Empty<ASTDataOption>();
+        public string Name { get; }
+        public string Module { get; }
+        public IEnumerable<string> Parameters { get; }
+        public IEnumerable<ASTAnnotation> Annotations { get; }
+        public IEnumerable<ASTDirective> Directives { get; }
+        public IEnumerable<ASTDataOption> Options { get; }
 
-        public ASTData() { }
+        public ASTData(
+            string name,
+            string module,
+            IEnumerable<string> parameters,
+            IEnumerable<ASTAnnotation> annotations,
+            IEnumerable<ASTDirective> directives,
+            IEnumerable<ASTDataOption> options)
+        {
+            this.Name = name;
+            this.Module = module;
+            this.Parameters = parameters;
+            this.Directives = directives;
+            this.Annotations = annotations;
+            this.Options = options;
+        }
 
-        public static (List<ASTError>, ASTData) Parse(
+        public static (IEnumerable<IASTError>, ASTData) Parse(
                 IParser parser,
                 IEnumerable<ASTAnnotation> annotations,
-                IEnumerable<ASTDirective> directives)
+                IEnumerable<ASTDirective> directives,
+                string module = "")
         {
             var errors = new List<ASTError>();
-            var result = new ASTData
-            {
-                Annotations = annotations,
-                Directives = directives
-            };
 
             if (parser.HasNext()) parser.Next();
             var nameId = parser.Consume(TokenType.Identifier);
-            result.Name = nameId.Value;
-            result.Parameters = parser.ConsumeWhile(TokenType.GenericParameter).Select(p => p.Value).ToList();
+            var parameters = parser.ConsumeWhile(TokenType.GenericParameter).Select(p => p.Value).ToList();
             parser.Consume(TokenType.Equal);
-
-            result.Options = ASTDataOption.Parse(parser).ToList();
-            
+            var (optionErrors, options) = ASTDataOption.Parse(parser);
             parser.Consume(TokenType.ContextEnded);
 
-            return (errors, result);
+            var result = new ASTData(
+                nameId.Value,
+                module,
+                parameters,
+                annotations,
+                directives,
+                options);
+
+            return (errors.Concat(optionErrors), result);
         }
 
         public object Clone()
         {
-            return new ASTData
-            {
-                Name = (string)this.Name.Clone(),
-                Parameters = ObjectCloner.CloneList(this.Parameters.ToList()),
-                Annotations = ObjectCloner.CloneList(this.Annotations.ToList()),
-                Directives = ObjectCloner.CloneList(this.Directives.ToList()),
-                Options = ObjectCloner.CloneList(this.Options.ToList())
-            };
+            return new ASTData(
+                (string)this.Name.Clone(),
+                (string)this.Module.Clone(),
+                ObjectCloner.CloneList(this.Parameters.ToList()),
+                ObjectCloner.CloneList(this.Annotations.ToList()),
+                ObjectCloner.CloneList(this.Directives.ToList()),
+                ObjectCloner.CloneList(this.Options.ToList()))
+            { };
         }
     }
 }

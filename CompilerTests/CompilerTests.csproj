@@ -4,7 +4,7 @@
     <TargetFramework>netcoreapp3.0</TargetFramework>
 
     <IsPackable>false</IsPackable>
-    <ReleaseVersion>v2.0.3-beta</ReleaseVersion>
+    <ReleaseVersion>v2.1.7-beta</ReleaseVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -23,6 +23,8 @@
     <ProjectReference Include="..\Mapper.XSD\Mapper.XSD.csproj" />
     <ProjectReference Include="..\Mapper.JSON\Mapper.JSON.csproj" />
     <ProjectReference Include="..\Mapper.HTML\Mapper.HTML.csproj" />
+    <ProjectReference Include="..\CLI\CLI.csproj" />
+    <ProjectReference Include="..\Mapper.Application\Mapper.Application.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="TestResults\4cbd3726-c5fc-40f3-9845-7701bf053b15\coverage.cobertura.xml" />

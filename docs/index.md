@@ -1,5 +1,7 @@
 ﻿# ZDragon
 
+<img src="./assets/logo.jpg" style="width: 250px" />
+
 So, you've come to understand the dragon? Software is a monster waiting to be tamed. It's a a
 dragon. A Dragon which breathes fire, runs in circles and can defeat the best of knights; but don't
 worry, ZDragon is here to help you out. With the help of this tool you will have your documentation
@@ -9,8 +11,8 @@ in order in no time.
 
 For those who just want to jump in!
 
-[OSx - v2.0.3-beta](https://github.com/Baudin999/ZDragon.NET/releases/download/v2.0.3-beta/ckc)<br />
-[Windows - v2.0.3-beta](https://github.com/Baudin999/ZDragon.NET/releases/download/v2.0.3-beta/ckc.exe)
+[OSx - v2.1.7-beta](https://github.com/Baudin999/ZDragon.NET/releases/download/v2.1.7-beta/ckc)<br />
+[Windows - v2.1.7-beta](https://github.com/Baudin999/ZDragon.NET/releases/download/v2.1.7-beta/ckc.exe)
 
 ## How to read this documentation
 
@@ -18,10 +20,11 @@ This documentation is written for people new to ZDragon. If you already know how
 you can skip these pages and just go to the downloads and language features.
 
 For those of you who want to learn about ZDragon, these pages are for you! ZDragon is a
-documentation language with some small features from real programming languages. Let me be clear.
-ZDragon is _not_ a Turing complete programming language. Nor does it try to be one. ZDragon lets you
-write down your thought and it will spit out models and diagrams.
+documentation language with some small features taken from real programming languages. Let me be
+clear. ZDragon is _not_ a Turing complete programming language. Nor does it try to be one. ZDragon
+lets you write down your thought and it will spit out models and diagrams.
 
+[Running ZDragon](./running_zdragon.md)<br />[The CLI tool](./cli.html) <br />
 [The Language](./language.html) <br /> [Flows (Sequence Diagrams)](./flows.html) <br />
 
 ## Roadmap
@@ -37,11 +40,8 @@ On the current roadmap we have the following features:
 - Information Architecture
 - LaTeX support
 - BPMN Diagrams
-- Templating (True Generics)
 - Versioning
-- Configuration
-- Live Example Data
-- Turing Completeness \_('_')_/
+- Turing Completeness `\_('_')_/`
 - Much, much more
 
 When we look at the features it is safe to say that ZDragon has the very big goal of transforming

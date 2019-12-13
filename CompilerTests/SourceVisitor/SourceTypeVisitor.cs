@@ -18,15 +18,12 @@ namespace CompilerTests.SourceVisitor
         [Fact]
         public void TestASTVisitor()
         {
-            Lexer lexer = new Lexer();
-            var tokenStream = lexer.Lex(@"
+            var code = @"
 type Person
-");
-            IParser parser = new Parser(tokenStream);
-            IEnumerable<IASTNode> nodeTree = parser.Parse();
-
-            VisitorSource visitor = new VisitorSource(nodeTree);
-            string result = string.Join("\n\n", visitor.Start());
+";
+            var generator = new ASTGenerator(code);
+            var visitor = new VisitorSource(generator);
+            var result = string.Join(Environment.NewLine + Environment.NewLine, visitor.Start());
 
             Assert.Equal("type Person", result);
         }
@@ -34,17 +31,14 @@ type Person
         [Fact]
         public void TestAnnotationsSource()
         {
-            Lexer lexer = new Lexer();
-            var tokenStream = lexer.Lex(@"
+            var code = @"
 @ The Person
 @ Another annotation
 type Person
-");
-            IParser parser = new Parser(tokenStream);
-            IEnumerable<IASTNode> nodeTree = parser.Parse();
-
-            VisitorSource visitor = new VisitorSource(nodeTree);
-            string result = string.Join("\n\n", visitor.Start());
+";
+            var generator = new ASTGenerator(code);
+            var visitor = new VisitorSource(generator);
+            var result = string.Join(Environment.NewLine + Environment.NewLine, visitor.Start());
 
             Assert.Equal(@"@ The Person
 @ Another annotation
@@ -55,17 +49,13 @@ type Person", result);
         [Fact]
         public void TestDirectivesSource()
         {
-            Lexer lexer = new Lexer();
-            var tokenStream = lexer.Lex(@"
+            var code = @"
 % api: /root/{param}
 type Person
-");
-            IParser parser = new Parser(tokenStream);
-            IEnumerable<IASTNode> nodeTree = parser.Parse();
-
-            VisitorSource visitor = new VisitorSource(nodeTree);
-            string result = string.Join("\n\n", visitor.Start());
-
+";
+            var generator = new ASTGenerator(code);
+            var visitor = new VisitorSource(generator);
+            var result = string.Join(Environment.NewLine + Environment.NewLine, visitor.Start());
             Assert.Equal(@"
 % api: /root/{param}
 type Person".Trim(), result);
@@ -74,21 +64,17 @@ type Person".Trim(), result);
         [Fact]
         public void TestMessedUpFieldSource()
         {
-            Lexer lexer = new Lexer();
-            var tokenStream = lexer.Lex(@"
+            var code = @"
 type Person =
     FirstName:
         String ;
     LastName: String & min 12 & max
     30;
-");
-            IParser parser = new Parser(tokenStream);
-            IEnumerable<IASTNode> nodeTree = parser.Parse();
-
-            VisitorSource visitor = new VisitorSource(nodeTree);
-            string result = string.Join("\n\n", visitor.Start());
-
-            string resultTest = @"
+";
+            var generator = new ASTGenerator(code);
+            var visitor = new VisitorSource(generator);
+            var result = string.Join(Environment.NewLine + Environment.NewLine, visitor.Start());
+            var resultTest = @"
 type Person =
     FirstName: String;
     LastName: String
@@ -103,22 +89,18 @@ type Person =
         [Fact]
         public void TestFieldRestrictionAnnotations()
         {
-            Lexer lexer = new Lexer();
-            var tokenStream = lexer.Lex(@"
+            var code = @"
 type Person =
     FirstName:
         String ;
     LastName: String & min 12
     @ annotation
     & max 30;
-");
-            IParser parser = new Parser(tokenStream);
-            IEnumerable<IASTNode> nodeTree = parser.Parse();
-
-            VisitorSource visitor = new VisitorSource(nodeTree);
-            string result = string.Join("\n\n", visitor.Start());
-
-            string resultTest = @"
+";
+            var generator = new ASTGenerator(code);
+            var visitor = new VisitorSource(generator);
+            var result = string.Join(Environment.NewLine + Environment.NewLine, visitor.Start());
+            var resultTest = @"
 type Person =
     FirstName: String;
     LastName: String
@@ -135,8 +117,7 @@ type Person =
         [Fact]
         public void TestMultipleTypesFormatting()
         {
-            Lexer lexer = new Lexer();
-            var tokenStream = lexer.Lex(@"
+            var code = @"
 type Person =
     FirstName: String;
     LastName: String
@@ -146,14 +127,11 @@ type Person =
 type School
 type Other =
     Something: String;
-");
-            IParser parser = new Parser(tokenStream);
-            IEnumerable<IASTNode> nodeTree = parser.Parse();
-
-            VisitorSource visitor = new VisitorSource(nodeTree);
-            string result = string.Join("\n\n", visitor.Start());
-
-            string resultTest = @"
+";
+            var generator = new ASTGenerator(code);
+            var visitor = new VisitorSource(generator);
+            var result = string.Join(Environment.NewLine + Environment.NewLine, visitor.Start());
+            var resultTest = @"
 type Person =
     FirstName: String;
     LastName: String

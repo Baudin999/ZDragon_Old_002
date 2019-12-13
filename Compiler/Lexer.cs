@@ -8,12 +8,14 @@ namespace Compiler
     {
 
         private bool _ignoreWhiteSpace = true;
+        private const string NEWLINE = "↓";
+        private const string INDENT = "→";
 
         private string PrepareSource(string source)
         {
-            source = new Regex(@"\r\n|\n").Replace(source, "↓");
-            source = new Regex(@"[\s\t]+↓").Replace(source, "↓");
-            source = new Regex("    |\t").Replace(source, "→");
+            source = new Regex(@"\r\n|\n").Replace(source, NEWLINE);
+            source = new Regex(@"[\s\t]+↓").Replace(source, NEWLINE);
+            source = new Regex("    |\t").Replace(source, INDENT);
             return source;
         }
 
@@ -153,7 +155,7 @@ namespace Compiler
                 else if (Char2.IsNewLine(input.Current()))
                 {
                     var newline = TokenLexers.Take(input, TokenType.NewLine);
-                    newline.Value = "↓";
+                    newline.Value = NEWLINE;
                     yield return newline;
                 }
                 else if (Char.IsWhiteSpace(input.Current()))

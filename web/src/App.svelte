@@ -1,19 +1,20 @@
 <script>
-  import SearchResult from "./SearchResult.svelte";
-  export let name;
+  import Home from "./Home.svelte";
+  import Lexicon from "./Lexicon.svelte";
+  import LexiconAdd from "./LexiconAdd.svelte";
+  import LexiconEdit from "./LexiconEdit.svelte";
+  import Editor from "./Editor.svelte";
+  import LexiconAdmin from "./LexiconAdmin.svelte";
+  import Preview from "./Preview.svelte";
+  import ZDragonConfig from "./ZDragonConfig.svelte";
+  import ModuleTopology from "./ModuleTopology.svelte";
+  import ModuleCreate from "./ModuleCreate.svelte";
+  import navigator from "./navigator.js";
+  let route;
 
-  let data = [];
-
-  const findData = async param => {
-    try {
-      var descriptions = await fetch(
-        `https://localhost:5001/api/search/${param || "nothing"}`
-      );
-      data = await descriptions.json();
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  const unsubscribe = navigator.subscribe(value => {
+    route = value;
+  });
 </script>
 
 <style>
@@ -23,14 +24,6 @@
     max-width: 240px;
     margin: 0 auto;
   }
-
-  h1 {
-    color: #ff3e00;
-    text-transform: uppercase;
-    font-size: 4em;
-    font-weight: 100;
-  }
-
   @media (min-width: 640px) {
     main {
       max-width: none;
@@ -39,20 +32,48 @@
 </style>
 
 <main>
-  <h1>Welcome to ZDragon!</h1>
-  <p>
-    Visit
-    <a href="https://zdragon.nl">ZDragon.nl</a>
-    to learn more about zdragon!
-  </p>
 
-  <div>
-    <h2>Search your models:</h2>
-    <input type="text" on:change={e => findData(e.target.value)} />
-  </div>
-
-  {#each data as d}
-    <SearchResult descriptor={d} />
-  {/each}
-
+  <span class="nav-button" on:click={() => navigator.navigate('index')}>
+    Home
+  </span>
+  <span
+    class="nav-button"
+    on:click={() => navigator.navigate('module-topology')}>
+    Topology
+  </span>
+  <span class="nav-button" on:click={() => navigator.navigate('lexicon')}>
+    Lexicon
+  </span>
+  {#if navigator.module}
+    <span class="nav-button" on:click={() => navigator.navigate('editor')}>
+      Editor
+    </span>
+    <span class="nav-button" on:click={() => navigator.navigate('preview')}>
+      Preview
+    </span>
+  {/if}
 </main>
+
+{#if route === 'index'}
+  <Home />
+{:else if route === 'lexicon'}
+  <Lexicon />
+{:else if route === 'add-lexicon'}
+  <LexiconAdd />
+{:else if route === 'edit-lexicon'}
+  <LexiconEdit />
+{:else if route === 'lexicon-admin'}
+  <LexiconAdmin />
+{:else if route === 'preview'}
+  <Preview />
+{:else if route === 'editor'}
+  <Editor />
+{:else if route === 'config'}
+  <ZDragonConfig />
+{:else if route === 'module-topology'}
+  <ModuleTopology />
+{:else if route === 'module-create'}
+  <ModuleCreate />
+{:else}
+  <Home />
+{/if}

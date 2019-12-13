@@ -10,15 +10,17 @@ namespace Compiler.AST
     {
         public string Key { get; }
         public string Value { get; }
+        public string Module { get; }
         //public ASTDirective(object v) { }
-        public ASTDirective(string key, string value)
+        public ASTDirective(string key, string value, string module)
         {
             this.Key = key;
             this.Value = value;
+            this.Module = module;
         }
 
 
-        public static (List<ASTError>, List<ASTDirective>) Parse(IParser parser)
+        public static (List<ASTError>, List<ASTDirective>) Parse(IParser parser, string module = "")
         {
             var errors = new List<ASTError>();
             var directives = parser.ConsumeWhile(TokenType.Directive);
@@ -37,10 +39,10 @@ Example:
 % api: /some/url/{{param}}
 type Person =
     FirstName: String;
-", parser.Current));
+", "Invalid syntax", parser.Current));
                     result = new[] { "no-key", result[0] };
                 }
-                return new ASTDirective(result[0].Trim(), result[1].Trim());
+                return new ASTDirective(result[0].Trim(), result[1].Trim(), module);
             }).ToList();
 
             if (parser.HasNext() && parser.Current.TokenType == TokenType.Directive) parser.Next();
@@ -49,7 +51,7 @@ type Person =
 
         public object Clone()
         {
-            return new ASTDirective((string)this.Key.Clone(), (string)this.Value.Clone());
+            return new ASTDirective((string)this.Key.Clone(), (string)this.Value.Clone(), (string)this.Module.Clone());
         }
     }
 }

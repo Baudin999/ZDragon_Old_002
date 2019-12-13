@@ -4,9 +4,10 @@ using System.Linq;
 
 namespace Compiler.AST
 {
-    public class ASTFlowParameter
+    public class ASTFlowParameter : IASTNode
     {
         public string Name { get; }
+        public string Module { get; } = "";
         public IEnumerable<ASTTypeDefinition> Types { get; }
 
         public ASTFlowParameter(string name, IEnumerable<ASTTypeDefinition> types)
@@ -16,9 +17,9 @@ namespace Compiler.AST
         }
 
 
-        public static ASTFlowParameter Parse(IParser parser)
+        public static ASTFlowParameter Parse(IParser parser, string module = "")
         {
-            var identifiers = ASTTypeDefinition.Parse(parser).ToList();
+            var identifiers = ASTTypeDefinition.Parse(parser, module).ToList();
             return new ASTFlowParameter("", identifiers);
         }
     }

@@ -16,7 +16,7 @@ namespace Compiler
             var startColumn = input.Column;
             var startLine = input.Line;
 
-            StringBuilder builder = new StringBuilder();
+            var builder = new StringBuilder();
             builder.Append(input.Current());
 
             while (input.HasNext() && !Char2.IsNewLine(input.Next()))

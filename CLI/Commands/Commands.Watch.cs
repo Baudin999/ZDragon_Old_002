@@ -13,6 +13,7 @@ namespace CLI.Commands
         {
             _ = app.Command("watch", (command) =>
                   {
+
                       command.Description = "Watch a .car Project";
                       command.HelpOption("-?|-h|--help");
 
@@ -28,6 +29,11 @@ namespace CLI.Commands
 
                       command.OnExecute(() =>
                       {
+                          Console.WriteLine(@"
+Welcome to ZDragon!
+
+To quit the application press 'q'
+");
                           var directory = fileOption.HasValue() switch
                           {
                               false => Directory.GetCurrentDirectory(),
@@ -36,7 +42,7 @@ namespace CLI.Commands
 
                           var project = new Project(directory);
 
-                          Task webserverTask = null;
+                          Task? webserverTask = null;
                           if (serve.HasValue())
                           {
                               webserverTask = WebServer.Start(project.OutPath);
@@ -44,13 +50,7 @@ namespace CLI.Commands
 
                           project.Watch();
 
-                          // Wait for the user to quit the program.
-                          Console.WriteLine("Press 'q' to quit the sample.");
-                          while (Console.ReadKey().Key != ConsoleKey.Q) { }
-
-
                           SignalSingleton.ExitSignal.Dispatch();
-                          project.Dispose();
                           return 0;
                       });
                   });

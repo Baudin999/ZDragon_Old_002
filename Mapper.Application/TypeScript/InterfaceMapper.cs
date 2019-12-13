@@ -6,10 +6,10 @@ using Compiler.AST;
 
 namespace Mapper.Application.TypeScript
 {
-    public class InterfaceMapper : DefaultVisitor<string>
+    public class InterfaceMapper : VisitorDefault<string>
     {
         public List<string> done = new List<string>();
-        public InterfaceMapper(IEnumerable<IASTNode> nodeTree) : base(nodeTree) { }
+        public InterfaceMapper(ASTGenerator generator) : base(generator) { }
 
 
         public override string VisitASTTypeField(ASTTypeField astTypeField)
@@ -30,7 +30,7 @@ namespace Mapper.Application.TypeScript
             {
                 return $@"
 public interface {astType.Name} {{
-{string.Join("\n", astType.Fields.Select(Visit).ToList())}
+{String.Join(Environment.NewLine, astType.Fields.Select(Visit).ToList())}
 }}
 ";
             }

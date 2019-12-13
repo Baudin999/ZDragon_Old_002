@@ -9,7 +9,7 @@ namespace Compiler
         : VisitorBase<string>
     {
         List<string> value = new List<string>();
-        public VisitorSource(IEnumerable<IASTNode> nodeTree) : base(nodeTree)
+        public VisitorSource(ASTGenerator generator) : base(generator)
         {
             
         }
@@ -24,13 +24,13 @@ namespace Compiler
 
             if (astAlias.Restrictions.Count() == 0)
             {
-                parts.Add($@"alias {astAlias.Name} = {typeDef}");
+                parts.Add($@"alias {astAlias.Name} = {typeDef};");
             } else
             {
-                var restrictions = string.Join("\n", astAlias.Restrictions.Select(Visit));
-                parts.Add($"alias {astAlias.Name} = {typeDef}\n{restrictions}");
+                var restrictions = String.Join(Environment.NewLine, astAlias.Restrictions.Select(Visit));
+                parts.Add($"alias {astAlias.Name} = {typeDef}\n{restrictions};");
             }
-            return string.Join("\n", parts.ToArray());
+            return String.Join(Environment.NewLine, parts.ToArray());
         }
 
         public override string VisitASTAnnotation(ASTAnnotation astAnnotation)
@@ -38,9 +38,9 @@ namespace Compiler
             return $"@ {astAnnotation.Value}";
         }
 
-        public override string VisitASTChapter(ASTChapter astOption)
+        public override string VisitASTChapter(ASTChapter astChapter)
         {
-            throw new NotImplementedException();
+            return astChapter.Content;
         }
 
         public override string VisitASTChoice(ASTChoice astChoice)
@@ -58,16 +58,19 @@ namespace Compiler
             return $"% {astDirective.Key}: {astDirective.Value}";
         }
 
-        public override string VisitASTFlow(ASTFlow astFlow) => throw new NotImplementedException();
+        public override string VisitASTFlow(ASTFlow astFlow)
+        {
+            return "";
+        }
 
         public override string VisitASTOption(ASTOption astOption)
         {
-            throw new NotImplementedException();
+            return "";
         }
 
-        public override string VisitASTParagraph(ASTParagraph astOption)
+        public override string VisitASTParagraph(ASTParagraph astParagraph)
         {
-            throw new NotImplementedException();
+            return astParagraph.Content;
         }
 
         public override string VisitASTRestriction(ASTRestriction astRestriction)
@@ -77,7 +80,7 @@ namespace Compiler
                     .Annotations
                     .Select(Visit)
                     .Select(a => indent + a);
-            var a = string.Join("\n", annotations);
+            var a = String.Join(Environment.NewLine, annotations);
 
             if (annotations.Count() > 0)
             {
@@ -105,7 +108,7 @@ namespace Compiler
                 parts.AddRange(astType.Fields.Select(Visit));
             }
 
-            return string.Join("\n", parts.ToArray());
+            return String.Join(Environment.NewLine, parts.ToArray());
         }
 
         public override string VisitASTTypeDefinition(ASTTypeDefinition astTypeDefinition)
@@ -116,7 +119,7 @@ namespace Compiler
         public override string VisitASTTypeField(ASTTypeField astTypeField)
         {
             var typeDef = string.Join(" ", astTypeField.Type.Select(Visit));
-            var restrictions = string.Join("\n", astTypeField.Restrictions.Select(Visit));
+            var restrictions = String.Join(Environment.NewLine, astTypeField.Restrictions.Select(Visit));
 
             if (astTypeField.Restrictions.Count() > 0)
             {
@@ -124,6 +127,20 @@ namespace Compiler
             } else
             {
                 return $"    {astTypeField.Name}: {typeDef};";
+            }
+        }
+
+        public override string VisitASTView(ASTView astView) => throw new NotImplementedException();
+
+        public override string VisitASTImport(ASTImport astImport)
+        {
+            if (astImport.Imports.Any())
+            {
+                return $"open {astImport} importing ({String.Join(", ", astImport.Imports)})";
+            }
+            else
+            {
+                return $"open {astImport}";
             }
         }
 

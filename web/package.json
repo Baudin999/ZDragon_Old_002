@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "scripts": {
     "build": "rollup -c",
-    "dev": "rollup -c -w",
-    "start": "sirv ../CLI/wwwroot --port 5005"
+    "dev": "rollup -c ./rollup.config.dev.js -w",
+    "start": "sirv ../CLI/bin/Debug/netcoreapp3.0/wwwroot --port 5005"
   },
   "devDependencies": {
     "rollup": "^1.12.0",

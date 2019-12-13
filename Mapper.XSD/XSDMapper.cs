@@ -8,15 +8,21 @@ using Compiler.AST;
 
 namespace Mapper.XSD
 {
-    public class XSDMapper : VisitorBase<XmlSchemaObject?>
+    public class XSDMapper : VisitorDefault<XmlSchemaObject?>
     {
         private const string DefaultSchemaNamespace = "http://www.w3.org/2001/XMLSchema";
 
         public XmlSchema Schema { get; } = new XmlSchema();
 
-        public XSDMapper(IEnumerable<IASTNode> nodeTree) : base(nodeTree)
+        public XSDMapper(ASTGenerator generator) : base(generator)
         {
-            Schema.Namespaces.Add("self", "org.schema.something");
+            if (generator.ModuleName == string.Empty)
+            {
+                Schema.Namespaces.Add("self", "org.schema.zdragon");
+            } else
+            {
+                Schema.Namespaces.Add("self", "org.schema." + generator.ModuleName.ToLower());
+            }
         }
 
         public override XmlSchemaObject VisitASTType(ASTType astType)
@@ -110,49 +116,9 @@ namespace Mapper.XSD
             return enumeration;
         }
 
-        public override XmlSchemaObject? VisitASTAnnotation(ASTAnnotation astAnnotation)
-        {
-            return null;
-        }
-
-        public override XmlSchemaObject? VisitASTDirective(ASTDirective astDirective)
-        {
-            return null;
-        }
-
-        public override XmlSchemaObject? VisitASTTypeDefinition(ASTTypeDefinition astTypeDefinition)
-        {
-            return null;
-        }
-
         public override XmlSchemaObject? VisitASTTypeField(ASTTypeField astTypeField)
         {
             return Mapper.Element(astTypeField);
-        }
-
-        public override XmlSchemaObject? VisitASTRestriction(ASTRestriction astRestriction)
-        {
-            return null;
-        }
-
-        public override XmlSchemaObject? VisitASTOption(ASTOption astOption)
-        {
-            return null;
-        }
-
-        public override XmlSchemaObject? VisitDefault(IASTNode node)
-        {
-            return null;
-        }
-
-        public override XmlSchemaObject? VisitASTChapter(ASTChapter astOption)
-        {
-            return null;
-        }
-
-        public override XmlSchemaObject? VisitASTParagraph(ASTParagraph astOption)
-        {
-            return null;
         }
 
         private void ExtractElement<T>(T node) where T : INamable, IRootNode
@@ -193,10 +159,8 @@ namespace Mapper.XSD
             return xmlSchemaComplexType;
         }
 
-        public override XmlSchemaObject? VisitASTFlow(ASTFlow astFlow)
-        {
-            return null;
-        }
+
+        public override XmlSchemaObject? VisitASTView(ASTView astView) => null;
     }
 }
 

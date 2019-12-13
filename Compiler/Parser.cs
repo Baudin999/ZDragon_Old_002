@@ -11,6 +11,13 @@ namespace Compiler
         private readonly List<Token> tokenStream;
         private int position;
 
+        private Parser()
+        {
+            length = 0;
+            tokenStream = new List<Token>();
+            position = 0;
+            Errors = new List<IASTError>();
+        }
         public Parser(IEnumerable<Token> tokenStream)
         {
             this.tokenStream = tokenStream.ToList();
@@ -26,8 +33,10 @@ namespace Compiler
         public bool HasPeek(int index = 1) => (position + index) < length;
         public Token Peek(int index = 1) => tokenStream[position + index];
 
+        public static Parser Empty() => new Parser();
+        public static string[] BaseTypes = { "String", "Number", "Boolean", "Date", "Time", "DateTime" };
 
-        public IEnumerable<IASTNode> Parse()
+        public IEnumerable<IASTNode> Parse(string moduleName = "")
         {
             var annotations = new List<ASTAnnotation>();
             var directives = new List<ASTDirective>();
@@ -36,15 +45,15 @@ namespace Compiler
                 
                 if (Current.TokenType == TokenType.KW_Type)
                 {
-                    var (errors, t) = ASTType.Parse(this, annotations, directives);
+                    var (errors, t) = ASTType.Parse(this, annotations, directives, moduleName);
                     Errors.AddRange(errors);
                     annotations = new List<ASTAnnotation>();
                     directives = new List<ASTDirective>();
-                    yield return t;
+                    if (!(t is null)) yield return t;
                 }
                 else if (Current.TokenType == TokenType.KW_Alias)
                 {
-                    var (errors, alias) = ASTAlias.Parse(this, annotations, directives);
+                    var (errors, alias) = ASTAlias.Parse(this, annotations, directives, moduleName);
                     Errors.AddRange(errors);
                     annotations = new List<ASTAnnotation>();
                     directives = new List<ASTDirective>();
@@ -52,7 +61,7 @@ namespace Compiler
                 }
                 else if (Current.TokenType == TokenType.KW_Choice)
                 {
-                    var (errors, result) = ASTChoice.Parse(this);
+                    var (errors, result) = ASTChoice.Parse(this, annotations, directives, moduleName);
                     Errors.AddRange(errors);
                     yield return result;
                     annotations = new List<ASTAnnotation>();
@@ -60,7 +69,7 @@ namespace Compiler
                 }
                 else if (Current.TokenType == TokenType.KW_Data)
                 {
-                    var (errors, data) = ASTData.Parse(this, annotations, directives);
+                    var (errors, data) = ASTData.Parse(this, annotations, directives, moduleName);
                     Errors.AddRange(errors);
                     yield return data;
                     annotations = new List<ASTAnnotation>();
@@ -68,7 +77,7 @@ namespace Compiler
                 }
                 else if (Current.TokenType == TokenType.KW_View)
                 {
-                    var (errors, data) = ASTView.Parse(this, annotations, directives);
+                    var (errors, data) = ASTView.Parse(this, annotations, directives, moduleName);
                     Errors.AddRange(errors);
                     yield return data;
                     annotations = new List<ASTAnnotation>();
@@ -76,7 +85,7 @@ namespace Compiler
                 }
                 else if (Current.TokenType == TokenType.KW_Open)
                 {
-                    var (errors, data) = ASTImport.Parse(this);
+                    var (errors, data) = ASTImport.Parse(this, moduleName);
                     Errors.AddRange(errors);
                     yield return data;
                     annotations = new List<ASTAnnotation>();
@@ -119,6 +128,18 @@ namespace Compiler
             yield break;
         }
 
+        private Token? TryTake(int index = -1)
+        {
+            if (length + index > 0 && length + index < length)
+            {
+                return this.HasPeek(index) ? this.Peek(index) : null;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
         /// <summary>
         /// Consume a token of a type but ignore newlines, indentation or whitespace.
         /// This is a convenience method which can let you focus on the core of the
@@ -143,8 +164,29 @@ namespace Compiler
                 }
                 else
                 {
-                    throw new InvalidTokenException("Invalid Token");
-                    
+                    var previous1 = this.TryTake(-2)?.Value ?? "";
+                    var previous = this.TryTake()?.Value ?? "";
+                    var value = this.TryTake(0)?.Value ?? "";
+                    var next = this.TryTake(1)?.Value ?? "";
+                    var next1 = this.TryTake(2)?.Value ?? "";
+                    var message = tokenType switch
+                    {
+                        TokenType.Identifier => $@"
+Expected an Identifier but found a {this.Current.TokenType}: '{value}'.
+Line {this.Current.StartLine}, Column {this.Current.StartColumn}
+...{previous1} {previous} {value} {next} {next1}...
+
+In ZDragon we expect types to be represented by an Identifier and
+identifiers always start with a capital letter and have no spaces
+or other symbols.
+",
+                        TokenType.EndStatement => $@"
+Expected an Enstatement but found a {this.Current.TokenType}: '{value}'.
+...{previous1} {previous} {value} {next} {next1}...
+",
+                        _ => $"Invalid Token: Expected a {tokenType} but found {this.Current.TokenType} on line {this.Current.StartLine} and column {this.Current.StartColumn}"
+                    };
+                    throw new InvalidTokenException(message);
                 }
             }
         }
@@ -210,14 +252,14 @@ Expected either {first} or {second} but encoutered {this.Current.TokenType}.
         public Token? TryConsume(TokenType tokenType, out Token? t)
         {
             Token? result = default;
-            int index = 0;
+            var index = 0;
             while (HasPeek(index))
             {
                 var token = Peek(index);
                 if (token.TokenType == tokenType)
                 {
                     result = token;
-                    for (int i = 0; i <= index; ++i)
+                    for (var i = 0; i <= index; ++i)
                     {
                         if (HasNext()) Next();
                     }
@@ -235,6 +277,29 @@ Expected either {first} or {second} but encoutered {this.Current.TokenType}.
 
             t = result;
             return t;
+        }
+
+        public bool IsNext(TokenType tokenType)
+        {
+            var index = 0;
+            while (HasPeek(index))
+            {
+                var token = Peek(index);
+                if (token.TokenType == tokenType)
+                {
+                    return true;
+                }
+                else if (token.TokenType == TokenType.Indent || token.TokenType == TokenType.NewLine)
+                {
+                    index += 1;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+
+            return false;
         }
 
     }

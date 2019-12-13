@@ -181,8 +181,8 @@ type Customer extends Person =
 
             Assert.Equal(2, customer.Fields.Count());
 
-            var addressable = customer.Fields.First();
-            var firstName = customer.Fields.Last();
+            var addressable = customer.Fields.First(f => f.Name == "Addresses");
+            var firstName = customer.Fields.First(f => f.Name == "FirstName");
 
             Assert.Equal(2, firstName.Restrictions.Count());
             Assert.Empty(addressable.Restrictions);

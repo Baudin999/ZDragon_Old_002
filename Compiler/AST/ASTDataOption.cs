@@ -6,40 +6,49 @@ namespace Compiler.AST
 {
     public class ASTDataOption : IASTNode, ICloneable
     {
-        public string Name { get; set; } = "";
-        public IEnumerable<ASTAnnotation> Annotations { get; set; } = Enumerable.Empty<ASTAnnotation>();
-        public IEnumerable<string> Parameters { get; set; } = Enumerable.Empty<string>();
-        public ASTDataOption() { }
-        public static IEnumerable<ASTDataOption> Parse(IParser parser)
+        public string Name { get; }
+        public string Module { get; }
+        public IEnumerable<ASTAnnotation> Annotations { get; }
+        public IEnumerable<string> Parameters { get; }
+
+        public ASTDataOption(string name,
+            string module,
+            IEnumerable<ASTAnnotation> annotations,
+            IEnumerable<string> parameters) {
+            this.Name = name;
+            this.Module = module;
+            this.Annotations = annotations;
+            this.Parameters = parameters;
+        }
+
+        public static (IEnumerable<IASTError>, IEnumerable<ASTDataOption>) Parse(IParser parser, string module = "")
         {
-            var annotations = ASTAnnotation.Parse(parser);
-            parser.TryConsume(TokenType.Or, out Token? t);
-            while (!(t is null))
+            var errors = new List<ASTError>();
+            var result = new List<ASTDataOption>();
+
+            while (!parser.IsNext(TokenType.ContextEnded))
             {
+                var annotations = ASTAnnotation.Parse(parser);
+                parser.Consume(TokenType.Or);
 
                 var id = parser.Consume(TokenType.Identifier);
-                var parameters = parser.ConsumeWhile(TokenType.GenericParameter);
+                var tokens = parser.ConsumeWhile(TokenType.Identifier, TokenType.GenericParameter);
+                var parameters = tokens.Select(t => t.Value).ToList();
+                parser.TryConsume(TokenType.EndStatement);
 
-                var r = new ASTDataOption();
-                r.Name = id.Value;
-                r.Parameters = parameters.Select(p => p.Value).ToList();
-                r.Annotations = annotations;
-
-                yield return r;
-
-                annotations = ASTAnnotation.Parse(parser);
-                parser.TryConsume(TokenType.Or, out t);
+                result.Add(new ASTDataOption(id.Value, module, annotations, parameters));
             }
+            return (errors, result);
         }
 
         public object Clone()
         {
-            return new ASTDataOption
-            {
-                Name = (string)this.Name.Clone(),
-                Parameters = ObjectCloner.CloneList(this.Parameters.ToList()),
-                Annotations = ObjectCloner.CloneList(this.Annotations.ToList()),
-            };
+            return new ASTDataOption(
+                (string)this.Name.Clone(),
+                (string)this.Module.Clone(),
+                ObjectCloner.CloneList(this.Annotations.ToList()),
+                ObjectCloner.CloneList(this.Parameters.ToList())
+                );
         }
     }
 }

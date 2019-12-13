@@ -20,8 +20,9 @@ namespace Compiler
         public IEnumerable<Token> ConsumeWhile(TokenType first, TokenType second, bool ignoreWhitespace = true);
         public Token? TryConsume(TokenType tokenType);
         public Token? TryConsume(TokenType tokenType, out Token? t);
+        public bool IsNext(TokenType tokenType);
 
-        public IEnumerable<IASTNode> Parse();
+        public IEnumerable<IASTNode> Parse(string moduleName = "");
     }
 
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Compiler;
 using Compiler.AST;
 using Newtonsoft.Json.Schema;
 
@@ -8,17 +9,17 @@ namespace Mapper.JSON
 {
     public class JsonMapper
     {
-        public IEnumerable<IASTNode> Nodes { get; }
+        public ASTGenerator Generator { get; }
         public Dictionary<string, JSchema> Schemas { get; } = new Dictionary<string, JSchema>();
 
-        public JsonMapper(IEnumerable<IASTNode> nodes)
+        public JsonMapper(ASTGenerator generator)
         {
-            this.Nodes = nodes;
+            this.Generator = generator;
         }
 
         public void Start()
         {
-            foreach (var node in this.Nodes)
+            foreach (var node in this.Generator.AST)
             {
                 if (node is ASTType && ((ASTType)node).Directives.Any())
                 {
@@ -26,8 +27,8 @@ namespace Mapper.JSON
                     var apiDirective = astType.Directives.FirstOrDefault(d => d.Key == "api");
                     if (!(apiDirective is null))
                     {
-                        this.Schemas.Add($"{astType.Name}.schema.json",
-                            new ASTTypeToJSchema().Create(astType, this.Nodes));
+                        var schema = new ASTTypeToJSchema().Create(astType, this.Generator.AST);
+                        if (schema != null) this.Schemas.Add($"{astType.Name}.schema.json", schema);
                     }
                 }
                 else if (node is ASTData && ((ASTData)node).Directives.Any())
@@ -36,8 +37,8 @@ namespace Mapper.JSON
                     var apiDirective = astType.Directives.FirstOrDefault(d => d.Key == "api");
                     if (!(apiDirective is null))
                     {
-                        this.Schemas.Add($"{astType.Name}.schema.json",
-                            new ASTTypeToJSchema().Create(astType, this.Nodes));
+                        var schema = new ASTTypeToJSchema().Create(astType, this.Generator.AST);
+                        if (schema != null) this.Schemas.Add($"{astType.Name}.schema.json", schema);
                     }
                 }
             }
@@ -53,23 +54,9 @@ namespace Mapper.JSON
         }
         
 
-        //internal static JSchema ConvertToJsonType(string sourceType)
-        //{
-        //    return sourceType switch
-        //    {
-        //        "String" => new JSchema { Type = JSchemaType.String },
-        //        "Number" => new JSchema { Type = JSchemaType.Number },
-        //        "Boolean" => new JSchema {  Type = JSchemaType.Boolean },
-        //        "Date" => new JSchema {  Type = JSchemaType.String, Format = "date" },
-        //        "Time" => new JSchema {  Type = JSchemaType.String, Format = "time" },
-        //        "DateTime" => new JSchema {  Type = JSchemaType.String, Format = "date-time" },
-        //        _ => new JSchema { Type = JSchemaType.String }
-        //    };
-        //}
-
         internal static string Annotate(IEnumerable<ASTAnnotation> annotations)
         {
-            return string.Join("\n", annotations.Select(a => a.Value).ToList());
+            return String.Join(Environment.NewLine, annotations.Select(a => a.Value).ToList());
         }
 
         internal static bool IsBasicType(string t)
@@ -94,31 +81,3 @@ namespace Mapper.JSON
         }
     }
 }
-
-/*
-$schema": "http://json-schema.org/draft-04/schema#",
-   "title": "Product",
-   "description": "A product from Acme's catalog",
-   "type": "object",
-	
-   "properties": {
-	
-      "id": {
-         "description": "The unique identifier for a product",
-         "type": "integer"
-      },
-		
-      "name": {
-         "description": "Name of the product",
-         "type": "string"
-      },
-		
-      "price": {
-         "type": "number",
-         "minimum": 0,
-         "exclusiveMinimum": true
-      }
-   },
-	
-   "required": ["id", "name", "price"]
-*/

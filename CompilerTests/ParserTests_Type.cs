@@ -35,10 +35,10 @@ type Person =
             var parseTree = new Parser(tokens).Parse();
             Assert.NotNull(parseTree);
 
-            List<IASTNode> list = parseTree.ToList();
+            var list = parseTree.ToList();
             Assert.Single(list);
 
-            ASTType t = list[0] as ASTType;
+            var t = list[0] as ASTType;
             Assert.Equal("Person", t.Name);
             Assert.Empty(t.Parameters);
             Assert.Single(t.Fields);
@@ -94,16 +94,16 @@ type Person =
             var parseTree = new Parser(tokens).Parse();
             Assert.NotNull(parseTree);
 
-            List<IASTNode> list = parseTree.ToList();
+            var list = parseTree.ToList();
             Assert.Single(list);
 
-            ASTType t = list[0] as ASTType;
+            var t = list[0] as ASTType;
             Assert.Equal("Person", t.Name);
             Assert.Empty(t.Parameters);
             Assert.Equal(3, t.Fields.Count());
 
 
-            List<ASTTypeField> fields = t.Fields.ToList();
+            var fields = t.Fields.ToList();
             ASTTypeField field = fields.First();
             Assert.Equal(2, field.Annotations.Count());
             Assert.True(field.Annotations.First() is ASTAnnotation);
@@ -121,7 +121,7 @@ type Person =
 
             ASTTypeField ageField = fields[2];
             Assert.Equal("Age", ageField.Name);
-            Assert.Equal(new List<ASTTypeDefinition>() { new ASTTypeDefinition("Number") }, ageField.Type);
+            Assert.Equal(new List<ASTTypeDefinition>() { new ASTTypeDefinition("Number", "") }, ageField.Type);
             Assert.Single(ageField.Annotations);
         }
 
@@ -147,10 +147,10 @@ type Address =
 
             Assert.Equal(2, parseTree.Count());
 
-            ASTType personType = parseTree[0] as ASTType;
+            var personType = parseTree[0] as ASTType;
             Assert.Equal("Person", personType.Name);
 
-            ASTType addressType = parseTree[1] as ASTType;
+            var addressType = parseTree[1] as ASTType;
             Assert.Equal("Address", addressType.Name);
 
         }
@@ -260,7 +260,7 @@ type Person =
             Assert.NotNull(parseTree);
 
             Assert.Single(parseTree);
-            ASTType t = (ASTType)parseTree[0];
+            var t = (ASTType)parseTree[0];
             Assert.Single(t.Fields);
             Assert.Equal(2, t.Fields.First().Restrictions.Count());
         }
@@ -282,11 +282,11 @@ type Person =
             Assert.NotNull(parseTree);
 
             Assert.Single(parseTree);
-            ASTType t = (ASTType)parseTree[0];
+            var t = (ASTType)parseTree[0];
             Assert.Single(t.Fields);
             Assert.Equal(2, t.Fields.First().Restrictions.Count());
 
-            ASTTypeField field = t.Fields.First();
+            var field = t.Fields.First();
             Assert.Equal(2, field.Restrictions.Count());
             Assert.Equal("Should not be 30", field.Restrictions.ToList()[1].Annotations.First().Value);
         }
@@ -308,7 +308,7 @@ type Person
 
             var s = parser.Errors.First();
 
-            ASTType t = parseTree[0] as ASTType;
+            var t = parseTree[0] as ASTType;
             Assert.Equal(2, t.Directives.Count());
         }
 
@@ -324,7 +324,7 @@ type Person =
     ;
 ";
             var g = new ASTGenerator(code);
-            Assert.Equal(1, g.AST.Count());
+            Assert.Single(g.AST);
 
             var t = g.AST[0] as ASTType;
             Assert.NotNull(t);
@@ -342,7 +342,7 @@ type Person =
     {
         public static List<ASTTypeDefinition> ToTypeDefinition(string[] parameters)
         {
-            return parameters.Select(p => new ASTTypeDefinition(p)).ToList();
+            return parameters.Select(p => new ASTTypeDefinition(p, "")).ToList();
         }
     }
 }

@@ -7,77 +7,19 @@ using Markdig;
 
 namespace Mapper.HTML
 {
-    public class HtmlMapper : VisitorBase<string>
+    public class HtmlMapper : VisitorDefault<string>
     {
         public List<string> Parts { get; } = new List<string>();
+        public IEnumerable<IASTError> Errors { get; }
         public MermaidMapper MermaidMapper { get; }
         public HtmlTableMapper TableMapper { get; }
 
-        public HtmlMapper(IEnumerable<IASTNode> nodeTree) : base(nodeTree)
+        public HtmlMapper(ASTGenerator generator) : base(generator)
         {
-            this.MermaidMapper = new MermaidMapper(nodeTree);
+            this.Errors = generator.Errors;
+            this.MermaidMapper = new MermaidMapper(generator);
             this.MermaidMapper.Start().ToList();
-            this.TableMapper = new HtmlTableMapper(nodeTree);
-        }
-
-        public string ToHtmlString(Dictionary<string, string> links)
-        {
-            return $@"
-<!DOCTYPE html>
-<html>
-<head>
-    <script src=""/mermaid.min.js""></script>
-    <link rel='stylesheet' type='text/css' href='/style.css' />
-  </head>
-<body>
-
-<a href='/index.html'>Home</a>
-
-<ul>
-<li><a href=""model.xsd"" alt=""XSD"">XSD</a></li>
-{string.Join("\n", links.Select(l => $"<li><a href=\"{l.Value}\">{l.Key}</a></li>").ToList())}
-</ul>
-
-<div class=""mermaid"">{this.MermaidMapper.ToString()}
-</div>
-
-{ string.Join("\n\n", Parts)}
-
-{ string.Join("\n\n", this.TableMapper.Start().ToList()) }
-
-<script>
-mermaid.initialize({{
-    startOnLoad:true,
-    classDiagram: {{
-        useMaxWidth: false
-    }},
-    sequence: {{ actorMargin: 250 }}
-}});
-
-setTimeout(() => {{
-    let svg = document.getElementsByTagName('svg')[0];
-    let [a, b, width, height] = svg.attributes['viewBox'].value.split(' ');
-    svg.attributes['width'].value = width;
-    svg.attributes['height'].value = height;
-}}, 30);
-
-</script>
-
-</body>
-</html>
-
-";
-        }
-
-
-        public override string VisitASTAlias(ASTAlias astAlias)
-        {
-            return "";
-        }
-
-        public override string VisitASTAnnotation(ASTAnnotation astAnnotation)
-        {
-            return "";
+            this.TableMapper = new HtmlTableMapper(generator);
         }
 
         public override string VisitASTChapter(ASTChapter astChapter)
@@ -87,21 +29,7 @@ setTimeout(() => {{
             return result;
         }
 
-        public override string VisitASTChoice(ASTChoice astChoice)
-        {
-            return "";
-        }
-
-        public override string VisitASTDirective(ASTDirective astDirective)
-        {
-            return "";
-        }
-
-        public override string VisitASTOption(ASTOption astOption)
-        {
-            return "";
-        }
-
+       
         public override string VisitASTFlow(ASTFlow astFlow)
         {
             var result = new MermaidFlowMapper(astFlow).ToString();
@@ -116,34 +44,86 @@ setTimeout(() => {{
             return result;
         }
 
-        public override string VisitASTRestriction(ASTRestriction astRestriction)
+        public override string VisitASTView(ASTView astView)
         {
-            return "";
+            var ast = astView.Nodes.Select(Generator.Find).ToList();
+            var mermaidMapper = new MermaidMapper(new ASTGenerator(ast));
+            mermaidMapper.Start().ToList();
+            var mermaidString = mermaidMapper.ToString().Trim();
+            var result = $@"<div class=""svg-container""><div class=""mermaid"">{mermaidString}</div></div>";
+            Parts.Add(result);
+            return result;
         }
 
-        public override string VisitASTType(ASTType astType)
+
+        public string ToHtmlString(Dictionary<string, string> links)
         {
-            return "";
+            
+
+            var tables = this.TableMapper.Start().ToList();
+            var tablesBlock = tables.Any() ? $@"
+<h2>Tables</h2>
+{string.Join(Environment.NewLine + Environment.NewLine, tables)}
+": "";
+
+            var errorBlock = string.Join(Environment.NewLine, this.Errors.Select(error =>
+            {
+                return $@"
+<div class=""error"">
+    <div class=""title"">{error.Title}</div>
+    <div><pre>{error.Message.Trim()}</pre></div>
+</div>
+";
+            }));
+
+            return $@"
+<!DOCTYPE html>
+<html>
+<head>
+    <script defer src=""/mermaid.min.js""></script>
+    <link rel='stylesheet' type='text/css' href='/global.css' />
+  </head>
+<body>
+
+<div class=""content-scrollable"">
+<main>
+    <ul style=""list-style=none;"">
+    <li><a target=""_blank"" href=""model.xsd"" alt=""XSD"">XSD</a></li>
+    {string.Join(Environment.NewLine, links.Select(l => $"<li><a target=\"_blank\" href=\"{l.Value}\">{l.Key}</a></li>").ToList())}
+    </ul>
+</main>
+
+{ errorBlock }
+
+{ string.Join(Environment.NewLine, Parts)}
+
+<h2>ERD</h2>
+
+<div class=""svg-container"">
+    <div class=""mermaid"">{this.MermaidMapper.ToString()}</div>
+</div>
+
+{ tablesBlock }
+
+</div>
+<script>
+mermaid.initialize({{
+    startOnLoad: false,
+    sequence: {{ actorMargin: 250 }}
+}});
+
+[...document.getElementsByClassName(""mermaid"")].reverse().forEach((element, i) => {{
+    const id = `mermaid-${{Date.now()}}`;	
+	mermaid.render(id, element.textContent.trim(), (svg, bind) => {{element.innerHTML = svg;}}, element);
+}});
+
+</script>
+
+</body>
+</html>
+
+";
         }
 
-        public override string VisitASTTypeDefinition(ASTTypeDefinition astTypeDefinition)
-        {
-            return "";
-        }
-
-        public override string VisitASTTypeField(ASTTypeField astTypeField)
-        {
-            return "";
-        }
-
-        public override string VisitDefault(IASTNode node)
-        {
-            return "";
-        }
-
-        public override string VisitASTData(ASTData astData)
-        {
-            return "";
-        }
     }
 }

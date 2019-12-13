@@ -31,7 +31,7 @@ namespace CLI
             services.AddCors(options =>
             {
                 options.AddPolicy(MyAllowSpecificOrigins,
-                    builder => builder.WithOrigins("http://localhost:5005")
+                    builder => builder.AllowAnyOrigin()
                                       .AllowAnyHeader()
                                       .AllowAnyMethod());
             });
@@ -54,10 +54,9 @@ namespace CLI
             app.UseStaticFiles(new StaticFileOptions
             {
                 FileProvider = new PhysicalFileProvider(
-                    Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "wwwroot")),
+                    Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? "", "wwwroot")),
                 RequestPath = ""
             });
-            app.UseHttpsRedirection();
             app.UseRouting();
             app.UseAuthorization();
             app.UseEndpoints(endpoints =>
@@ -89,4 +88,5 @@ namespace CLI
             }
         }
     }
+
 }

@@ -6,16 +6,16 @@ using Compiler.AST;
 
 namespace Mapper.HTML
 {
-    public class MermaidMapper : VisitorBase<string>
+    public class MermaidMapper : VisitorDefault<string>
     {
         private List<string> Parts = new List<string>();
-        public MermaidMapper(IEnumerable<IASTNode> nodeTree) : base(nodeTree) { }
+        public MermaidMapper(ASTGenerator generator) : base(generator) { }
 
         public override string VisitASTAlias(ASTAlias astAlias)
         {
             var template = $@"
 class {astAlias.Name} {{
-{string.Join("\n", astAlias.Type.Select(t => t.Value).ToList())}
+{string.Join(Environment.NewLine, astAlias.Type.Select(t => t.Value).ToList())}
 }}
 ";
             this.Parts.Add(template);
@@ -24,21 +24,11 @@ class {astAlias.Name} {{
 
         }
 
-        public override string VisitASTAnnotation(ASTAnnotation astAnnotation)
-        {
-            return "";
-        }
-
-        public override string VisitASTChapter(ASTChapter astChapter)
-        {
-            return "";
-        }
-
         public override string VisitASTChoice(ASTChoice astChoice)
         {
-            string template = $@"
+            var template = $@"
 class {astChoice.Name} {{
-{string.Join("\n", astChoice.Options.Select(o => o.Value).ToList())}
+{string.Join(Environment.NewLine, astChoice.Options.Select(o => o.Value).ToList())}
 }}
 
 ";
@@ -68,32 +58,12 @@ class {astChoice.Name} {{
             });
             var template = $@"
 class {astData.Name} {{
-{string.Join("\n", astData.Options.Select(o => o.ToMermaidString()).ToList())}
+{string.Join(Environment.NewLine, astData.Options.Select(o => o.ToMermaidString()).ToList())}
 }}
-{string.Join("\n", typeReferences)}
+{string.Join(Environment.NewLine, typeReferences)}
 ";
             this.Parts.Add(template);
             return template;
-        }
-
-        public override string VisitASTDirective(ASTDirective astDirective)
-        {
-            return "";
-        }
-
-        public override string VisitASTOption(ASTOption astOption)
-        {
-            return "";
-        }
-
-        public override string VisitASTParagraph(ASTParagraph astParagraph)
-        {
-            return "";
-        }
-
-        public override string VisitASTRestriction(ASTRestriction astRestriction)
-        {
-            return "";
         }
 
         public override string VisitASTType(ASTType astType)
@@ -134,10 +104,10 @@ class {astData.Name} {{
             {
                 var template = $@"
 class {astType.Name} {{
-{string.Join("\n", fields)}
+{string.Join(Environment.NewLine, fields)}
 }}
-{string.Join("\n", extensions)}
-{string.Join("\n", typeReferences)}
+{string.Join(Environment.NewLine, extensions)}
+{string.Join(Environment.NewLine, typeReferences)}
 ";
                 this.Parts.Add(template);
                 return template;
@@ -146,7 +116,7 @@ class {astType.Name} {{
             {
                 var template = $@"
 class {astType.Name}
-{string.Join("\n", extensions)}
+{string.Join(Environment.NewLine, extensions)}
 ";
                 Parts.Add(template);
                 return template;
@@ -154,33 +124,11 @@ class {astType.Name}
 
         }
 
-        public override string VisitASTTypeDefinition(ASTTypeDefinition astTypeDefinition)
-        {
-            return "";
-        }
-
-        public override string VisitASTTypeField(ASTTypeField astTypeField)
-        {
-            return "";
-        }
-
-        public override string VisitDefault(IASTNode node)
-        {
-            return "";
-        }
-
         public override string ToString()
         {
 
-            return $@"
-classDiagram
-{string.Join("", Parts.ToList())}
-".Trim();
+            return $"classDiagram\n{string.Join(Environment.NewLine, Parts.ToList())}";
         }
 
-        public override string VisitASTFlow(ASTFlow astFlow)
-        {
-            return "";
-        }
     }
 }

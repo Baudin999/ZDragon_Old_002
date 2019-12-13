@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.0</TargetFramework>
-    <ReleaseVersion>v2.0.3-beta</ReleaseVersion>
+    <ReleaseVersion>v2.1.8-beta</ReleaseVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -13,5 +13,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="TypeScript\" />
+    <Folder Include="CSharp\" />
+    <Folder Include="Topology\" />
   </ItemGroup>
 </Project>

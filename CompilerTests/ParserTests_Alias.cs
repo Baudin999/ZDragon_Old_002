@@ -21,7 +21,7 @@ alias Name = String;
             Assert.Single(parseTree);
 
 
-            ASTAlias alias = parseTree[0] as ASTAlias;
+            var alias = parseTree[0] as ASTAlias;
             Assert.Equal("Name", alias.Name);
             Assert.Equal(Helpers.ToTypeDefinition(new[] { "String" }), alias.Type.ToList());
         }
@@ -41,7 +41,7 @@ alias Name = String
             Assert.Single(parseTree);
 
 
-            ASTAlias alias = parseTree[0] as ASTAlias;
+            var alias = parseTree[0] as ASTAlias;
             Assert.Equal(2, alias.Restrictions.Count());
 
         }
@@ -52,12 +52,11 @@ alias Name = String
             var code = @"
 alias Name = List String;
 ";
-            var tokens = new Lexer().Lex(code);
-            var parseTree = new Parser(tokens).Parse().ToList();
-            Assert.NotNull(parseTree);
-            Assert.Single(parseTree);
-
-            ASTAlias alias = parseTree[0] as ASTAlias;
+            var g = new ASTGenerator(code);
+            Assert.NotNull(g.AST);
+            Assert.Empty(g.Errors);
+            Assert.IsType<ASTAlias>(g.AST.First());
+            var alias = (ASTAlias)g.AST.First();
             Assert.Equal(Helpers.ToTypeDefinition(new[] { "List", "String" }), alias.Type.ToList());
 
         }
@@ -74,7 +73,7 @@ alias Name = String;
             var parseTree = new Parser(tokens).Parse().ToList();
             Assert.NotNull(parseTree);
             Assert.Single(parseTree);
-            ASTAlias alias = parseTree[0] as ASTAlias;
+            var alias = parseTree[0] as ASTAlias;
             Assert.Empty(alias.Restrictions);
             Assert.Single(alias.Annotations.ToList());
             Assert.Equal("This alias represents a name", alias.Annotations.First().Value);
@@ -99,7 +98,7 @@ alias Name = String
             Assert.NotNull(parseTree);
             Assert.Single(parseTree);
 
-            ASTAlias alias = parseTree[0] as ASTAlias;
+            var alias = parseTree[0] as ASTAlias;
 
             foreach (ASTRestriction restriction in alias.Restrictions) { 
                 Assert.Single(restriction.Annotations);
@@ -159,11 +158,58 @@ alias Name = String
             Assert.NotNull(parseTree);
             Assert.Single(parseTree);
 
-            ASTAlias alias = parseTree[0] as ASTAlias;
+            var alias = parseTree[0] as ASTAlias;
             Assert.Single(alias.Restrictions);
             ASTRestriction restriction = alias.Restrictions.First();
             Assert.Equal(TokenType.String, restriction.Token.TokenType);
 
+        }
+
+        [Fact]
+        public void RenameType()
+        {
+            var code = @"
+type School =
+    Name: String;
+
+alias FooBar = School;
+";
+            var g = new ASTGenerator(code);
+            var fooBar = g.Find("FooBar");
+            Assert.True(fooBar is ASTType);
+
+            var t = (ASTType)fooBar;
+            Assert.Single(t.Fields);
+
+            var name = t.Fields.First();
+            Assert.Equal("Name", name.Name);
+            Assert.Equal("String", name.Type.First().Value);
+        }
+
+        [Fact]
+        public void AliasOfAView()
+        {
+            var code = @"
+type School =
+    Name: String;
+
+view SchoolView =
+    School
+
+alias AnotherSchoolView = SchoolView;
+";
+            var g = new ASTGenerator(code);
+            Assert.Empty(g.Errors);
+
+            var school = g.Find<ASTType>("School");
+            var schoolView = g.Find<ASTView>("SchoolView");
+            var anotherShoolView = g.Find<ASTView>("AnotherSchoolView");
+
+            Assert.NotNull(school);
+            Assert.NotNull(schoolView);
+            Assert.NotNull(anotherShoolView);
+
+            Assert.Equal(3, g.AST.Count);
         }
     }
 }

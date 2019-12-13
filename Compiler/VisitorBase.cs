@@ -1,16 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Compiler.AST;
 
 namespace Compiler
 {
     public abstract class VisitorBase<T>
     {
+        public ASTGenerator Generator { get; }
         public IEnumerable<IASTNode> NodeTree { get; }
 
-        public VisitorBase(IEnumerable<IASTNode> nodeTree)
+        protected VisitorBase(ASTGenerator generator)
         {
-            this.NodeTree = nodeTree;
+            this.Generator = generator;
+            this.NodeTree = generator.AST;
         }
 
         public IEnumerable<T> Start()
@@ -30,6 +33,7 @@ namespace Compiler
         {
             return node switch
             {
+                ASTImport n => VisitASTImport(n),
                 ASTType n => VisitASTType(n),
                 ASTTypeField n => VisitASTTypeField(n),
                 ASTTypeDefinition n => VisitASTTypeDefinition(n),
@@ -43,6 +47,7 @@ namespace Compiler
                 ASTChapter n => VisitASTChapter(n),
                 ASTParagraph n => VisitASTParagraph(n),
                 ASTFlow n => VisitASTFlow(n),
+                ASTView n => VisitASTView(n),
                 _ => VisitDefault(node),
             };
         }
@@ -59,6 +64,10 @@ namespace Compiler
         public abstract T VisitASTRestriction(ASTRestriction astRestriction);
         public abstract T VisitASTOption(ASTOption astOption);
 
+        // Other
+        public abstract T VisitASTImport(ASTImport astImport);
+        public abstract T VisitASTView(ASTView astView);
+
         // flows
         public abstract T VisitASTFlow(ASTFlow astFlow);
 
@@ -68,45 +77,13 @@ namespace Compiler
 
         // default
         public abstract T VisitDefault(IASTNode node);
-    }
 
 
-    public class DefaultVisitor<T> : VisitorBase<T>
-    {
-
-        public DefaultVisitor(IEnumerable<IASTNode> nodeTree) : base(nodeTree) { }
-
-        public override T VisitASTAlias(ASTAlias astAlias) => d;
-        public override T VisitASTAnnotation(ASTAnnotation astAnnotation) => d;
-        public override T VisitASTChapter(ASTChapter astChapter) => d;
-        public override T VisitASTChoice(ASTChoice astChoice) => d;
-        public override T VisitASTData(ASTData astData) => d;
-        public override T VisitASTDirective(ASTDirective astDirective) => d;
-        public override T VisitASTFlow(ASTFlow astFlow) => d;
-        public override T VisitASTOption(ASTOption astOption) => d;
-        public override T VisitASTParagraph(ASTParagraph astParagraph) => d;
-        public override T VisitASTRestriction(ASTRestriction astRestriction) => d;
-        public override T VisitASTType(ASTType astType) => d;
-        public override T VisitASTTypeDefinition(ASTTypeDefinition astTypeDefinition) => d;
-        public override T VisitASTTypeField(ASTTypeField astTypeField) => d;
-        public override T VisitDefault(IASTNode node) => d;
-
-        private T d
+        public IASTNode Find(string name)
         {
-            get
-            {
-#pragma warning disable CS8653 // A default expression introduces a null value for a type parameter.
-                T t = default;
-#pragma warning restore CS8653 // A default expression introduces a null value for a type parameter.
-
-                return Type.GetTypeCode(typeof(T)) switch
-                {
-                    TypeCode.String => (T)Convert.ChangeType(string.Empty, typeof(T)),
-                    TypeCode.Int16 => (T)Convert.ChangeType(0, typeof(T)),
-                    _ => t
-                };
-            }
+            return NodeTree.FirstOrDefault(n => n is INamable && ((INamable)n).Name == name);
         }
     }
+
 
 }
