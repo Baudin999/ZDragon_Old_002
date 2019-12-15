@@ -54,7 +54,7 @@ namespace Compiler
 
             var sourceVisitor = new VisitorSource(this);
             var parts = sourceVisitor.Start().ToList();
-            this.Code = string.Join(Environment.NewLine + Environment.NewLine, parts);
+            this.Code = string.Join(Environment.NewLine + Environment.NewLine, parts).Trim();
         }
 
         public ASTGenerator(string code, string moduleName = "", IEnumerable<IASTNode>? imports = null)

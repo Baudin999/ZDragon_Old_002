@@ -19,7 +19,8 @@ namespace Mapper.XSD
             if (generator.ModuleName == string.Empty)
             {
                 Schema.Namespaces.Add("self", "org.schema.zdragon");
-            } else
+            }
+            else
             {
                 Schema.Namespaces.Add("self", "org.schema." + generator.ModuleName.ToLower());
             }
@@ -59,9 +60,9 @@ namespace Mapper.XSD
 
         public override XmlSchemaObject VisitASTAlias(ASTAlias astAlias)
         {
-            var _modifier = astAlias.Type.First().Value;
-            var _type = astAlias.Type.Last().Value;
-            
+            var _modifier = astAlias.Types.First().Value;
+            var _type = astAlias.Types.Last().Value;
+
             if (_modifier == "List")
             {
                 var list = Mapper.MapList(astAlias);

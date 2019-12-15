@@ -9,7 +9,7 @@ namespace CompilerTests
     public class ParserTests_Generics
     {
         [Fact(DisplayName = "Can define a single generic parameter")]
-        public void CanDefineSingleGenericParameter ()
+        public void CanDefineSingleGenericParameter()
         {
             var code = @"
 type Foo 'a
@@ -42,7 +42,7 @@ type Foo 'a =
             var g = new ASTGenerator(code);
             var t = (ASTType)g.AST[0];
             var field = t.Fields.First();
-            var fieldType = field.Type.First().Value;
+            var fieldType = field.Types.First().Value;
 
             Assert.Single(t.Parameters);
             Assert.Equal("'a", fieldType);
@@ -63,7 +63,7 @@ alias ConcreteFoo = Foo String;
             Assert.Equal("ConcreteFoo", t.Name);
             Assert.NotNull(t);
             Assert.Single(t.Fields);
-            Assert.Equal("String", t.Fields.First().Type.First().Value);
+            Assert.Equal("String", t.Fields.First().Types.First().Value);
         }
 
         [Fact(DisplayName = "Resolve simple generic type 02")]
@@ -88,10 +88,10 @@ alias ConcreteFoo = Foo String Number;
             var base2 = fields[1];
             var base3 = fields[2];
 
-            
-            Assert.Equal("String", base1.Type.First().Value);
-            Assert.Equal("Number", base2.Type.First().Value);
-            Assert.Equal("String", base3.Type.First().Value);
+
+            Assert.Equal("String", base1.Types.First().Value);
+            Assert.Equal("Number", base2.Types.First().Value);
+            Assert.Equal("String", base3.Types.First().Value);
         }
 
         [Fact(DisplayName = "Error when not resolving everything")]
@@ -153,10 +153,10 @@ alias PersonRequest = Request Header Person;
             var bodyField = personRequest.Fields.Last();
 
             Assert.Equal("Header", headerField.Name);
-            Assert.Equal("Header", headerField.Type.Last().Value);
+            Assert.Equal("Header", headerField.Types.Last().Value);
 
             Assert.Equal("Body", bodyField.Name);
-            Assert.Equal("Person", bodyField.Type.Last().Value);
+            Assert.Equal("Person", bodyField.Types.Last().Value);
 
 
         }

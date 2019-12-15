@@ -22,7 +22,7 @@ namespace CompilerTests
             
             Assert.NotNull(lexer);
             Assert.NotNull(result);
-            Assert.Equal(65, result.Count());
+            Assert.Equal(59, result.Count());
         }
 
         [Fact]
@@ -47,11 +47,10 @@ namespace CompilerTests
             var lexer = new Lexer();
             var result = lexer.Lex(@"
 type Person =
-    FirstName: String
+    FirstName: String;
 ");
             Assert.NotNull(result);
-            Assert.Equal(12, result.Count());
-            
+            Assert.Equal(13, result.Count());
         }
 
         [Fact]
@@ -86,11 +85,10 @@ LastName: String;
             var lexer = new Lexer();
             var result = lexer.Lex(code).ToList();
             Assert.NotNull(result);
-            Assert.Equal(15, result.Count());
+            Assert.Equal(14, result.Count());
             Assert.Equal(TokenType.ContextEnded, result[11].TokenType);
             Assert.Equal(TokenType.Paragraph, result[12].TokenType);
-            Assert.Equal("LastName: String;\n", result[12].Value);
-
+            Assert.Equal("LastName: String;", result[12].Value);
         }
 
         [Fact]
@@ -154,7 +152,7 @@ LastName: String;
         [Fact]
         public void GenericParameter()
         {
-            string code = "type 'a";
+            var code = "type 'a";
             var lexer = new Lexer();
             var result = lexer.Lex(code).ToList();
             Assert.NotNull(result);
@@ -162,6 +160,8 @@ LastName: String;
             Assert.Equal(TokenType.GenericParameter, result[2].TokenType);
             Assert.Equal("'a", result[2].Value);
         }
+
+        
     }
 }
 

@@ -12,15 +12,15 @@ namespace Mapper.HTML
 
         public override string VisitASTTypeField(ASTTypeField astTypeField)
         {
-            var _mod = astTypeField.Type.First().Value;
-            var _type = astTypeField.Type.Last().Value;
+            var _mod = astTypeField.Types.First().Value;
+            var _type = astTypeField.Types.Last().Value;
 
             var restrictions = String.Join(Environment.NewLine, astTypeField.Restrictions.Select(r => $"{r.Key} {r.Value}"));
 
             return $@"
 <tr>
     <td>{astTypeField.Name}</td>
-    <td>{string.Join(" ", astTypeField.Type.Select(t => t.Value).ToList())}</td>
+    <td>{string.Join(" ", astTypeField.Types.Select(t => t.Value).ToList())}</td>
     <td>{_mod != "Maybe"}</td>
     <td>{restrictions}</td>
     <td>

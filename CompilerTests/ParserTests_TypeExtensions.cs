@@ -8,7 +8,7 @@ namespace CompilerTests
 {
     public class ParserTests_TypeExtensions
     {
-        
+
         [Fact]
         public void SimpleExtension()
         {
@@ -128,7 +128,7 @@ type Customer extends Person =
             var customer = g.Find<ASTType>("Customer");
 
             Assert.Equal(person.Fields.Count(), customer.Fields.Count());
-            Assert.Equal("Boolean", customer.Fields.Last().Type.First().Value);
+            Assert.Equal("Boolean", customer.Fields.Last().Types.First().Value);
 
         }
 
@@ -160,7 +160,7 @@ type Customer extends Person =
             var max = lastName.Restrictions.First(r => r.Key == "max");
 
             Assert.Equal(person.Fields.Count(), customer.Fields.Count());
-            Assert.Equal("String", lastName.Type.First().Value);
+            Assert.Equal("String", lastName.Types.First().Value);
             Assert.Equal("2", min.Value);
             Assert.Equal("40", max.Value);
 

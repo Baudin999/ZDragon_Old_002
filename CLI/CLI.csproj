@@ -36,50 +36,10 @@
     <None Remove="Assets\style.css" />
   </ItemGroup>
   <ItemGroup>
-    <None Update="wwwroot\global.css">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <ExcludeFromSingleFile>false</ExcludeFromSingleFile>
-    </None>
-    <None Update="wwwroot\index.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <ExcludeFromSingleFile>false</ExcludeFromSingleFile>
-    </None>
-    <None Update="wwwroot\build\bundle.js">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <ExcludeFromSingleFile>false</ExcludeFromSingleFile>
-    </None>
-    <None Update="wwwroot\build\bundle.css">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <ExcludeFromSingleFile>false</ExcludeFromSingleFile>
-    </None>
-    <None Update="wwwroot\build\bundle.js.map">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <ExcludeFromSingleFile>false</ExcludeFromSingleFile>
-    </None>
-    <None Update="wwwroot\build\bundle.css.map">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <ExcludeFromSingleFile>false</ExcludeFromSingleFile>
-    </None>
-    <None Update="wwwroot\fa.css">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <ExcludeFromSingleFile>false</ExcludeFromSingleFile>
-    </None>
-    <None Update="wwwroot\codeflask.js">
+    <None Update="wwwroot\*">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="wwwroot\mermaid.min.js">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="wwwroot\mermaid.min.map.js">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="wwwroot\mermaid.min.js.map">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="wwwroot\vis-network.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="wwwroot\favicon.ico">
+    <None Update="wwwroot\**">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

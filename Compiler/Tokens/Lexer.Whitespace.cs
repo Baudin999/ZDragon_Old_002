@@ -11,7 +11,7 @@ namespace Compiler
             var startColumn = input.Column;
             var startLine = input.Line;
 
-            while (input.HasNext() && Char.IsWhiteSpace(input.Current()))
+            while (input.HasNext() && Char.IsWhiteSpace(input.Current))
             {
                 input.Next();
             }

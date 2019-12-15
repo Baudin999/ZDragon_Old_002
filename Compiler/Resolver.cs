@@ -83,8 +83,8 @@ namespace Compiler
 
         private (IEnumerable<IASTError>, ASTTypeField) PluckField(ASTPluckedField field)
         {
-            var _ref = field.Type.First();
-            var _field = field.Type.Last();
+            var _ref = field.Types.First();
+            var _field = field.Types.Last();
             var referencedNode = FindNode(_ref.Value);
             var referencedField = (referencedNode as ASTType)?.Fields.FirstOrDefault(_f => _f.Name == _field.Value);
 
@@ -107,7 +107,7 @@ namespace Compiler
         private (IEnumerable<IASTError>, IASTNode) ResolveAlias(ASTAlias alias)
         {
             // here we'll resolve generic aliasses
-            var _mod = alias.Type.First().Value;
+            var _mod = alias.Types.First().Value;
             if (_mod == "List" || _mod == "Maybe" || Parser.BaseTypes.Contains(_mod))
             {
                 // non generic type...
@@ -117,7 +117,7 @@ namespace Compiler
                 //
                 return (Enumerable.Empty<IASTError>(), alias);
             }
-            else if (!Parser.BaseTypes.Contains(_mod) && alias.Type.Count() == 1)
+            else if (!Parser.BaseTypes.Contains(_mod) && alias.Types.Count() == 1)
             {
                 // Clearly we're in a case like:
                 // alias Foo = Bar;
@@ -151,7 +151,7 @@ namespace Compiler
                 }
 
             }
-            else if (alias.Type.Count() > 1)
+            else if (alias.Types.Count() > 1)
             {
                 var errors = new List<IASTError>();
                 var clone = FindNode(_mod) as ASTType;
@@ -159,7 +159,7 @@ namespace Compiler
                 {
                     errors.Add(new ASTError("Cannot resolve generic type", "Invalid Syntax", null));
                 }
-                else if (clone.Parameters.Count() != alias.Type.Count() - 1)
+                else if (clone.Parameters.Count() != alias.Types.Count() - 1)
                 {
                     errors.Add(new ASTError("Not resolving all generic parameters.", "Invalid Syntax", null));
                 }
@@ -167,12 +167,12 @@ namespace Compiler
                 {
                     var resolvedFields = clone.Fields.Select(field =>
                     {
-                        var fieldTypes = field.Type.Select(t =>
+                        var fieldTypes = field.Types.Select(t =>
                         {
                             if (t.IsGeneric)
                             {
                                 var index = clone.Parameters.ToList().IndexOf(t.Value) + 1;
-                                return (ASTTypeDefinition)alias.Type.ElementAt(index).Clone();
+                                return (ASTTypeDefinition)alias.Types.ElementAt(index).Clone();
                             }
                             return (ASTTypeDefinition)t.Clone();
                         });

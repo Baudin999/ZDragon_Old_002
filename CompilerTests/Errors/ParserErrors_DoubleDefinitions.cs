@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Compiler;
 using Xunit;
 
@@ -17,6 +18,8 @@ type Person
 ";
             var g = new ASTGenerator(code);
             Assert.Single(g.Errors);
+
+            var error = g.Errors.First();
         }
 
         [Fact(DisplayName = "Type Already Exists 02")]

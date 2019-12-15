@@ -14,7 +14,7 @@ namespace Compiler
             var builder = new StringBuilder();
             while (input.HasNext() && !EndContext(input))
             {
-                builder.Append(input.Current());
+                builder.Append(input.Current);
                 input.Next();
             }
             return new Token()

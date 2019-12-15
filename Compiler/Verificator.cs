@@ -52,7 +52,7 @@ namespace Compiler
                 {
                     foreach (var field in type.Fields)
                     {
-                        var (_mod, _type) = (field.Type.First().Value, field.Type.Last().Value);
+                        var (_mod, _type) = (field.Types.First().Value, field.Types.Last().Value);
                         var __type = (_mod, _type) switch
                         {
                             ("Maybe", _) => _type,
@@ -70,7 +70,7 @@ Could not find type {__type} on field {field.Name} on type {type.Name}.
 
 type {type.Name} ...
     ...
-    {field.Name}: {string.Join(Environment.NewLine, field.Type.Select(t => t.Value).ToList())};
+    {field.Name}: {string.Join(Environment.NewLine, field.Types.Select(t => t.Value).ToList())};
 
 ", "Unknown Type"));
                             }

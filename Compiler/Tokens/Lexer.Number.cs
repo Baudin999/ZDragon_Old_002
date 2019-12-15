@@ -8,7 +8,7 @@ namespace Compiler
         public static Token Number(Input input)
         {
 
-            if (!char.IsNumber(input.Current()))
+            if (!char.IsNumber(input.Current))
             {
                 throw new InvalidOperationException("Not a number.");
             }
@@ -22,13 +22,13 @@ namespace Compiler
             StringBuilder builder = new StringBuilder();
             while (input.HasNext())
             {
-                if (char.IsNumber(input.Current()))
+                if (char.IsNumber(input.Current))
                 {
-                    builder.Append(input.Current());
+                    builder.Append(input.Current);
                 }
-                else if (!hasDot && input.Current() == '.')
+                else if (!hasDot && input.Current == '.')
                 {
-                    builder.Append(input.Current());
+                    builder.Append(input.Current);
                     hasDot = true;
                 } else
                 {

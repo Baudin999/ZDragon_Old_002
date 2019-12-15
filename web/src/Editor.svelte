@@ -2,23 +2,49 @@
   import { onMount, onDestroy } from "svelte";
   import navigator from "./navigator.js";
   import { getCode } from "./Services/codeServices";
+  import {
+    theme,
+    tokenizer,
+    createCommands,
+    createActions
+  } from "./editor-carlang.js";
 
   let errors = [];
-  let flask;
+  let editor;
   let showPreview = false;
   let route = `/${navigator.module}/index.html`;
 
   let getcode = async () => {
     // var codeRequest = await fetch("/api/module/" + navigator.module);
     // var code = await codeRequest.text();
-    debugger;
+    // debugger;
     var code = await getCode();
-    flask.updateCode(code);
     setTimeout(getErrors, 0);
+    setValue(code);
+  };
+
+  let setValue = text => {
+    const model = editor.getModel();
+    const position = editor.getPosition();
+
+    if (text != null && text !== model.getValue()) {
+      editor.pushUndoStop();
+      model.pushEditOperations(
+        [],
+        [
+          {
+            range: model.getFullModelRange(),
+            text: text
+          }
+        ]
+      );
+      editor.pushUndoStop();
+      editor.setPosition(position);
+    }
   };
 
   let saveCode = async () => {
-    var code = flask.getCode();
+    var code = editor.getValue();
     var codeRequest = await fetch("/api/module/" + navigator.module, {
       method: "POST",
       headers: {
@@ -28,10 +54,10 @@
       body: code
     });
     setTimeout(getErrors, 2000);
-    setTimeout(() => {
-      var iframe = document.getElementById("iframe--preview");
-      iframe.src = iframe.src;
-    }, 2000);
+    // setTimeout(() => {
+    //   var iframe = document.getElementById("iframe--preview");
+    //   iframe.src = iframe.src;
+    // }, 2000);
   };
 
   let getErrors = async () => {
@@ -47,20 +73,49 @@
       saveCode();
       e.preventDefault();
       return false;
-    } else if (e.key === "e" && (e.ctrlKey === true || e.metaKey == true)) {
-      console.log("showing preview");
-      showPreview = !showPreview;
-      e.preventDefault();
-      return false;
     }
   }
 
   onMount(() => {
-    flask = new CodeFlask("#editor", {
-      language: "carlang",
-      tabSize: 4
+    require.config({ paths: { vs: "/vs" } });
+    require(["vs/editor/editor.main"], function() {
+      monaco.languages.register({ id: "carlang" });
+      monaco.languages.setMonarchTokensProvider("carlang", tokenizer);
+      monaco.editor.defineTheme("carlangTheme", theme);
+      editor = monaco.editor.create(document.getElementById("editor"), {
+        value: "",
+        language: "carlang",
+        theme: "carlangTheme",
+        scrollBeyondLastLine: false,
+        roundedSelection: false,
+        minimap: {
+          enabled: false
+        }
+      });
+
+      createCommands(monaco, editor);
+      createActions(monaco, editor);
+      getcode();
+
+      monaco.languages.registerCompletionItemProvider("carlang", {
+        provideCompletionItems: () => {
+          var suggestions = [
+            {
+              label: "snippet: type",
+              kind: monaco.languages.CompletionItemKind.Snippet,
+              insertText: [
+                "type ${1:TypeName} =",
+                "\t${2: FieldName}: ${3: FieldType};"
+              ].join("\n"),
+              insertTextRules:
+                monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+              documentation: "Snippet: New Type"
+            }
+          ];
+          return { suggestions: suggestions };
+        }
+      });
     });
-    getcode();
 
     window.addEventListener("keydown", mouseTrap, true);
   });
@@ -82,9 +137,13 @@
   .error pre {
     overflow-wrap: break-word;
   }
-
-  .editor textarea {
-    max-width: none !important;
+  .editor-container {
+    margin-top: 1rem;
+  }
+  .editor-container,
+  #editor {
+    width: 700px;
+    height: calc(100% - 4rem);
   }
 
   .preview {
@@ -114,7 +173,7 @@
 <div class="editor-container">
   <div id="editor" />
 </div>
-
+<!-- 
 {#if errors && errors.length > 0}
   <div class="errors">
     {#each errors as error}
@@ -124,10 +183,10 @@
       </div>
     {/each}
   </div>
-{/if}
-
+{/if} -->
+<!-- 
 {#if showPreview}
   <div class="preview">
     <iframe id="iframe--preview" title="preview" src={route} />
   </div>
-{/if}
+{/if} -->

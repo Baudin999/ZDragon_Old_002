@@ -36,7 +36,7 @@ namespace Mapper.Application
                     Name = field.Name,
                     Description = MapAnnotations(field.Annotations),
                     Parent = astType.Name,
-                    Type = MapTypes(field.Type),
+                    Type = MapTypes(field.Types),
                     DescriptorType = DescriptorType.Field.ToString("g")
                 };
             }
@@ -49,7 +49,7 @@ namespace Mapper.Application
                 Module = ModuleName,
                 Name = astAlias.Name,
                 Description = MapAnnotations(astAlias.Annotations),
-                Type = MapTypes(astAlias.Type),
+                Type = MapTypes(astAlias.Types),
                 DescriptorType = DescriptorType.Alias.ToString("g")
             };
         }

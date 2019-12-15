@@ -12,7 +12,7 @@ namespace Compiler
             int startLine = input.Line;
 
             var builder = new StringBuilder();
-            builder.Append(input.Current());
+            builder.Append(input.Current);
             for (int i = 0; i < source.Length -1; ++i)
             {
                 builder.Append(input.Next());

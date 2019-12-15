@@ -43,8 +43,8 @@ namespace Mapper.JSON
 
         private JSchema? MapTypeField(ASTTypeField field)
         {
-            var _mod = field.Type.First().Value;
-            var _type = field.Type.Last().Value;
+            var _mod = field.Types.First().Value;
+            var _type = field.Types.Last().Value;
 
             return MapDefinition(_mod, _type);
         }
@@ -74,7 +74,7 @@ namespace Mapper.JSON
             {
                 schema.Properties.Add(field.Name, MapTypeField(field));
 
-                if (field.Type.First().Value != "Maybe")
+                if (field.Types.First().Value != "Maybe")
                 {
                     schema.Required.Add(field.Name);
                 }
@@ -84,13 +84,13 @@ namespace Mapper.JSON
 
         private JSchema? MapASTAlias(ASTAlias astAlias)
         {
-            var _mod = astAlias.Type.First().Value;
-            var _type = astAlias.Type.Last().Value;
+            var _mod = astAlias.Types.First().Value;
+            var _type = astAlias.Types.Last().Value;
             var result = MapDefinition(_mod, _type);
             if (result != null)
             {
                 result.Title = astAlias.Name;
-            } 
+            }
             return result;
         }
 

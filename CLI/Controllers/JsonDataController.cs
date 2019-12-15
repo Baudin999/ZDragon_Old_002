@@ -68,7 +68,7 @@ namespace CLI.Controllers
             foreach (var field in node.Fields)
             {
                 var fakerDirective = field.Directives.FirstOrDefault(f => f.Key == "faker")?.Value;
-                var (_mod, _type) = (field.Type.First().Value, field.Type.Last().Value);
+                var (_mod, _type) = (field.Types.First().Value, field.Types.Last().Value);
                 var data = (_mod, _type) switch
                 {
                     ("Maybe", _) => GenerateBaseValue(_type),
@@ -90,7 +90,7 @@ namespace CLI.Controllers
         private dynamic GenerateAlias(ASTAlias alias)
         {
             var fakerDirective = alias.Directives.FirstOrDefault(f => f.Key == "faker")?.Value;
-            var (_mod, _type) = (alias.Type.First().Value, alias.Type.Last().Value);
+            var (_mod, _type) = (alias.Types.First().Value, alias.Types.Last().Value);
             return (_mod, _type) switch
             {
                 ("Maybe", _) => GenerateBaseValue(_type),
@@ -118,7 +118,7 @@ namespace CLI.Controllers
                     "person.lastname" => BogusWrapper.Person.LastName,
                     _ => "Not a faker directive"
                 };
-                
+
                 //return faker.GetPropValue(fakerDirective) ?? "Not a valid faker directive";
             }
             return _type switch

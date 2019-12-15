@@ -12,7 +12,7 @@ namespace Compiler.AST
         public IEnumerable<ASTAnnotation> Annotations { get; }
         public IEnumerable<ASTDirective> Directives { get; }
 
-        public IEnumerable<ASTTypeDefinition> Type { get; }
+        public IEnumerable<ASTTypeDefinition> Types { get; }
         public IEnumerable<ASTRestriction> Restrictions { get; private set; }
         public FieldOrigin Origin { get; }
 
@@ -30,7 +30,7 @@ namespace Compiler.AST
             this.Module = module;
             this.Annotations = annotations;
             this.Directives = directives;
-            this.Type = types;
+            this.Types = types;
             this.Restrictions = restrictions;
             this.Origin = origin;
         }
@@ -83,11 +83,11 @@ namespace Compiler.AST
             string _type;
             if (this is ASTPluckedField)
             {
-                _type = this.Type.First().Value;
+                _type = this.Types.First().Value;
             }
             else
             {
-                _type = this.Type.Last().Value;
+                _type = this.Types.Last().Value;
             }
 
 
@@ -110,7 +110,7 @@ namespace Compiler.AST
                 (string)this.Module.Clone(),
                 ObjectCloner.CloneList(this.Annotations.ToList()),
                 ObjectCloner.CloneList(this.Directives.ToList()),
-                ObjectCloner.CloneList(this.Type.ToList()),
+                ObjectCloner.CloneList(this.Types.ToList()),
                 ObjectCloner.CloneList(this.Restrictions.ToList()),
                 origin
                 );
@@ -122,7 +122,7 @@ namespace Compiler.AST
                     (string)this.Module.Clone(),
                     ObjectCloner.CloneList(this.Annotations.ToList()),
                     ObjectCloner.CloneList(this.Directives.ToList()),
-                    ObjectCloner.CloneList(this.Type.ToList()),
+                    ObjectCloner.CloneList(this.Types.ToList()),
                     ObjectCloner.CloneList(this.Restrictions.ToList()),
                     origin
                     );
@@ -137,7 +137,7 @@ namespace Compiler.AST
                 (string)this.Module.Clone(),
                 ObjectCloner.CloneList(this.Annotations.ToList()),
                 ObjectCloner.CloneList(this.Directives.ToList()),
-                ObjectCloner.CloneList(this.Type.ToList()),
+                ObjectCloner.CloneList(this.Types.ToList()),
                 ObjectCloner.CloneList(this.Restrictions.ToList()),
                 this.Origin
                 );
@@ -149,7 +149,7 @@ namespace Compiler.AST
                     (string)this.Module.Clone(),
                     ObjectCloner.CloneList(this.Annotations.ToList()),
                     ObjectCloner.CloneList(this.Directives.ToList()),
-                    ObjectCloner.CloneList(this.Type.ToList()),
+                    ObjectCloner.CloneList(this.Types.ToList()),
                     ObjectCloner.CloneList(this.Restrictions.ToList()),
                     this.Origin
                     );
@@ -172,7 +172,7 @@ namespace Compiler.AST
         public bool Equals([AllowNull] ASTTypeField x, [AllowNull] ASTTypeField y) => x.Name == y.Name;
         public int GetHashCode([DisallowNull] ASTTypeField obj) => ((object)obj).GetHashCode();
 
-        public override string ToString() => $"{Name}: {String.Join(" ", Type)};";
+        public override string ToString() => $"{Name}: {String.Join(" ", Types)};";
     }
 
     public class ASTPluckedField : ASTTypeField

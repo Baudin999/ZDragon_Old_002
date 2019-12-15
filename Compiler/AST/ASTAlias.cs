@@ -9,7 +9,7 @@ namespace Compiler.AST
     {
         public string Name { get; } = "";
         public string Module { get; }
-        public IEnumerable<ASTTypeDefinition> Type { get; } = Enumerable.Empty<ASTTypeDefinition>();
+        public IEnumerable<ASTTypeDefinition> Types { get; } = Enumerable.Empty<ASTTypeDefinition>();
         public IEnumerable<ASTRestriction> Restrictions { get; } = Enumerable.Empty<ASTRestriction>();
         public IEnumerable<ASTAnnotation> Annotations { get; } = Enumerable.Empty<ASTAnnotation>();
         public IEnumerable<ASTDirective> Directives { get; } = Enumerable.Empty<ASTDirective>();
@@ -22,7 +22,7 @@ namespace Compiler.AST
             IEnumerable<ASTAnnotation> annotations,
             IEnumerable<ASTDirective> directives) {
             this.Name = name;
-            this.Type = types;
+            this.Types = types;
             this.Restrictions = restrictions;
             this.Annotations = annotations;
             this.Directives = directives;
@@ -61,7 +61,7 @@ namespace Compiler.AST
             return new ASTAlias(
                 (string)this.Name.Clone(),
                 (string)this.Module.Clone(),
-                ObjectCloner.CloneList(this.Type.ToList()),
+                ObjectCloner.CloneList(this.Types.ToList()),
                 ObjectCloner.CloneList(this.Restrictions.ToList()),
                 ObjectCloner.CloneList(this.Annotations.ToList()),
                 ObjectCloner.CloneList(this.Directives.ToList())

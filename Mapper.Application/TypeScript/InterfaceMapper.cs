@@ -14,7 +14,7 @@ namespace Mapper.Application.TypeScript
 
         public override string VisitASTTypeField(ASTTypeField astTypeField)
         {
-            var (first, last) = (astTypeField.Type.First().Value, astTypeField.Type.Last().Value);
+            var (first, last) = (astTypeField.Types.First().Value, astTypeField.Types.Last().Value);
             var _type = (first, last) switch
             {
                 ("String", _) => "string",

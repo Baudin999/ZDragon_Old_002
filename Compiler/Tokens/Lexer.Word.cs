@@ -11,9 +11,9 @@ namespace Compiler
             var startColumn = input.Column;
             var startLine = input.Line;
             var builder = NewMethod();
-            while ((char.IsLetter(input.Current()) || char.IsNumber(input.Current())) || input.Current() == '_')
+            while ((char.IsLetter(input.Current) || char.IsNumber(input.Current)) || input.Current == '_')
             {
-                builder.Append(input.Current());
+                builder.Append(input.Current);
                 if (input.HasNext()) input.Next();
                 else break;
             }

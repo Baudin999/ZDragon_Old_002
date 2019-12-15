@@ -7,7 +7,7 @@ namespace Compiler
     {
         public static Token Identifier(Input input)
         {
-            if (!Char.IsUpper(input.Current()))
+            if (!Char.IsUpper(input.Current))
             {
                 throw new InvalidOperationException("Identifiers start with an uppercase.");
             }
@@ -17,9 +17,9 @@ namespace Compiler
             var startLine = input.Line;
 
             StringBuilder builder = new StringBuilder();
-            while (input.HasNext() && (char.IsLetter(input.Current()) || char.IsNumber(input.Current())))
+            while (input.HasNext() && (char.IsLetter(input.Current) || char.IsNumber(input.Current)))
             {
-                builder.Append(input.Current());
+                builder.Append(input.Current);
                 input.Next();
             }
             return new Token()
@@ -37,7 +37,7 @@ namespace Compiler
 
         public static Token QualifiedIdentifier(Input input)
         {
-            if (!Char.IsUpper(input.Current()))
+            if (!Char.IsUpper(input.Current))
             {
                 throw new InvalidOperationException("Identifiers start with an uppercase.");
             }
@@ -47,9 +47,9 @@ namespace Compiler
             var startLine = input.Line;
 
             StringBuilder builder = new StringBuilder();
-            while (input.HasNext() && (char.IsLetter(input.Current()) || char.IsNumber(input.Current()) || input.Current() == '.'))
+            while (input.HasNext() && (char.IsLetter(input.Current) || char.IsNumber(input.Current) || input.Current == '.'))
             {
-                builder.Append(input.Current());
+                builder.Append(input.Current);
                 input.Next();
             }
             return new Token()

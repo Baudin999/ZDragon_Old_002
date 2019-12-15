@@ -18,7 +18,7 @@ namespace Mapper.XSD
             sequence.MaxOccurs = max is null ? 10 : int.Parse(max.Value);
 
 
-            string _type = e.Type.Last().Value;
+            string _type = e.Types.Last().Value;
 
             XmlSchemaElement element = new XmlSchemaElement();
             switch (_type)

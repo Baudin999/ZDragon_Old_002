@@ -8,8 +8,8 @@ namespace Mapper.XSD
 	public partial class Mapper
 	{
 		public static XmlSchemaElement Element<T>(T e) where T : IElement, IRestrictable {
-            var _modifier = e.Type.First().Value;
-            var _type = e.Type.Last().Value;
+            var _modifier = e.Types.First().Value;
+            var _type = e.Types.Last().Value;
 
             var element = new XmlSchemaElement();
             element.Name = e.Name;

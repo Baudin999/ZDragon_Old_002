@@ -15,7 +15,7 @@ namespace Mapper.HTML
         {
             var template = $@"
 class {astAlias.Name} {{
-{string.Join(Environment.NewLine, astAlias.Type.Select(t => t.Value).ToList())}
+{string.Join(Environment.NewLine, astAlias.Types.Select(t => t.Value).ToList())}
 }}
 ";
             this.Parts.Add(template);
@@ -69,11 +69,11 @@ class {astData.Name} {{
         public override string VisitASTType(ASTType astType)
         {
             var extensions = astType.Extensions.Select(e => $"{astType.Name} --|> {e}");
-            var fields = astType.Fields.Select(f => $@"{f.Name}: {string.Join(" ", f.Type.Select(t => t.Value))}").ToList();
+            var fields = astType.Fields.Select(f => $@"{f.Name}: {string.Join(" ", f.Types.Select(t => t.Value))}").ToList();
             var typeReferences = astType.Fields.Select(f =>
             {
-                var _mod = f.Type.First().Value;
-                var _type = f.Type.Last().Value;
+                var _mod = f.Types.First().Value;
+                var _type = f.Types.Last().Value;
                 if (_type != "String"
                     && _type != "Number"
                     && _type != "Boolean"

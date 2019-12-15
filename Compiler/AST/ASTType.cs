@@ -44,6 +44,11 @@ namespace Compiler.AST
         {
             try
             {
+                int startColumn = parser.Current.StartColumn;
+                int startLine = parser.Current.StartLine;
+                int endColumn = 0;
+                int endLine = 0;
+
                 var errors = new List<IASTError>();
 
                 parser.Next();

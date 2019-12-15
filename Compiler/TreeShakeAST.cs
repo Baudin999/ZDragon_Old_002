@@ -53,7 +53,7 @@ namespace Compiler
                 else if (node is ASTAlias alias)
                 {
                     CombinedNodes.Add(alias);
-                    var _type = alias.Type.Last().Value;
+                    var _type = alias.Types.Last().Value;
                     resolveNode(_type);
                 }
                 else if (node is ASTType t)

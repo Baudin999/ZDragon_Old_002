@@ -11,14 +11,13 @@ namespace Compiler
             var startColumn = input.Column;
             var startLine = input.Line;
 
-            StringBuilder builder = new StringBuilder();
-            builder.Append(input.Current());
+            var builder = new StringBuilder();
+            builder.Append(input.Current);
             while (input.HasNext() && input.Next() != end)
             {
-                builder.Append(input.Current());
+                builder.Append(input.Current);
             }
-            builder.Append(input.Current());
-
+            builder.Append(input.Current);
             if (input.HasNext()) input.Next();
 
             return new Token()

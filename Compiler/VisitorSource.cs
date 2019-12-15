@@ -20,7 +20,7 @@ namespace Compiler
             parts.AddRange(astAlias.Annotations.Select(Visit));
             parts.AddRange(astAlias.Directives.Select(Visit));
 
-            var typeDef = string.Join(" ", astAlias.Type.Select(Visit));
+            var typeDef = string.Join(" ", astAlias.Types.Select(Visit));
 
             if (astAlias.Restrictions.Count() == 0)
             {
@@ -118,7 +118,7 @@ namespace Compiler
 
         public override string VisitASTTypeField(ASTTypeField astTypeField)
         {
-            var typeDef = string.Join(" ", astTypeField.Type.Select(Visit));
+            var typeDef = string.Join(" ", astTypeField.Types.Select(Visit));
             var restrictions = String.Join(Environment.NewLine, astTypeField.Restrictions.Select(Visit));
 
             if (astTypeField.Restrictions.Count() > 0)

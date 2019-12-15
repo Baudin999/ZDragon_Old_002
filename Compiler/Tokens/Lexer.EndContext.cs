@@ -5,7 +5,7 @@ namespace Compiler
     {
         public static bool EndContext(Input input, int depth = 2)
         {
-            if (Char2.IsNewLine(input.Current()))
+            if (Char2.IsNewLine(input.Current))
             {
                 var index = 0;
                 while (input.HasPeek(index) && input.Peek(index) == '↓')

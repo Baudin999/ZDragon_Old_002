@@ -25,7 +25,7 @@ namespace Compiler
         {
         }
 
-        internal Input(string source, int position, int line = 1, int column = 1)
+        internal Input(string source, int position, int line = 0, int column = 0)
         {
             _source = source;
             _position = position;
@@ -43,7 +43,7 @@ namespace Compiler
             {
                 return false;
             }
-
+                    
             for (var i = 0; i < length; ++i)
             {
                 if (Peek(i) != keyword[i]) return false;
@@ -52,24 +52,29 @@ namespace Compiler
         }
 
         public bool HasNext() => _position + 1 < _length;
-        public bool HasPeek(int pos) => _position + pos < _length;
+        public bool HasPeek(int pos = 1) => _position + pos < _length;
 
-        public char Current() => _source[_position];
+        public char Current { get { return _source[_position]; } }
 
         public char Next() {
             if (HasNext())
             {
-                _position += 1;
                 var c = _source[_position];
-                if (c == '↓')
+                if (c == Lexer.NEWLINE)
                 {
                     _line++;
-                    _column = 1;
-                } else
+                    _column = 0;
+                }
+                else if (c == Lexer.INDENT)
+                {
+                    _column += 4;
+                }
+                else
                 {
                     _column++;
                 }
-                return c;
+                _position += 1;
+                return _source[_position];
             }
             else
             {

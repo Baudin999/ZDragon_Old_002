@@ -8,7 +8,7 @@ namespace Compiler
         public static Token GenericParameter(Input input)
         {
 
-            if (input.Current() != '\'')
+            if (input.Current != '\'')
             {
                 throw new InvalidOperationException("Not a GenericParameter.");
             }
@@ -18,11 +18,11 @@ namespace Compiler
             var startLine = input.Line;
 
             StringBuilder builder = new StringBuilder();
-            builder.Append(input.Current());
+            builder.Append(input.Current);
 
             while (input.HasNext() && Char.IsLetter(input.Next()))
             {
-                builder.Append(input.Current());
+                builder.Append(input.Current);
             }
 
             return new Token()

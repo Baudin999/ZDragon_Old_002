@@ -23,7 +23,7 @@ alias Name = String;
 
             var alias = parseTree[0] as ASTAlias;
             Assert.Equal("Name", alias.Name);
-            Assert.Equal(Helpers.ToTypeDefinition(new[] { "String" }), alias.Type.ToList());
+            Assert.Equal(Helpers.ToTypeDefinition(new[] { "String" }), alias.Types.ToList());
         }
 
         [Fact]
@@ -57,7 +57,7 @@ alias Name = List String;
             Assert.Empty(g.Errors);
             Assert.IsType<ASTAlias>(g.AST.First());
             var alias = (ASTAlias)g.AST.First();
-            Assert.Equal(Helpers.ToTypeDefinition(new[] { "List", "String" }), alias.Type.ToList());
+            Assert.Equal(Helpers.ToTypeDefinition(new[] { "List", "String" }), alias.Types.ToList());
 
         }
 
@@ -100,7 +100,8 @@ alias Name = String
 
             var alias = parseTree[0] as ASTAlias;
 
-            foreach (ASTRestriction restriction in alias.Restrictions) { 
+            foreach (ASTRestriction restriction in alias.Restrictions)
+            {
                 Assert.Single(restriction.Annotations);
                 Assert.Equal(TokenType.Number, restriction.Token.TokenType);
             }
@@ -123,7 +124,7 @@ alias Name = Maybe String;
             ASTAlias alias = parseTree[0] as ASTAlias;
             Assert.Empty(alias.Restrictions);
             Assert.Equal(2, alias.Annotations.Count());
-            Assert.Equal(Helpers.ToTypeDefinition(new[] { "Maybe", "String" }), alias.Type);
+            Assert.Equal(Helpers.ToTypeDefinition(new[] { "Maybe", "String" }), alias.Types);
         }
 
         [Fact]
@@ -183,7 +184,7 @@ alias FooBar = School;
 
             var name = t.Fields.First();
             Assert.Equal("Name", name.Name);
-            Assert.Equal("String", name.Type.First().Value);
+            Assert.Equal("String", name.Types.First().Value);
         }
 
         [Fact]

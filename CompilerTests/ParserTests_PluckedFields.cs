@@ -30,8 +30,8 @@ type Customer =
 
             var firstName = customer.Fields.First();
             Assert.Equal("FirstName", firstName.Name);
-            Assert.Single(firstName.Type);
-            Assert.Equal("String", firstName.Type.First().Value);
+            Assert.Single(firstName.Types);
+            Assert.Equal("String", firstName.Types.First().Value);
         }
 
         [Fact]
@@ -140,7 +140,7 @@ type Customer =
             Assert.Single(person.Fields);
             var p_firstName = person.Fields.First();
             Assert.Equal(2, p_firstName.Restrictions.Count());
-            
+
 
             var customer = (ASTType)g.AST.Last();
             var firstName = customer.Fields.First();

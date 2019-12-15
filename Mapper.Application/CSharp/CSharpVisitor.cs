@@ -16,7 +16,7 @@ namespace Mapper.Application.CSharp
 
         public override string VisitASTTypeField(ASTTypeField astTypeField)
         {
-            var t = (astTypeField.Type.First().Value, astTypeField.Type.Last().Value);
+            var t = (astTypeField.Types.First().Value, astTypeField.Types.Last().Value);
             return $@"    public {CSharpHelpers.ToCSharpKeyword(t)} {astTypeField.Name} {{ get; set; }}";
         }
 
@@ -31,7 +31,7 @@ public class {astType.Name} {{
 
         public override string VisitASTAlias(ASTAlias astAlias)
         {
-            var t = (astAlias.Type.First().Value, astAlias.Type.Last().Value);
+            var t = (astAlias.Types.First().Value, astAlias.Types.Last().Value);
             return Intercept($@"using {astAlias.Name} = {CSharpHelpers.ToCSharpType(t)};");
         }
 

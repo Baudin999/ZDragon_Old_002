@@ -17,13 +17,13 @@ namespace Compiler
             var startLine = input.Line;
 
             var builder = new StringBuilder();
-            builder.Append(input.Current());
+            builder.Append(input.Current);
 
             while (input.HasNext() && !Char2.IsNewLine(input.Next()))
             {
-                builder.Append(input.Current());
+                builder.Append(input.Current);
             }
-            return new Token()
+             var result = new Token()
             {
                 StartIndex = start,
                 StartColumn = startColumn,
@@ -34,27 +34,61 @@ namespace Compiler
                 Value = builder.ToString(),
                 TokenType = type
             };
+            if (input.HasNext()) input.Next();
+            return result;
         }
 
         internal static Token Take(Input input, TokenType type)
         {
-            var c = input.Current();
-            input.Next();
-
-            return new Token()
+            var result = new Token()
             {
-                StartIndex = input.Position - 1,
-                StartColumn = input.Column - 1,
+                StartIndex = input.Position,
+                StartColumn = input.Column,
                 StartLine = input.Line,
-                EndIndex = input.Position,
-                EndColumn = input.Column,
+                EndIndex = input.Position + 1,
+                EndColumn = input.Column + 1,
                 EndLine = input.Line,
-                Value = c.ToString(),
+                Value = input.Current.ToString(),
                 TokenType = type
             };
+            input.Next();
+            return result;
         }
 
-        
+        internal static Token TakeNewLine(Input input)
+        {
+            var result = new Token()
+            {
+                StartIndex = input.Position,
+                StartColumn = input.Column,
+                StartLine = input.Line,
+                EndIndex = input.Position + 1,
+                EndColumn = 0,
+                EndLine = input.Line + 1,
+                Value = Environment.NewLine,
+                TokenType = TokenType.NewLine
+            };
+            input.Next();
+            return result;
+        }
+
+        //internal static Token TakeIndent(Input input)
+        //{
+        //    input.Next();
+        //    return new Token()
+        //    {
+        //        StartIndex = input.Position - 1,
+        //        StartColumn = input.Column - 1,
+        //        StartLine = input.Line - 1,
+        //        EndIndex = input.Position,
+        //        EndColumn = 0,
+        //        EndLine = input.Line,
+        //        Value = Environment.NewLine,
+        //        TokenType = TokenType.NewLine
+        //    };
+        //}
+
+
     }
 
     public static class Char2

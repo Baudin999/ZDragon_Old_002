@@ -13,7 +13,6 @@ namespace CLI
 {
     public partial class Project : IDisposable
     {
-
         public static Project? Current { get; private set; }
 
         public string Path { get; } = "";
@@ -21,7 +20,6 @@ namespace CLI
         public string ConfigPath { get; } = "";
         public CarConfig? CarConfig { get; private set; }
         public ObservableCollection<Module> Modules { get; } = new ObservableCollection<Module>();
-
 
         public Project(string path)
         {
