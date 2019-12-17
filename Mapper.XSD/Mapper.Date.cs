@@ -7,13 +7,13 @@ namespace Mapper.XSD
 {
     public partial class Mapper
     {
-        public static XmlSchemaType MapDate<T>(T e) where T : IElement, IRestrictable
+        public static XmlSchemaType MapDate<T>(T e) where T : INamable, IRestrictable
         {
-            XmlSchemaSimpleType simpleType = new XmlSchemaSimpleType();
+            var simpleType = new XmlSchemaSimpleType();
             simpleType.Name = e.Name;
 
 
-            XmlSchemaSimpleTypeRestriction restriction = new XmlSchemaSimpleTypeRestriction();
+            var restriction = new XmlSchemaSimpleTypeRestriction();
             restriction.BaseTypeName = new System.Xml.XmlQualifiedName("date", DefaultSchemaNamespace);
 
             simpleType.Content = restriction;

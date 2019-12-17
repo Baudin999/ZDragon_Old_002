@@ -67,7 +67,7 @@ namespace Compiler
                 if (existingNode is null)
                 {
                     nodes.Add(new ASTType(
-                        option.Name,
+                        option.ASTName.Clone<ASTName>(),
                         dataNode.Module,
                         option.Parameters,
                         Enumerable.Empty<string>(),
@@ -136,7 +136,7 @@ namespace Compiler
                 else if (source is ASTType type)
                 {
                     var newType = new ASTType(
-                        alias.Name,
+                        alias.ASTName.Clone<ASTName>(),
                         alias.Module,
                         Enumerable.Empty<string>(),
                         Enumerable.Empty<string>(),
@@ -178,7 +178,7 @@ namespace Compiler
                         });
 
                         return new ASTTypeField(
-                            (string)field.Name.Clone(),
+                            field.ASTName.Clone<ASTName>(),
                             (string)field.Module.Clone(),
                             ObjectCloner.CloneList(field.Annotations),
                             ObjectCloner.CloneList(field.Directives),
@@ -188,7 +188,7 @@ namespace Compiler
                     });
 
                     var newType = new ASTType(
-                        (string)alias.Name.Clone(),
+                        alias.ASTName.Clone<ASTName>(),
                         (string)alias.Module.Clone(),
                         ObjectCloner.CloneList(clone.Parameters),
                         ObjectCloner.CloneList(clone.Extensions),

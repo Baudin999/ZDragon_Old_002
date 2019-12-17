@@ -6,6 +6,7 @@ namespace Compiler.AST
 {
     public class ASTOption : IASTNode, ICloneable
     {
+        public Token? Token { get; } = Token.Empty();
         public string Value { get; }
         public string Module { get; }
         public IEnumerable<ASTAnnotation> Annotations { get; }

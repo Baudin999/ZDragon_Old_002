@@ -6,6 +6,7 @@ namespace Compiler.AST
 {
     public class ASTView : IASTNode, INamable, ICloneable
     {
+        public Token? Token { get; } = Token.Empty();
         public string Name { get; }
         public string Module { get; }
         public IEnumerable<string> Nodes { get; }

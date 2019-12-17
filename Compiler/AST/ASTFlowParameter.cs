@@ -7,6 +7,7 @@ namespace Compiler.AST
     public class ASTFlowParameter : IASTNode
     {
         public string Name { get; }
+        public Token? Token { get; } = Token.Empty();
         public string Module { get; } = "";
         public IEnumerable<ASTTypeDefinition> Types { get; }
 

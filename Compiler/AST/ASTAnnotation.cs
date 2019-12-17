@@ -7,7 +7,7 @@ namespace Compiler.AST
 {
     public class ASTAnnotation : IASTNode, ICloneable
     {
-
+        public Token? Token { get; } = Token.Empty();
         public string Value { get; private set; } = "";
         public string Module { get; } = "";
 

@@ -7,7 +7,9 @@ namespace Compiler.AST
 {
     public class ASTTypeField : IASTNode, IRestrictable, IElement, INamable, ICloneable, IEqualityComparer<ASTTypeField>
     {
-        public string Name { get; }
+        public Token? Token { get; } = Token.Empty();
+        public ASTName ASTName { get; }
+        public string Name { get { return this.ASTName.Name; } }
         public string Module { get; }
         public IEnumerable<ASTAnnotation> Annotations { get; }
         public IEnumerable<ASTDirective> Directives { get; }
@@ -17,7 +19,7 @@ namespace Compiler.AST
         public FieldOrigin Origin { get; }
 
         public ASTTypeField(
-            string name,
+            ASTName name,
             string module,
             IEnumerable<ASTAnnotation> annotations,
             IEnumerable<ASTDirective> directives,
@@ -26,7 +28,7 @@ namespace Compiler.AST
             FieldOrigin origin = FieldOrigin.Original
             )
         {
-            this.Name = name;
+            this.ASTName = name;
             this.Module = module;
             this.Annotations = annotations;
             this.Directives = directives;
@@ -41,20 +43,14 @@ namespace Compiler.AST
             var annotations = ASTAnnotation.Parse(parser).ToList();
 
             var pluck = parser.TryConsume(TokenType.KW_Pluck);
-            var name = "";
+            
             if (pluck is null)
             {
-                name = parser.Consume(TokenType.Identifier).Value;
+                var name = ASTName.Parse(parser);
                 parser.Consume(TokenType.Separator);
-            }
-
-            var types = ASTTypeDefinition.Parse(parser, module);
-            var restrictions = ASTRestriction.CreateRestrictions(parser, TokenType.KW_Type).ToList();
-            parser.Consume(TokenType.EndStatement);
-
-
-            if (pluck is null)
-            {
+                var types = ASTTypeDefinition.Parse(parser, module);
+                var restrictions = ASTRestriction.CreateRestrictions(parser, TokenType.KW_Type).ToList();
+                parser.Consume(TokenType.EndStatement);
                 return (d_errors, new ASTTypeField(
                     name,
                     module,
@@ -64,11 +60,13 @@ namespace Compiler.AST
                     restrictions,
                     FieldOrigin.Original
                     ));
-            }
-            else
+            } else
             {
+                var types = ASTTypeDefinition.Parse(parser, module);
+                var restrictions = ASTRestriction.CreateRestrictions(parser, TokenType.KW_Type).ToList();
+                parser.Consume(TokenType.EndStatement);
                 return (d_errors, new ASTPluckedField(
-                    name,
+                    new ASTName("", pluck),
                     module,
                     annotations,
                     directives,
@@ -106,7 +104,7 @@ namespace Compiler.AST
             if (this is ASTPluckedField)
             {
                 return new ASTPluckedField(
-                (string)this.Name.Clone(),
+                this.ASTName.Clone<ASTName>(),
                 (string)this.Module.Clone(),
                 ObjectCloner.CloneList(this.Annotations.ToList()),
                 ObjectCloner.CloneList(this.Directives.ToList()),
@@ -118,7 +116,7 @@ namespace Compiler.AST
             else
             {
                 return new ASTTypeField(
-                    (string)this.Name.Clone(),
+                    this.ASTName.Clone<ASTName>(),
                     (string)this.Module.Clone(),
                     ObjectCloner.CloneList(this.Annotations.ToList()),
                     ObjectCloner.CloneList(this.Directives.ToList()),
@@ -133,7 +131,7 @@ namespace Compiler.AST
             if (this is ASTPluckedField)
             {
                 return new ASTPluckedField(
-                (string)this.Name.Clone(),
+                this.ASTName.Clone<ASTName>(),
                 (string)this.Module.Clone(),
                 ObjectCloner.CloneList(this.Annotations.ToList()),
                 ObjectCloner.CloneList(this.Directives.ToList()),
@@ -145,7 +143,7 @@ namespace Compiler.AST
             else
             {
                 return new ASTTypeField(
-                    (string)this.Name.Clone(),
+                    this.ASTName.Clone<ASTName>(),
                     (string)this.Module.Clone(),
                     ObjectCloner.CloneList(this.Annotations.ToList()),
                     ObjectCloner.CloneList(this.Directives.ToList()),
@@ -178,7 +176,7 @@ namespace Compiler.AST
     public class ASTPluckedField : ASTTypeField
     {
         public ASTPluckedField(
-            string name,
+            ASTName name,
             string module,
             IEnumerable<ASTAnnotation> annotations,
             IEnumerable<ASTDirective> directives,

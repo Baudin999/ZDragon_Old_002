@@ -98,5 +98,33 @@ and the positions in the text file.");
             Assert.Equal(0, EOF.StartColumn);
             Assert.Equal(0, EOF.EndColumn);
         }
+
+        [Fact]
+        public void LexExample01()
+        {
+            var lexer = new Lexer();
+            var result = lexer.Lex(@"
+# Chapter One
+
+type Person
+
+## Chapter Two
+
+alias Name = String;
+
+").Where(n=> n.TokenType != TokenType.NewLine).ToList();
+
+
+            var chapterOne = result[0];
+            var person = result[1];
+            var chapterTwo = result[2];
+            var aliasOne = result[3];
+
+            Assert.NotNull(chapterOne);
+            Assert.Equal(1, chapterOne.StartLine);
+            Assert.NotNull(person);
+            Assert.NotNull(chapterTwo);
+            Assert.NotNull(aliasOne);
+        }
     }
 }

@@ -9,6 +9,7 @@ namespace Compiler.AST
     public class ASTDirective : IASTNode, ICloneable
     {
         public string Key { get; }
+        public Token? Token { get; } = Token.Empty();
         public string Value { get; }
         public string Module { get; }
         //public ASTDirective(object v) { }

@@ -3,6 +3,7 @@ namespace Compiler.AST
 {
     public class ASTParagraph: IASTNode, IASTMardownNode
     {
+        public Token? Token { get; } = Token.Empty();
         public string Content { get; }
         public string Module { get; }
 

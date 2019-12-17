@@ -15,9 +15,6 @@ namespace Compiler
 
         public TokenType TokenType { get; set; }
 
-        public Token()
-        {
-        }
 
         public override string ToString()
         {
@@ -60,6 +57,19 @@ namespace Compiler
             };
 
             return token;
+        }
+
+        public static Token Empty()
+        {
+            return new Token
+            {
+                StartColumn = 0,
+                EndColumn = 0,
+                StartLine = 0,
+                EndLine = 0,
+                TokenType = TokenType.Other,
+                Value = ""
+            };
         }
     }
 

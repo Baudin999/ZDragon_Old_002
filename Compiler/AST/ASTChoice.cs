@@ -6,6 +6,7 @@ namespace Compiler.AST
 {
     public class ASTChoice : IASTNode, INamable, ICloneable
     {
+        public Token? Token { get; } = Token.Empty();
         public string Name { get; }
         public string Module { get; }
         public IEnumerable<ASTAnnotation> Annotations { get; }

@@ -7,12 +7,12 @@ namespace Mapper.XSD
 {
 	public partial class Mapper
 	{
-		public static XmlSchemaType MapNumber<T>(T e) where T : IElement, IRestrictable { 
-            XmlSchemaSimpleType simpleType = new XmlSchemaSimpleType();
+		public static XmlSchemaType MapNumber<T>(T e) where T : IElement, INamable, IRestrictable { 
+            var simpleType = new XmlSchemaSimpleType();
             simpleType.Name = e.Name;
 
 
-            XmlSchemaSimpleTypeRestriction restriction = new XmlSchemaSimpleTypeRestriction();
+            var restriction = new XmlSchemaSimpleTypeRestriction();
             restriction.BaseTypeName = new System.Xml.XmlQualifiedName("decimal", DefaultSchemaNamespace);
 
             var min = e.Restrictions.FirstOrDefault(r => r.Key == "min");
@@ -20,14 +20,14 @@ namespace Mapper.XSD
 
             if (min != null)
             {
-                XmlSchemaMinLengthFacet mMin = new XmlSchemaMinLengthFacet();
+                var mMin = new XmlSchemaMinLengthFacet();
                 mMin.Value = min is null ? "1" : min.Value;
                 restriction.Facets.Add(mMin);
             }
 
             if (max != null)
             {
-                XmlSchemaMaxLengthFacet mMax = new XmlSchemaMaxLengthFacet();
+                var mMax = new XmlSchemaMaxLengthFacet();
                 mMax.Value = max is null ? "100" : max.Value;
                 restriction.Facets.Add(mMax);
             }

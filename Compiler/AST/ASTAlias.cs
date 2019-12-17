@@ -7,7 +7,9 @@ namespace Compiler.AST
 {
     public class ASTAlias : IASTNode, IRestrictable, IElement, INamable, IRootNode, ICloneable
     {
-        public string Name { get; } = "";
+        public ASTName ASTName { get; }
+        public string Name { get { return this.ASTName.Name; } }
+        public Token? Token { get; } = Token.Empty();
         public string Module { get; }
         public IEnumerable<ASTTypeDefinition> Types { get; } = Enumerable.Empty<ASTTypeDefinition>();
         public IEnumerable<ASTRestriction> Restrictions { get; } = Enumerable.Empty<ASTRestriction>();
@@ -15,13 +17,13 @@ namespace Compiler.AST
         public IEnumerable<ASTDirective> Directives { get; } = Enumerable.Empty<ASTDirective>();
 
         public ASTAlias(
-            string name,
+            ASTName astName,
             string module,
             IEnumerable<ASTTypeDefinition> types,
             IEnumerable<ASTRestriction> restrictions,
             IEnumerable<ASTAnnotation> annotations,
             IEnumerable<ASTDirective> directives) {
-            this.Name = name;
+            this.ASTName = astName;
             this.Types = types;
             this.Restrictions = restrictions;
             this.Annotations = annotations;
@@ -38,7 +40,7 @@ namespace Compiler.AST
             var errors = new List<ASTError>();
             
             if (parser.HasNext()) parser.Next();
-            var nameId = parser.Consume(TokenType.Identifier);
+            var name = ASTName.Parse(parser);//parser.Consume(TokenType.Identifier);
             parser.Consume(TokenType.Equal);
             var types = ASTTypeDefinition.Parse(parser, module).ToList();
             var restrictions = ASTRestriction.CreateRestrictions(parser, TokenType.KW_Alias).ToList();
@@ -46,7 +48,7 @@ namespace Compiler.AST
             parser.Consume(TokenType.ContextEnded);
 
             var result = new ASTAlias(
-                nameId.Value,
+                name,
                 module,
                 types,
                 restrictions,
@@ -59,7 +61,7 @@ namespace Compiler.AST
         public object Clone()
         {
             return new ASTAlias(
-                (string)this.Name.Clone(),
+                this.ASTName.Clone<ASTName>(),
                 (string)this.Module.Clone(),
                 ObjectCloner.CloneList(this.Types.ToList()),
                 ObjectCloner.CloneList(this.Restrictions.ToList()),

@@ -7,20 +7,20 @@ namespace Mapper.XSD
 {
 	public partial class Mapper
 	{
-		public static XmlSchemaType MapList<T>(T e) where T : IElement, IRestrictable {
-            XmlSchemaComplexType complexType = new XmlSchemaComplexType();
+		public static XmlSchemaType MapList<T>(T e) where T : IElement, INamable, IRestrictable {
+            var complexType = new XmlSchemaComplexType();
             complexType.Name = e.Name;
 
-            XmlSchemaSequence sequence = new XmlSchemaSequence();
+            var sequence = new XmlSchemaSequence();
             var min = e.Restrictions.FirstOrDefault(r => r.Key == "min");
             var max = e.Restrictions.FirstOrDefault(r => r.Key == "max");
             sequence.MinOccurs = min is null ? 0 : int.Parse(min.Value);
             sequence.MaxOccurs = max is null ? 10 : int.Parse(max.Value);
 
 
-            string _type = e.Types.Last().Value;
+            var _type = e.Types.Last().Value;
 
-            XmlSchemaElement element = new XmlSchemaElement();
+            var element = new XmlSchemaElement();
             switch (_type)
             {
                 case "String":

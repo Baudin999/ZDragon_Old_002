@@ -4,18 +4,23 @@ using System.Linq;
 
 namespace Compiler.AST
 {
-    public class ASTDataOption : IASTNode, ICloneable
+    public class ASTDataOption : IASTNode, INamable, ICloneable
     {
-        public string Name { get; }
+        public ASTName ASTName { get; }
+        public string Name { get { return this.ASTName.Name; } }
+        public Token? Token { get; } = Token.Empty();
         public string Module { get; }
+
         public IEnumerable<ASTAnnotation> Annotations { get; }
         public IEnumerable<string> Parameters { get; }
 
-        public ASTDataOption(string name,
+        public ASTDataOption(
+            ASTName astName,
             string module,
             IEnumerable<ASTAnnotation> annotations,
-            IEnumerable<string> parameters) {
-            this.Name = name;
+            IEnumerable<string> parameters)
+        {
+            this.ASTName = astName;
             this.Module = module;
             this.Annotations = annotations;
             this.Parameters = parameters;
@@ -31,12 +36,12 @@ namespace Compiler.AST
                 var annotations = ASTAnnotation.Parse(parser);
                 parser.Consume(TokenType.Or);
 
-                var id = parser.Consume(TokenType.Identifier);
+                var id = ASTName.Parse(parser);//parser.Consume(TokenType.Identifier);
                 var tokens = parser.ConsumeWhile(TokenType.Identifier, TokenType.GenericParameter);
                 var parameters = tokens.Select(t => t.Value).ToList();
                 parser.TryConsume(TokenType.EndStatement);
 
-                result.Add(new ASTDataOption(id.Value, module, annotations, parameters));
+                result.Add(new ASTDataOption(id, module, annotations, parameters));
             }
             return (errors, result);
         }
@@ -44,7 +49,7 @@ namespace Compiler.AST
         public object Clone()
         {
             return new ASTDataOption(
-                (string)this.Name.Clone(),
+                this.ASTName.Clone<ASTName>(),
                 (string)this.Module.Clone(),
                 ObjectCloner.CloneList(this.Annotations.ToList()),
                 ObjectCloner.CloneList(this.Parameters.ToList())

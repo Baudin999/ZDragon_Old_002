@@ -5,7 +5,7 @@ namespace Compiler.AST
 {
     public interface IElement
     {
-        public string Name { get; }
+        public ASTName ASTName { get; }
         public IEnumerable<ASTTypeDefinition> Types { get;  }
     }
 }

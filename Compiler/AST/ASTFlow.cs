@@ -9,6 +9,7 @@ namespace Compiler.AST
     {
         public string Name { get; }
         public string Module { get; }
+        public Token? Token { get; } = Token.Empty();
         public IEnumerable<IFlowStep> Steps { get; } = Enumerable.Empty<IFlowStep>();
 
         public ASTFlow(string name, string module, IEnumerable<IFlowStep> steps)

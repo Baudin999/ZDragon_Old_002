@@ -7,6 +7,7 @@ namespace Compiler.AST
 {
     public class ASTTypeDefinition : IASTNode, ICloneable
     {
+        public Token? Token { get; } = Token.Empty();
         public string Value { get; }
         public string Module { get; }
         public bool IsGeneric => this.Value.StartsWith("'", StringComparison.Ordinal);
