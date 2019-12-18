@@ -1,4 +1,8 @@
-<link src="style.css" rel="stylesheet" type="text/css"/>
+<style>
+pre {
+  white-space: pre-wrap!important;
+}
+</style>
 
 # Common Use Cases
 
