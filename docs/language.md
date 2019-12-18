@@ -7,6 +7,34 @@ It's always good to get the terminology right. ZDragon is the tool, this tool ha
 build/watch and serve your content. ZDragon also parses your `car-lang` code and transpiles it to
 HTML, XSDs and JSON schemas.
 
+## Basic Types
+
+`car-lang` supports the following base types:
+
+- `String`
+- `Number`
+- `Decimal`
+- `Boolean`
+- `Date`
+- `Time`
+- `DateTime`
+
+These types are the building blocks for all of your custom types.
+
+Example:
+
+```
+type Person =
+    FirstName: String;
+    LastName: String;
+```
+
+Example 02:
+
+```
+alias Foo = Number;
+```
+
 ## Types
 
 Types are the bread and butter of ZDragon and explain how certain data structures should look. Type
@@ -211,6 +239,23 @@ As you can see the types have been created and the structure of the schema looks
 Algebraic Data Types or ADTs for short have a lot of merrit but might seem hard to grasp. You will
 notice that they are the last types you will reach for when designing a logical data model but once
 you get into service models you will use them for almost every result.
+
+## Annotations
+
+Annotations are "in-type" descriptions. Annotations will be taken along with every transformation.
+You can annotate a type by using the `@` sign. You can use multiple annotations and those will be
+aggregated into a single description. For example:
+
+```
+@ The person is
+@ is someone...
+type Person =
+    @ The first name
+    FirstName: String;
+
+    @ The last Name
+    LastName: String;
+```
 
 ## Conclusion
 
