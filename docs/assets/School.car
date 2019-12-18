@@ -1,0 +1,82 @@
+# School Model
+
+This model describes the models used in the School Domain.
+
+## School
+
+A school is an educational institution designed to provide 
+learning spaces and learning environments for the teaching 
+of **students** (or "pupils") under the direction of **teachers**. 
+Most countries have systems of formal education, which is 
+commonly compulsory. In these systems, students progress 
+through a series of schools. The names for these schools 
+vary by country (discussed in the Regional section below) 
+but generally include primary school for young children 
+and secondary school for teenagers who have completed primary 
+education. An institution where higher education is taught, 
+is commonly called a university college or university, but 
+these higher education institutions are usually not compulsory.
+
+[link](https://en.wikipedia.org/wiki/School)
+
+type School =
+    Students: List Student;
+    Teachers: List Teacher;
+    Courses: List Course;
+
+## Student
+
+A **student** is primarily a **person** enrolled in a school or 
+other educational institution who attends **classes** in a 
+**course** to attain the appropriate level of mastery of a 
+**subject** under the guidance of an instructor and who devotes 
+time outside class to do whatever activities the instructor 
+assigns that are necessary either for **class** preparation or 
+to submit evidence of progress towards that mastery. In the 
+broader sense, a **student** is anyone who applies themselves 
+to the intensive intellectual engagement with some matter necessary 
+to master it as part of some practical affair in which such mastery 
+is basic or decisive.
+
+type Student =
+    Class: Class;
+    Courses: List Course;
+
+## Teacher
+
+A teacher (also called a school teacher or, in some contexts, 
+an educator) is a person who helps students to acquire knowledge 
+or competence.
+
+type Teacher =
+    Course: Course;
+
+## Class
+
+A grouping of students taking one or more courses together.
+
+type Class
+
+## Subject
+
+A general categorization of ideas based on common criteria 
+which are of import to students taking  course.
+
+type Subject
+
+## Course
+
+Courses are time-limited blocks of education, lasting anywhere 
+between several weeks to several months. They can either be 
+compulsory material or "elective". An elective is usually not a 
+required course, but there are a certain number of non-specific 
+electives that are required for certain majors.
+
+type Course =
+    Subjects: List Subject;
+    Type: CourseType;
+
+choice CourseType =
+    | "Manditory"
+    | "Elective"
+

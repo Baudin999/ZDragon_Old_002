@@ -34,7 +34,7 @@ namespace Compiler
         public Token Peek(int index = 1) => tokenStream[position + index];
 
         public static Parser Empty() => new Parser();
-        public static string[] BaseTypes = { "String", "Number", "Boolean", "Date", "Time", "DateTime" };
+        public static string[] BaseTypes = { "String", "Number", "Decimal", "Boolean", "Date", "Time", "DateTime" };
 
         public IEnumerable<IASTNode> Parse(string moduleName = "")
         {
@@ -150,6 +150,7 @@ namespace Compiler
         /// <returns></returns>
         public Token Consume(TokenType tokenType, bool ignoreWhitespace = true)
         {
+            
             while (true)
             {
                 if (this.Current.TokenType == tokenType)
@@ -164,17 +165,20 @@ namespace Compiler
                 }
                 else
                 {
-                    var previous1 = this.TryTake(-2)?.Value ?? "";
-                    var previous = this.TryTake()?.Value ?? "";
-                    var value = this.TryTake(0)?.Value ?? "";
-                    var next = this.TryTake(1)?.Value ?? "";
-                    var next1 = this.TryTake(2)?.Value ?? "";
+                    var parts = new List<string?>();
+                    for (var i = -10; i < 11; ++i)
+                    {
+                        parts.Add(this.TryTake(i)?.Value);
+                    }
+                    var s = string.Join("", parts.OfType<string>().ToList());
+                    var value = this.Current.Value;
+
                     var message = tokenType switch
                     {
                         TokenType.Identifier => $@"
 Expected an Identifier but found a {this.Current.TokenType}: '{value}'.
 Line {this.Current.StartLine}, Column {this.Current.StartColumn}
-...{previous1} {previous} {value} {next} {next1}...
+...{s}...
 
 In ZDragon we expect types to be represented by an Identifier and
 identifiers always start with a capital letter and have no spaces
@@ -182,7 +186,7 @@ or other symbols.
 ",
                         TokenType.EndStatement => $@"
 Expected an Enstatement but found a {this.Current.TokenType}: '{value}'.
-...{previous1} {previous} {value} {next} {next1}...
+...{s}...
 ",
                         _ => $"Invalid Token: Expected a {tokenType} but found {this.Current.TokenType} on line {this.Current.StartLine} and column {this.Current.StartColumn}"
                     };

@@ -6,6 +6,10 @@ namespace Compiler.AST
     public interface IElement
     {
         public ASTName ASTName { get; }
-        public IEnumerable<ASTTypeDefinition> Types { get;  }
+    }
+
+    public interface ITypeble
+    {
+        public IEnumerable<ASTTypeDefinition> Types { get; }
     }
 }

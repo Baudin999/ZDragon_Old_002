@@ -43,6 +43,7 @@ class {astChoice.Name} {{
                 var _type = f.Name;
                 if (_type != "String"
                     && _type != "Number"
+                    && _type != "Decimal"
                     && _type != "Boolean"
                     && _type != "Date"
                     && _type != "DateTime"
@@ -76,6 +77,7 @@ class {astData.Name} {{
                 var _type = f.Types.Last().Value;
                 if (_type != "String"
                     && _type != "Number"
+                    && _type != "Decimal"
                     && _type != "Boolean"
                     && _type != "Date"
                     && _type != "DateTime"

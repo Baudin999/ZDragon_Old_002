@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Compiler.AST
 {
-    public class ASTTypeField : IASTNode, IRestrictable, IElement, INamable, ICloneable, IEqualityComparer<ASTTypeField>
+    public class ASTTypeField : IASTNode, IRestrictable, IElement, ITypeble, INamable, ICloneable, IEqualityComparer<ASTTypeField>
     {
         public Token? Token { get; } = Token.Empty();
         public ASTName ASTName { get; }

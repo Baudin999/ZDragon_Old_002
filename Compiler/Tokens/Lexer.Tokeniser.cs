@@ -55,40 +55,6 @@ namespace Compiler
             return result;
         }
 
-        internal static Token TakeNewLine(Input input)
-        {
-            var result = new Token()
-            {
-                StartIndex = input.Position,
-                StartColumn = input.Column,
-                StartLine = input.Line,
-                EndIndex = input.Position + 1,
-                EndColumn = 0,
-                EndLine = input.Line + 1,
-                Value = Environment.NewLine,
-                TokenType = TokenType.NewLine
-            };
-            input.Next();
-            return result;
-        }
-
-        //internal static Token TakeIndent(Input input)
-        //{
-        //    input.Next();
-        //    return new Token()
-        //    {
-        //        StartIndex = input.Position - 1,
-        //        StartColumn = input.Column - 1,
-        //        StartLine = input.Line - 1,
-        //        EndIndex = input.Position,
-        //        EndColumn = 0,
-        //        EndLine = input.Line,
-        //        Value = Environment.NewLine,
-        //        TokenType = TokenType.NewLine
-        //    };
-        //}
-
-
     }
 
     public static class Char2

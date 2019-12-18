@@ -24,8 +24,17 @@ documentation language with some small features taken from real programming lang
 clear. ZDragon is _not_ a Turing complete programming language. Nor does it try to be one. ZDragon
 lets you write down your thought and it will spit out models and diagrams.
 
-[Running ZDragon](./running_zdragon.md)<br />[The CLI tool](./cli.html) <br />
-[The Language](./language.html) <br /> [Flows (Sequence Diagrams)](./flows.html) <br />
+- [Running ZDragon](./running_zdragon.md)
+- [The CLI tool](./cli.html)
+- [The Language](./language.html)
+- [Reuse](./reuse.html)
+- [Flows (Sequence Diagrams)](./flows.html)
+
+## Learning ZDragon
+
+These links are designed to help you understand and create ZDragon models:
+
+- [Common Usecases 01 - Logical Data Models](./common_usecases_logical_data_model.md)
 
 ## Roadmap
 

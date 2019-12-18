@@ -61,7 +61,7 @@ namespace Mapper.JSON
 
         internal static bool IsBasicType(string t)
         {
-            return t == "String" || t == "Number" || t == "Boolean" || t == "Date" || t == "Time" || t == "DateTime";
+            return Parser.BaseTypes.Contains(t);
         }
 
 

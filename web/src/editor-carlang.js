@@ -1,6 +1,6 @@
 export const tokenizer = {
   brackets: [{ open: "{*", close: "*}", token: "delimiter.bracket" }],
-  keywords: ["type", "alias", "choice", "view", "flow", "data"],
+  keywords: ["type", "alias", "choice", "data", "open", "view", "flow"],
   autoClosingPairs: [{ open: "{*", close: "*}" }],
   digits: /\d+(_+\d+)*/,
   tokenizer: {
@@ -92,7 +92,3 @@ alias ${type} = ${word};
     }
   });
 };
-
-// export const completionProvider = (monaco, editor) => {
-//     //
-// }

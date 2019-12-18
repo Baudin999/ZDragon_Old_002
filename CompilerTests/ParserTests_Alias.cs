@@ -208,9 +208,9 @@ alias AnotherSchoolView = SchoolView;
 
             Assert.NotNull(school);
             Assert.NotNull(schoolView);
-            Assert.NotNull(anotherShoolView);
+            Assert.Null(anotherShoolView);
 
-            Assert.Equal(3, g.AST.Count);
+            Assert.Equal(2, g.AST.Count);
         }
     }
 }

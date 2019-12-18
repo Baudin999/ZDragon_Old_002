@@ -8,6 +8,7 @@
     createCommands,
     createActions
   } from "./editor-carlang.js";
+  import { completionProvider } from "./editor-completionProvider.js";
 
   let errors = [];
   let editor;
@@ -54,10 +55,6 @@
       body: code
     });
     setTimeout(getErrors, 2000);
-    // setTimeout(() => {
-    //   var iframe = document.getElementById("iframe--preview");
-    //   iframe.src = iframe.src;
-    // }, 2000);
   };
 
   let getErrors = async () => {
@@ -65,7 +62,10 @@
       "/api/module/" + navigator.module + "/errors"
     );
     errors = await errorsRequest.json();
-    console.log(errors);
+
+    if (errors && errors.length > 0) {
+      console.log(errors);
+    }
   };
 
   function mouseTrap(e) {
@@ -87,7 +87,7 @@
         language: "carlang",
         theme: "carlangTheme",
         scrollBeyondLastLine: false,
-        roundedSelection: false,
+        roundedSelection: true,
         minimap: {
           enabled: false
         }
@@ -95,26 +95,8 @@
 
       createCommands(monaco, editor);
       createActions(monaco, editor);
+      completionProvider(monaco, editor);
       getcode();
-
-      monaco.languages.registerCompletionItemProvider("carlang", {
-        provideCompletionItems: () => {
-          var suggestions = [
-            {
-              label: "snippet: type",
-              kind: monaco.languages.CompletionItemKind.Snippet,
-              insertText: [
-                "type ${1:TypeName} =",
-                "\t${2: FieldName}: ${3: FieldType};"
-              ].join("\n"),
-              insertTextRules:
-                monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-              documentation: "Snippet: New Type"
-            }
-          ];
-          return { suggestions: suggestions };
-        }
-      });
     });
 
     window.addEventListener("keydown", mouseTrap, true);

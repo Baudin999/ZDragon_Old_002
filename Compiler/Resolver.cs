@@ -30,7 +30,7 @@ namespace Compiler
                 {
                     var (resolve_alias_errors, resolvedAlias) = ResolveAlias(alias);
                     errors.AddRange(resolve_alias_errors);
-                    nodes.Add(resolvedAlias);
+                    if (resolvedAlias != null) nodes.Add(resolvedAlias);
                 }
                 else if (node is ASTType t)
                 {
@@ -104,7 +104,7 @@ namespace Compiler
             }
         }
 
-        private (IEnumerable<IASTError>, IASTNode) ResolveAlias(ASTAlias alias)
+        private (IEnumerable<IASTError>, IASTNode?) ResolveAlias(ASTAlias alias)
         {
             // here we'll resolve generic aliasses
             var _mod = alias.Types.First().Value;
@@ -131,7 +131,8 @@ namespace Compiler
                 }
                 else if (source is ASTView)
                 {
-                    return (errors, (IASTNode)((ASTView)source).Clone(alias.Name));
+                    return (errors, null);
+                    //return (errors, (IASTNode)((ASTView)source).Clone(alias.Name));
                 }
                 else if (source is ASTType type)
                 {

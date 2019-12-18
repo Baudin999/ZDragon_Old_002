@@ -44,4 +44,6 @@ view we want to gain more information about our environment and our models.
 
 ## Way of working with ZDragon
 
-Normally we
+Normally we run ZDragon from the command line, but this might be because we love terminals. The
+easiest way is to double click the executable. Another way is to add ZDragon (`ckc` or `ckc.exe`) to
+your local PATH variable so that you can run it from any directory.

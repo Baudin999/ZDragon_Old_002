@@ -151,7 +151,7 @@ Have fun with your module!
 
             // Add event handlers.
             watcher.Changed += OnChanged;
-            //watcher.Created += OnCreate;
+            watcher.Created += OnCreate;
             watcher.Deleted += OnDelete;
             watcher.Renamed += OnRenamed;
 
@@ -195,11 +195,29 @@ Have fun with your module!
             }
         }
 
+        private void OnCreate(object source, FileSystemEventArgs e)
+        {
+            try
+            {
+                var module = Modules.FirstOrDefault(m => m.Path == e.FullPath);
+                if (module is null)
+                {
+                    Console.WriteLine($"{e.ChangeType}: {e.FullPath}");
+                    module = new Module(e.FullPath, this.Path, this);
+                    Modules.Add(module);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+
         private void OnDelete(object source, FileSystemEventArgs e)
         {
             try
             {
-                Console.WriteLine($"File: {e.FullPath} {e.ChangeType}");
+                Console.WriteLine($"{e.ChangeType}: {e.FullPath}");
                 Modules.Remove(Modules.FirstOrDefault(m => m.Path == e.FullPath));
             }
             catch (Exception ex)
@@ -212,7 +230,7 @@ Have fun with your module!
         {
             try
             {
-                Console.WriteLine($"File: {e.OldFullPath} renamed to {e.FullPath}");
+                Console.WriteLine($"{e.ChangeType}: {e.OldFullPath} renamed to {e.FullPath}");
                 Modules.Remove(Modules.FirstOrDefault(m => m.Path == e.OldFullPath));
 
                 var module = new Module(e.FullPath, this.Path, this);

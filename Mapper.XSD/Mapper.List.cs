@@ -7,7 +7,7 @@ namespace Mapper.XSD
 {
 	public partial class Mapper
 	{
-		public static XmlSchemaType MapList<T>(T e) where T : IElement, INamable, IRestrictable {
+		public static XmlSchemaType MapList<T>(T e) where T : IElement, ITypeble, INamable, IRestrictable {
             var complexType = new XmlSchemaComplexType();
             complexType.Name = e.Name;
 

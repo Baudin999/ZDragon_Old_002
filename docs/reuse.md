@@ -35,3 +35,47 @@ type Customer extends Person =
         & min 2
         & max 40;
 ```
+
+## Plucking Fields
+
+The previous chapter described how to reuse entire types and extend these types with extra
+information. Plucking fields is the other option for reuse. the idea is that you can pluck a single
+field from a type.
+
+```
+type Person =
+    FirstName: String
+        & pattern /[A-Z][a-z]{2, 23}/
+    ;
+    LastName: String;
+    DateOfBirth: Date;
+
+type Customer =
+    pluck Person.FirstName;
+    pluck Person.LastName;
+```
+
+The `Customer` type will now only have the `FirstName` and the `LastName` exactly as defined in the
+`Person` type. This is a fairly tedious but useful way of reusing your types.
+
+## Breaking things up
+
+Another way to achieve the previous result is to break types up into smaller types.
+
+```
+type Namable =
+    FirstName: String
+        & pattern /[A-Z][a-z]{2, 23}/
+    ;
+    LastName: String;
+
+type Birthable =
+    DateOfBirth: Date;
+
+type Person extends Namable Birthable
+type Customer extends Namable
+```
+
+The approach requires you to think about how types are broken up and how they will be used in your
+processes and APIs. This approach is hard but eventually it will pay off. In this way you can break
+up your types into subsets you can actually reuse in your running software.

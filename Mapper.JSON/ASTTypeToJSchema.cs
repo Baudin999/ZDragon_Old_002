@@ -46,16 +46,16 @@ namespace Mapper.JSON
             var _mod = field.Types.First().Value;
             var _type = field.Types.Last().Value;
 
-            return MapDefinition(_mod, _type);
+            return MapDefinition(_mod, _type, field);
         }
 
-        private JSchema MapBasicArray(string _type)
+        private JSchema MapBasicArray(string _type, IRestrictable restrictable)
         {
             var schema = new JSchema
             {
                 Type = JSchemaType.Array
             };
-            schema.Items.Add(MapBasicType(_type));
+            schema.Items.Add(MapBasicType(_type, restrictable));
             return schema;
         }
 
@@ -86,7 +86,7 @@ namespace Mapper.JSON
         {
             var _mod = astAlias.Types.First().Value;
             var _type = astAlias.Types.Last().Value;
-            var result = MapDefinition(_mod, _type);
+            var result = MapDefinition(_mod, _type, astAlias);
             if (result != null)
             {
                 result.Title = astAlias.Name;
@@ -128,14 +128,21 @@ namespace Mapper.JSON
             if (success) NodeNames.Add(name);
         }
 
-        private JSchema? MapDefinition(string _mod, string _type)
+        private JSchema? MapDefinition(string _mod, string _type, IRestrictable restrictable)
         {
             var isBasicType = JsonMapper.IsBasicType(_type);
+            var min = restrictable.Restrictions.FirstOrDefault(r => r.Key == "min");
+            var max = restrictable.Restrictions.FirstOrDefault(r => r.Key == "max");
+            var pattern = restrictable.Restrictions.FirstOrDefault(r => r.Key == "pattern");
+            var decimals = restrictable.Restrictions.FirstOrDefault(r => r.Key == "decimals");
+
             JSchema? result;
 
             if (_mod == "List" && isBasicType)
             {
-                return MapBasicArray(_type);
+                result = MapBasicArray(_type, restrictable);
+                result.MinimumItems = int.Parse(min?.Value ?? "0");
+                result.MaximumItems = int.Parse(min?.Value ?? "10");
             }
             else if (_mod == "List" && !isBasicType)
             {
@@ -143,12 +150,14 @@ namespace Mapper.JSON
                 result = new JSchema
                 {
                     Type = JSchemaType.Array,
+                    MinimumItems = int.Parse(min?.Value ?? "0"),
+                    MaximumItems = int.Parse(min?.Value ?? "10")
                 };
                 result.Items.Add(temp);
             }
             else if (isBasicType)
             {
-                return MapBasicType(_type);
+                result = MapBasicType(_type, restrictable);
             }
             else
             {
@@ -180,12 +189,44 @@ namespace Mapper.JSON
             return result;
         }
 
-        private JSchema MapBasicType(string _type)
+        private JSchema MapBasicType(string _type, IRestrictable restrictable)
         {
+            var min = restrictable.Restrictions.FirstOrDefault(r => r.Key == "min");
+            var max = restrictable.Restrictions.FirstOrDefault(r => r.Key == "max");
+            var pattern = restrictable.Restrictions.FirstOrDefault(r => r.Key == "pattern");
+            var decimals = restrictable.Restrictions.FirstOrDefault(r => r.Key == "decimals");
+
+            var multipleOf = int.Parse(decimals?.Value ?? "2");
+            var d = multipleOf switch
+            {
+                0 => 1d,
+                1 => 0.1,
+                2 => 0.01,
+                3 => 0.001,
+                4 => 0.0001,
+                5 => 0.00001,
+                6 => 0.000001,
+                7 => 0.0000001,
+                8 => 0.00000001,
+                9 => 0.000000001,
+                10 => 0.0000000001,
+                _ => 0.00000000001
+            };
+
             return _type switch
             {
                 "String" => new JSchema { Type = JSchemaType.String },
-                "Number" => new JSchema { Type = JSchemaType.Number },
+                "Number" => new JSchema {
+                    Type = JSchemaType.Integer,
+                    Minimum = int.Parse(min?.Value ?? "0"),
+                    Maximum = int.Parse(min?.Value ?? "100")
+                },
+                "Decimal" => new JSchema {
+                    Type = JSchemaType.Number,
+                    Minimum = int.Parse(min?.Value ?? "0"),
+                    Maximum = int.Parse(min?.Value ?? "100"),
+                    MultipleOf = d
+                },
                 "Boolean" => new JSchema { Type = JSchemaType.Boolean },
                 "Date" => new JSchema { Type = JSchemaType.String, Format = "date" },
                 "Time" => new JSchema { Type = JSchemaType.String, Format = "time" },

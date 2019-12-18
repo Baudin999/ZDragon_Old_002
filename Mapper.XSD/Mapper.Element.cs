@@ -7,7 +7,7 @@ namespace Mapper.XSD
 {
 	public partial class Mapper
 	{
-		public static XmlSchemaElement Element<T>(T e) where T : IElement, INamable, IRestrictable {
+		public static XmlSchemaElement Element<T>(T e) where T : IElement, ITypeble, INamable, IRestrictable {
             var _modifier = e.Types.First().Value;
             var _type = e.Types.Last().Value;
 

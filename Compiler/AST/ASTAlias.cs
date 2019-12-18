@@ -5,7 +5,7 @@ using System.Runtime.Serialization;
 
 namespace Compiler.AST
 {
-    public class ASTAlias : IASTNode, IRestrictable, IElement, INamable, IRootNode, ICloneable
+    public class ASTAlias : IASTNode, IRestrictable, IElement, ITypeble, INamable, IRootNode, ICloneable
     {
         public ASTName ASTName { get; }
         public string Name { get { return this.ASTName.Name; } }

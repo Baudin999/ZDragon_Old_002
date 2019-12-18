@@ -7,7 +7,7 @@ namespace Mapper.XSD
 {
 	public partial class Mapper
 	{
-		public static XmlSchemaType MapDecimal<T>(T e) where T : IElement, INamable, IRestrictable { 
+		public static XmlSchemaType MapNumber<T>(T e) where T : IElement, INamable, IRestrictable { 
             var simpleType = new XmlSchemaSimpleType();
             simpleType.Name = e.Name;
 
@@ -17,7 +17,6 @@ namespace Mapper.XSD
 
             var min = e.Restrictions.FirstOrDefault(r => r.Key == "min");
             var max = e.Restrictions.FirstOrDefault(r => r.Key == "max");
-            var decimals = e.Restrictions.FirstOrDefault(r => r.Key == "decimals");
 
             if (min != null)
             {
@@ -31,15 +30,6 @@ namespace Mapper.XSD
                 var mMax = new XmlSchemaMaxLengthFacet();
                 mMax.Value = max is null ? "100" : max.Value;
                 restriction.Facets.Add(mMax);
-            }
-
-            if (decimals != null)
-            {
-                var mFractionDigits = new XmlSchemaFractionDigitsFacet()
-                {
-                    Value = decimals is null ? "2" : decimals.Value
-                };
-                restriction.Facets.Add(mFractionDigits);
             }
 
             simpleType.Content = restriction;

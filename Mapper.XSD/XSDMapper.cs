@@ -74,6 +74,7 @@ namespace Mapper.XSD
             {
                 "String" => Mapper.MapString(astAlias),
                 "Number" => Mapper.MapNumber(astAlias),
+                "Decimal" => Mapper.MapNumber(astAlias),
                 "Boolean" => Mapper.MapBoolean(astAlias),
                 "Date" => Mapper.MapDate(astAlias),
                 "Time" => Mapper.MapDate(astAlias),
