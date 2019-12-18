@@ -40,6 +40,9 @@ h1.title {
     .nav-button:hover {
         cursor: pointer;
     }
+p {
+    text-align: justify;
+}
 
 
 
@@ -142,9 +145,6 @@ form button {
     color: hotpink;
 }
 
-.codeflask {
-    width: calc(100% - 2rem)!important;
-}
 
 
 /*

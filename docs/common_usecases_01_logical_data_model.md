@@ -6,7 +6,7 @@ pre {
 
 # Common Use Cases
 
-This chapter will focus on solving common use cases when modeling your information. Allong the way
+These chapters will focus on solving common use cases when modeling your information. Allong the way
 we'll look at how to evolve a model form a purely logical data model to an implementation model.
 
 ## Conceptual models
@@ -63,9 +63,12 @@ There are a few things to notice:
 ## Evolving your information
 
 Now that we have definitions of our core concepts we can start dicecting the text we've written to
-figure out the "Peripherals". There are many ways of going about finding these entities. The best
-idea, in our opinion, is doing interviews with subject matter experts and distilling the most used
-_nouns_. We recommend making the most used nouns bold so that they stick out in text.
+figure out the "Peripherals". "Peripherals" are entities which did not start our exploration into
+the subject matter but are important enough to clarify and describe. There are many ways of going
+about finding these peripheral entities.
+
+The best idea, in our opinion, is doing interviews with subject matter experts and distilling the
+most used _nouns_. We recommend making the most used nouns bold so that they stick out in text.
 
 > Markdown: surrounding a selection of words with two '\*\*' will make the selection **bold**.
 
@@ -74,14 +77,22 @@ For example, in the Teacher section we would mark it up like:
 ```
 ## Teacher
 
-A teacher (also called a \*\*school\*\* \*\*teacher\*\* or, in some contexts, an educator) is a **person** who helps \*\*students\*\* to acquire knowledge or competence.
+A teacher (also called a \*\*school teacher\*\* or, in some contexts, an educator) is a **person** who helps \*\*students\*\* to acquire knowledge or competence.
 
 type Teacher
 ```
 
+This text would look something like:
+
+A teacher (also called a \*\*school teacher\*\* or, in some contexts, an educator) is a **person**
+who helps \*\*students\*\* to acquire knowledge or competence.
+
+When rendered on the actual page.
+
 As you can see we've ignored terms like _educator_, _knowledge_ and _competence_. Try and keep the
-number of entites you want to describe as small as possible. After parsing all of the text and
-taking the most important nouns out of the text we'll end up with something like:
+number of entites you want to describe as small as possible, but still enough to clarify your
+domain. After parsing all of the text and taking the most important nouns out of the text we'll end
+up with something like:
 
 ```
 # School Model
@@ -127,6 +138,16 @@ Courses are time-limited blocks of education, lasting anywhere between several w
 type Course
 
 ```
+
+### Recap
+
+We've started with the main (root) entities of our domain and wrote small elaboratory paragraphs
+detailing their use and giving them context.
+
+From these descriptions we've distilled peripheral entities which bring our main entities to life.
+We mark these entites bold so that everyone can see why they are entities in our logical model.
+
+We now have a great conceptual model which can now evolve to a logical model!
 
 ## Adding Cardinality
 
@@ -183,5 +204,44 @@ After creating the relationships between the different models we end up with som
 <div style="width: 300px">
 <img src="./assets/SchoolModel01.png" />
 </div>
+
+### Recap
+
+Cardinality is the relation between entities. In ZDragon we have the following ways of describing a
+relationship:
+
+#### One to One (1..1)
+
+```
+type Address
+type Person =
+    HomeAddress: Address;
+```
+
+#### Zero to One (0..1)
+
+```
+type Address
+type Person =
+    BillingAddress: Maybe Address;
+```
+
+#### Zero to many (0..\*)
+
+```
+type Person =
+    Tags: List String;
+```
+
+#### One to many (1..\*)
+
+```
+type Person =
+    Tags: List String
+        & min 1
+    ;
+```
+
+## Final Result Example
 
 [final result](./assets/School.car)

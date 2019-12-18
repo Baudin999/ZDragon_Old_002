@@ -124,7 +124,7 @@
   }
   .editor-container,
   #editor {
-    width: 700px;
+    /* width: 700px; */
     height: calc(100% - 4rem);
   }
 
@@ -155,7 +155,7 @@
 <div class="editor-container">
   <div id="editor" />
 </div>
-<!-- 
+
 {#if errors && errors.length > 0}
   <div class="errors">
     {#each errors as error}
@@ -165,7 +165,7 @@
       </div>
     {/each}
   </div>
-{/if} -->
+{/if}
 <!-- 
 {#if showPreview}
   <div class="preview">

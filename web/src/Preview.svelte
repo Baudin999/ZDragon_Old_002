@@ -8,9 +8,13 @@
     height: calc(100% - 60px);
   }
   iframe {
-    width: 100%;
     height: 100%;
+    width: 23cm;
+    padding: 0 1cm;
     border: none;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
   }
 </style>
 

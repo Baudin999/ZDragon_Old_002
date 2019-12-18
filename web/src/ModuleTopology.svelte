@@ -1,5 +1,6 @@
 <script>
   import navigator from "./navigator.js";
+
   var options = {
     interaction: {
       dragNodes: false,
@@ -9,8 +10,9 @@
       enabled: false
     }
   };
-  var getData = async () => {
-    var response = await fetch("/api/topology");
+  var getData = async e => {
+    var url = e ? "/api/topology" : "/api/topology/modules";
+    var response = await fetch(url);
     var topology = await response.json();
     var container = document.getElementById("topology");
     var network = new vis.Network(container, topology, options);
@@ -23,7 +25,7 @@
       }
     });
   };
-  getData();
+  getData(false);
 </script>
 
 <style>
@@ -36,8 +38,23 @@
   #topology > *:focus {
     outline: none !important;
   }
+  .options-form {
+    position: fixed;
+    right: 10px;
+    bottom: 10px;
+  }
 </style>
 
 <div class="topology">
   <div id="topology" />
+  <div class="options-form">
+    <div class="form-field">
+      <label>Include Details</label>
+      <input
+        type="checkbox"
+        on:change={e => {
+          getData(e.target.checked);
+        }} />
+    </div>
+  </div>
 </div>

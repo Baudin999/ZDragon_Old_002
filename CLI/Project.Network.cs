@@ -9,7 +9,7 @@ namespace CLI
 {
     public partial class Project
     {
-        public Topology GetTopology()
+        public Topology GetTopology(bool includeDetails)
         {
             var nodes = new List<TopologyNode>();
             var edges = new List<TopologyEdge>();
@@ -27,18 +27,18 @@ namespace CLI
                         {
                             Arrows = "to"
                         });
-                    } else if (node is ASTType)
+                    } else if (includeDetails && node is ASTType)
                     {
                         var _type = ((ASTType)node);
                         var _id = $"{m.Name}.{_type.Name}";
                         nodes.Add(new TopologyNode(_id, _type.Name));
                         edges.Add(new TopologyEdge(moduleName, _id, ""));
-                    } else if (node is ASTAlias alias)
+                    } else if (includeDetails && node is ASTAlias alias)
                     {
                         var _id = $"{m.Name}.{alias.Name}";
                         nodes.Add(new TopologyNode(_id, alias.Name, new TopologyColor("#0096a0")));
                         edges.Add(new TopologyEdge(moduleName, _id, ""));
-                    } else if (node is ASTData data)
+                    } else if (includeDetails && node is ASTData data)
                     {
                         var _id = $"{m.Name}.{data.Name}";
                         nodes.Add(new TopologyNode(_id, data.Name, new TopologyColor("#fef6e1")));

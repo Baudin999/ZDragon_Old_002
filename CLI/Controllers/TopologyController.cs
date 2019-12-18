@@ -10,7 +10,15 @@ namespace CLI.Controllers
         [HttpGet("/api/topology")]
         public IActionResult GetTopology()
         {
-            var topology = Project.Current?.GetTopology();
+            var topology = Project.Current?.GetTopology(true);
+            if (topology is null) return NoContent();
+            else return Ok(topology);
+        }
+
+        [HttpGet("/api/topology/modules")]
+        public IActionResult GetTopologyModules()
+        {
+            var topology = Project.Current?.GetTopology(false);
             if (topology is null) return NoContent();
             else return Ok(topology);
         }

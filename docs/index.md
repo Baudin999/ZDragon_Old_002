@@ -34,7 +34,7 @@ lets you write down your thought and it will spit out models and diagrams.
 
 These links are designed to help you understand and create ZDragon models:
 
-- [Common Usecases 01 - Logical Data Models](./common_usecases_logical_data_model.md)
+- [Common Usecases 01 - Logical Data Models](./common_usecases_01_logical_data_model.md)
 
 ## Roadmap
 
