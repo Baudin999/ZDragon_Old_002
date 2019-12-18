@@ -1,3 +1,5 @@
+<link src="style.css" rel="stylesheet" type="text/css"/>
+
 # Common Use Cases
 
 This chapter will focus on solving common use cases when modeling your information. Allong the way
