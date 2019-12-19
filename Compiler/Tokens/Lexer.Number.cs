@@ -19,7 +19,7 @@ namespace Compiler
             var startColumn = input.Column;
             var startLine = input.Line;
 
-            StringBuilder builder = new StringBuilder();
+            var builder = new StringBuilder();
             while (input.HasNext())
             {
                 if (char.IsNumber(input.Current))
@@ -36,7 +36,7 @@ namespace Compiler
                 }
                 input.Next();
             }
-            return new Token()
+            return new Token
             {
                 StartIndex = start,
                 StartColumn = startColumn,

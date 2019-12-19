@@ -7,7 +7,7 @@ using LiteDB;
 
 namespace CLI
 {
-    public class Database
+    public static class Database
     {
         private static string path = Path.Combine(Project.Current?.OutPath ?? "", "Lexicon.db");
         private static ConnectionString ConnectionString()

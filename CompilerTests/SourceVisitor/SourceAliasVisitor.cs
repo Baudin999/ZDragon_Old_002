@@ -9,12 +9,7 @@ namespace CompilerTests.SourceVisitor
 {
     public class SourceAliasVisitor
     {
-        private readonly ITestOutputHelper output;
-
-        public SourceAliasVisitor(ITestOutputHelper output)
-        {
-            this.output = output;
-        }
+       
 
         [Fact]
         public void TestASTVisitor()

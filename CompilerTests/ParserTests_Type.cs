@@ -121,7 +121,7 @@ type Person =
 
             ASTTypeField ageField = fields[2];
             Assert.Equal("Age", ageField.Name);
-            Assert.Equal(new List<ASTTypeDefinition>() { new ASTTypeDefinition("Number", "") }, ageField.Types);
+            Assert.Equal(new List<ASTTypeDefinition> { new ASTTypeDefinition("Number", "") }, ageField.Types);
             Assert.Single(ageField.Annotations);
         }
 

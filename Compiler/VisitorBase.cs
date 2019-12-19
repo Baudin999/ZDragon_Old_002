@@ -21,7 +21,11 @@ namespace Compiler
             foreach (IASTNode node in NodeTree)
             {
                 var result = Visit(node);
+                // is JITed away and replaced by false in case of a non nullable type. 
+                // https://stackoverflow.com/questions/5340817/what-should-i-do-about-possible-compare-of-value-type-with-null
+#pragma warning disable RECS0017 // Possible compare of value type with 'null'
                 if (result != null)
+#pragma warning restore RECS0017 // Possible compare of value type with 'null'
                 {
                     yield return result;
                 }

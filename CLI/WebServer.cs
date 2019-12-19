@@ -9,7 +9,7 @@ using Microsoft.Extensions.Logging;
 
 namespace CLI
 {
-    public class WebServer
+    public static class WebServer
     {
         public static string RootPath = "";
         public static Task Start(string rootPath)

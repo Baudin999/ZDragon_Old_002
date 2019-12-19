@@ -17,7 +17,7 @@ namespace Compiler
                 builder.Append(input.Current);
                 input.Next();
             }
-            return new Token()
+            return new Token
             {
                 StartIndex = start,
                 StartColumn = startColumn,

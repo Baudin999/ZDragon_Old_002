@@ -35,7 +35,7 @@ namespace Mapper.XSD
 
             if (decimals != null)
             {
-                var mFractionDigits = new XmlSchemaFractionDigitsFacet()
+                var mFractionDigits = new XmlSchemaFractionDigitsFacet
                 {
                     Value = decimals is null ? "2" : decimals.Value
                 };

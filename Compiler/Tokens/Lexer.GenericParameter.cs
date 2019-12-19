@@ -17,7 +17,7 @@ namespace Compiler
             var startColumn = input.Column;
             var startLine = input.Line;
 
-            StringBuilder builder = new StringBuilder();
+            var builder = new StringBuilder();
             builder.Append(input.Current);
 
             while (input.HasNext() && Char.IsLetter(input.Next()))
@@ -25,7 +25,7 @@ namespace Compiler
                 builder.Append(input.Current);
             }
 
-            return new Token()
+            return new Token
             {
                 StartIndex = start,
                 StartColumn = startColumn,

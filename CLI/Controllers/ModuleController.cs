@@ -104,7 +104,7 @@ namespace CLI.Controllers
 
             if (m is null)
             {
-                return await Task.Run(() => NotFound());
+                return await Task.Run(NotFound);
             }
             else { 
                 using (var reader = new StreamReader(Request.Body, Encoding.UTF8))

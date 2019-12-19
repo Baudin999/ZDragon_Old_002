@@ -11,12 +11,7 @@ namespace CompilerTests.XSD
 {
     public class XSDTests
     {
-        private readonly ITestOutputHelper output;
-
-        public XSDTests(ITestOutputHelper output)
-        {
-            this.output = output;
-        }
+       
         [Fact]
         public void CreateXSD()
         {

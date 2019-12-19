@@ -9,12 +9,7 @@ namespace CompilerTests
     public class InputTests
     {
 
-        private readonly ITestOutputHelper output;
-
-        public InputTests(ITestOutputHelper output)
-        {
-            this.output = output;
-        }
+       
 
         [Fact]
         public void StreamThroughInput()

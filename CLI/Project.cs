@@ -8,6 +8,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using CLI.Signals;
 using Compiler.AST;
+using Configuration;
 
 namespace CLI
 {
@@ -103,7 +104,7 @@ Have fun with your module!
             }
             catch (IOException ioe)
             {
-                Console.WriteLine("ReadModuleText: Caught Exception reading file [{0}]", ioe.ToString());
+                Console.WriteLine("ReadModuleText: Caught Exception reading file [{0}]", ioe);
                 throw ioe;
             }
         }
@@ -249,7 +250,7 @@ Have fun with your module!
 
         }
 
-        private class Helpers
+        private static class Helpers
         {
             public static string ReadAsset(string name)
             {

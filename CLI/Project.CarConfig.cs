@@ -1,4 +1,5 @@
 ﻿using System;
+using Configuration;
 
 namespace CLI
 {

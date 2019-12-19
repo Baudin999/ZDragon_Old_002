@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using Newtonsoft.Json;
 
-namespace CLI
+namespace Configuration
 {
     public class CarConfig
     {
@@ -11,8 +11,10 @@ namespace CLI
         public string PortNumber { get; set; } = "5000";
         public string Remote { get; set; } = "";
 
-
+        
         public LexiconConfig LexiconConfig { get; set; } = new LexiconConfig();
+        public XsdConfig XsdConfig { get; set; } = new XsdConfig();
+        public ErdConfig ErdConfig { get; set; } = new ErdConfig();
 
         public static CarConfig? Load(string path)
         {
@@ -21,8 +23,7 @@ namespace CLI
             {
                 var json = File.ReadAllText(path);
                 var serializer = new JsonSerializer();
-                var result = (CarConfig)serializer.Deserialize(new JsonTextReader(new StringReader(json)), typeof(CarConfig));
-
+                var result = serializer.Deserialize<CarConfig>(new JsonTextReader(new StringReader(json)));
                 return result;
             }
             return null;
@@ -45,6 +46,16 @@ namespace CLI
         public List<string> FunctionalOwners { get; set; } = new List<string>();
         public List<string> TechnicalOwners { get; set; } = new List<string>();
         public List<string> Domains { get; set; } = new List<string>();
+    }
+
+    public class XsdConfig
+    {
+        public bool Enable { get; set; } = true;
+    }
+
+    public class ErdConfig
+    {
+        public bool ShowExtendedFields { get; set; } = true;
     }
 
 

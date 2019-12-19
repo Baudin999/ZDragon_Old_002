@@ -5,6 +5,7 @@ using System.Linq;
 using Compiler;
 using Compiler.AST;
 using Mapper.Application;
+using Configuration;
 
 namespace CLI
 {
@@ -19,7 +20,6 @@ namespace CLI
         public Transpiler Transpiler { get; private set; }
         public ASTGenerator Generator { get; private set; }
         public DateTime LastParsed { get; private set; }
-
 
         public Module(string path, string basePath, Project project)
         {
@@ -45,7 +45,7 @@ namespace CLI
 
         public void SaveModuleOutput(bool decend = true, bool suppressMessage = false)
         {
-            this.Transpiler.StartTranspilation(this.Name);
+            this.Transpiler.StartTranspilation(this.Name, Project.CarConfig?.ErdConfig ?? new ErdConfig());
             if (!suppressMessage)
             {
                 Console.WriteLine($"Perfectly parsed: {Name}");
@@ -114,7 +114,7 @@ namespace CLI
             }
             catch (IOException ioe)
             {
-                Console.WriteLine("ReadModuleText: Caught Exception reading file [{0}]", ioe.ToString());
+                Console.WriteLine("ReadModuleText: Caught Exception reading file [{0}]", ioe);
                 throw ioe;
             }
         }

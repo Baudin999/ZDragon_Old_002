@@ -18,11 +18,11 @@ namespace CLI.Controllers
         public IActionResult GetRoutes()
         {
             var rs = _provider.ActionDescriptors.Items;
-            var routes = rs.Select(x => new {
-                Controller = x.RouteValues["controller"],
-                Action = x.RouteValues["action"],
-                Url = $"{x.RouteValues["controller"]}/{x.RouteValues["action"]}"
-            }).ToList();
+            var routes = rs.Select(x => (
+                Controller: x.RouteValues["controller"],
+                Action: x.RouteValues["action"],
+                Url: $"{x.RouteValues["controller"]}/{x.RouteValues["action"]}"
+            )).ToList();
             return Ok(routes);
         }
     }

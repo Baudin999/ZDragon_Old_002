@@ -8,7 +8,7 @@ namespace Compiler
     public class VisitorSource
         : VisitorBase<string>
     {
-        List<string> value = new List<string>();
+        
         public VisitorSource(ASTGenerator generator) : base(generator)
         {
             
@@ -22,7 +22,7 @@ namespace Compiler
 
             var typeDef = string.Join(" ", astAlias.Types.Select(Visit));
 
-            if (astAlias.Restrictions.Count() == 0)
+            if (!astAlias.Restrictions.Any())
             {
                 parts.Add($@"alias {astAlias.Name} = {typeDef};");
             } else
@@ -82,7 +82,7 @@ namespace Compiler
                     .Select(a => indent + a);
             var a = String.Join(Environment.NewLine, annotations);
 
-            if (annotations.Count() > 0)
+            if (annotations.Any())
             {
                 return $"\n{a}\n{indent}& {astRestriction.Key} {astRestriction.Value}";
             }
@@ -98,7 +98,7 @@ namespace Compiler
             parts.AddRange(astType.Annotations.Select(Visit));
             parts.AddRange(astType.Directives.Select(Visit));
 
-            if (astType.Fields.Count() == 0)
+            if (!astType.Fields.Any())
             {
                 parts.Add($"type {astType.Name}");
             }
@@ -121,7 +121,7 @@ namespace Compiler
             var typeDef = string.Join(" ", astTypeField.Types.Select(Visit));
             var restrictions = String.Join(Environment.NewLine, astTypeField.Restrictions.Select(Visit));
 
-            if (astTypeField.Restrictions.Count() > 0)
+            if (astTypeField.Restrictions.Any())
             {
                 return $"    {astTypeField.Name}: {typeDef}\n{restrictions}\n    ;";
             } else

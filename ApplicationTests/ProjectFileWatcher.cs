@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 using CLI;
@@ -17,7 +18,9 @@ namespace ApplicationTests
             try
             {
                 Directory.Delete(dir, true);
-            } catch (Exception) { }
+            } catch (Exception) {
+                Debug.WriteLine("Delete Directory failed in unit test.");
+            }
 
             this.output = output;
             project = new Project(dir);
@@ -30,7 +33,9 @@ namespace ApplicationTests
         }
 
         [Fact]
+#pragma warning disable IDE0051 // Remove unused private members
         private void CreateModule()
+#pragma warning restore IDE0051 // Remove unused private members
         {
             project.CreateModule("Test");
             Assert.True(File.Exists(path("Test.car")));

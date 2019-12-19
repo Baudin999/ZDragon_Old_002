@@ -7,7 +7,7 @@ namespace Compiler
         {
             input.Next();
 
-            return new Token()
+            return new Token
             {
                 StartIndex = input.Position - 1,
                 StartColumn = input.Column - 1,

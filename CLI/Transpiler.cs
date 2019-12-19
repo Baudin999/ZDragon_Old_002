@@ -8,6 +8,7 @@ using Mapper.Application;
 using Mapper.HTML;
 using Mapper.JSON;
 using Mapper.XSD;
+using Configuration;
 
 namespace CLI
 {
@@ -63,7 +64,7 @@ namespace CLI
         }
 
 
-        public void StartTranspilation(string moduleName = "")
+        public void StartTranspilation(string moduleName, ErdConfig erdConfig)
         {
             this.Imports = ImportResolver.ResolveImports(this.Generator);
             this.Generator.Resolve(this.Imports);
@@ -71,7 +72,7 @@ namespace CLI
             this.XsdMapper = new XSDMapper(this.Generator);
             this.XsdMapper.Start().ToList();
 
-            this.HtmlMapper = new HtmlMapper(this.Generator);
+            this.HtmlMapper = new HtmlMapper(this.Generator, erdConfig);
             this.HtmlMapper.Start().ToList();
 
             this.JsonMapper = new JsonMapper(this.Generator);

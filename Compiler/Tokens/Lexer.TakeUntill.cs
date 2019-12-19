@@ -20,7 +20,7 @@ namespace Compiler
             builder.Append(input.Current);
             if (input.HasNext()) input.Next();
 
-            return new Token()
+            return new Token
             {
                 StartIndex = start,
                 StartColumn = startColumn,

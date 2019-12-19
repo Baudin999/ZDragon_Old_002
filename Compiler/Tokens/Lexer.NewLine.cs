@@ -5,7 +5,7 @@ namespace Compiler
     {
         internal static Token TakeNewLine(Input input)
         {
-            var result = new Token()
+            var result = new Token
             {
                 StartIndex = input.Position,
                 StartColumn = input.Column,

@@ -16,13 +16,13 @@ namespace Compiler
             var startColumn = input.Column;
             var startLine = input.Line;
 
-            StringBuilder builder = new StringBuilder();
+            var builder = new StringBuilder();
             while (input.HasNext() && (char.IsLetter(input.Current) || char.IsNumber(input.Current)))
             {
                 builder.Append(input.Current);
                 input.Next();
             }
-            return new Token()
+            return new Token
             {
                 StartIndex = start,
                 StartColumn = startColumn,
@@ -46,13 +46,13 @@ namespace Compiler
             var startColumn = input.Column;
             var startLine = input.Line;
 
-            StringBuilder builder = new StringBuilder();
+            var builder = new StringBuilder();
             while (input.HasNext() && (char.IsLetter(input.Current) || char.IsNumber(input.Current) || input.Current == '.'))
             {
                 builder.Append(input.Current);
                 input.Next();
             }
-            return new Token()
+            return new Token
             {
                 StartIndex = start,
                 StartColumn = startColumn,

@@ -44,7 +44,7 @@ namespace Mapper.XSD
 
             var description = string.Join(" ", astType.Annotations.Select(a => a.Value));
             var schemaAnnotation = new XmlSchemaAnnotation();
-            var docs = new XmlSchemaDocumentation()
+            var docs = new XmlSchemaDocumentation
             {
                 Markup = TextToNodeArray(description)
             };
@@ -137,7 +137,7 @@ namespace Mapper.XSD
         private XmlNode[] TextToNodeArray(string text)
         {
             var doc = new XmlDocument();
-            return new XmlNode[1] { doc.CreateTextNode(text) };
+            return new XmlNode[] { doc.CreateTextNode(text) };
         }
 
         public override XmlSchemaObject? VisitASTData(ASTData astData)

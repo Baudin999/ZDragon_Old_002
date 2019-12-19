@@ -27,7 +27,7 @@ namespace Compiler
             input.Next();
 
 
-            return new Token()
+            return new Token
             {
                 StartIndex = start,
                 StartColumn = startColumn,

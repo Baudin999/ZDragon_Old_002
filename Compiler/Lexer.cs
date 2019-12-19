@@ -46,7 +46,7 @@ namespace Compiler
                 {
                     context = true;
                     var token = TokenLexers.Word(input);
-                    yield return new Token() {
+                    yield return new Token {
                         EndLine = input.Line,
                         EndColumn = 0,
                         StartLine = input.Line,
@@ -75,7 +75,7 @@ namespace Compiler
                     yield return TokenLexers.TakeUntillEndOfContext(input);
                     if (context)
                     {
-                        yield return new Token() {
+                        yield return new Token {
                             EndLine = input.Line,
                             EndColumn = 0,
                             StartLine = input.Line,
@@ -87,7 +87,7 @@ namespace Compiler
                 else if (context && Char2.IsNewLine(input.Current) && TokenLexers.EndContext(input, 1))
                 {
                     context = false;
-                    yield return new Token() {
+                    yield return new Token {
                         EndLine = input.Line,
                         EndColumn = 0,
                         StartLine = input.Line,
@@ -203,7 +203,7 @@ namespace Compiler
             // we'll want to end the context, jsut for good measure!
             if (context)
             {
-                yield return new Token() {
+                yield return new Token {
                     EndLine = input.Line,
                     EndColumn = 0,
                     StartLine = input.Line,
@@ -213,7 +213,7 @@ namespace Compiler
                 context = false;
             }
 
-            yield return new Token() {
+            yield return new Token {
                 EndLine = input.Line,
                 EndColumn = 0,
                 StartLine = input.Line,

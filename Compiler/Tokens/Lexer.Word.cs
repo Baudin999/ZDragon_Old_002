@@ -36,7 +36,7 @@ namespace Compiler
             if (word == "compose") type = TokenType.KW_Compose;
             if (word == "loop") type = TokenType.KW_Loop;
 
-            return new Token()
+            return new Token
             {
                 StartIndex = start,
                 StartColumn = startColumn,

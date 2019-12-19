@@ -23,7 +23,7 @@ namespace Compiler
             {
                 builder.Append(input.Current);
             }
-             var result = new Token()
+             var result = new Token
             {
                 StartIndex = start,
                 StartColumn = startColumn,
@@ -40,7 +40,7 @@ namespace Compiler
 
         internal static Token Take(Input input, TokenType type)
         {
-            var result = new Token()
+            var result = new Token
             {
                 StartIndex = input.Position,
                 StartColumn = input.Column,

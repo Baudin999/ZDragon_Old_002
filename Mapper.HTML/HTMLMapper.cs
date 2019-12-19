@@ -4,6 +4,7 @@ using System.Linq;
 using Compiler;
 using Compiler.AST;
 using Markdig;
+using Configuration;
 
 namespace Mapper.HTML
 {
@@ -13,6 +14,7 @@ namespace Mapper.HTML
         public IEnumerable<IASTError> Errors { get; }
         public MermaidMapper MermaidMapper { get; }
         public HtmlTableMapper TableMapper { get; }
+        public ErdConfig ErdConfig { get; } = new ErdConfig();
 
         public HtmlMapper(ASTGenerator generator) : base(generator)
         {
@@ -20,6 +22,10 @@ namespace Mapper.HTML
             this.MermaidMapper = new MermaidMapper(generator);
             this.MermaidMapper.Start().ToList();
             this.TableMapper = new HtmlTableMapper(generator);
+        }
+        public HtmlMapper(ASTGenerator generator, ErdConfig erdConfig) : this(generator)
+        {
+            this.ErdConfig = erdConfig;
         }
 
         public override string VisitASTChapter(ASTChapter astChapter)

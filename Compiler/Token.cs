@@ -45,7 +45,7 @@ namespace Compiler
             {
                 Value = (string)this.Value.Clone(),
                 // Performing a lookup will ensure copy by value
-                TokenType = (TokenType)((int)this.TokenType),
+                TokenType = (TokenType)this.TokenType,
 
                 // int's are never copied by reference, no need to clone
                 StartColumn = this.StartColumn,

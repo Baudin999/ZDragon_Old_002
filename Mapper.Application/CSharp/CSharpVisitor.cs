@@ -55,7 +55,7 @@ namespace {Namespace} {{
         }
     }
 
-    public class CSharpHelpers
+    public static class CSharpHelpers
     {
         public static string ToCSharpKeyword ((string, string) types)
         {

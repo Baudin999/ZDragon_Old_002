@@ -51,7 +51,7 @@ Points to look out for:
             _ = mapper.Start().ToList();
 
             var document = mapper.ToString();
-            Assert.True(document.Count() > 0);
+            Assert.True(document.Any());
         }
 
         [Fact]
@@ -72,7 +72,7 @@ Points to look out for:
 
             var document = mapper.ToString();
 
-            Assert.True(document.Count() > 0);
+            Assert.True(document.Any());
 
         }
     }

@@ -168,7 +168,7 @@ namespace Compiler.AST
         }
 
         public bool Equals([AllowNull] ASTTypeField x, [AllowNull] ASTTypeField y) => x.Name == y.Name;
-        public int GetHashCode([DisallowNull] ASTTypeField obj) => ((object)obj).GetHashCode();
+        public int GetHashCode([DisallowNull] ASTTypeField obj) => obj.GetHashCode();
 
         public override string ToString() => $"{Name}: {String.Join(" ", Types)};";
     }

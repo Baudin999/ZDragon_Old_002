@@ -66,7 +66,6 @@ namespace Compiler.AST
                 ObjectCloner.CloneList(this.Annotations.ToList()),
                 ObjectCloner.CloneList(this.Directives.ToList()),
                 ObjectCloner.CloneList(this.Options.ToList()));
-            { };
         }
     }
 }
