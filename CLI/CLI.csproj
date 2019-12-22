@@ -25,6 +25,7 @@
     <PackageReference Include="System.IO.FileSystem.Watcher" Version="4.3.0" />
     <PackageReference Include="Bogus" Version="28.4.4" />
     <PackageReference Include="LiteDB" Version="4.1.4" />
+    <PackageReference Include="System.Reactive" Version="4.3.1" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Assets\" />
@@ -35,6 +36,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Remove="Assets\style.css" />
+    <None Remove="Assets\mermaid.min.js" />
+    <None Remove="Assets\mermaid.min.js.map" />
   </ItemGroup>
   <ItemGroup>
     <None Update="wwwroot\*">
@@ -43,5 +46,9 @@
     <None Update="wwwroot\**">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Assets\mermaid.min.js" />
+    <EmbeddedResource Include="Assets\mermaid.min.js.map" />
   </ItemGroup>
 </Project>

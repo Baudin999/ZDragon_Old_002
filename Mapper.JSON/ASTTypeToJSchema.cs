@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Compiler.AST;
+using Configuration;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Schema;
 
@@ -12,6 +13,12 @@ namespace Mapper.JSON
         private List<string> NodeNames = new List<string>();
         private JObject References = new JObject();
         public List<IASTNode> Nodes { get; private set; } = new List<IASTNode>();
+        private CarConfig CarConfig { get; }
+
+        public ASTTypeToJSchema(CarConfig carConfig)
+        {
+            this.CarConfig = carConfig;
+        }
 
         public JSchema? Create(ASTType astType, IEnumerable<IASTNode> nodes)
         {
@@ -55,7 +62,7 @@ namespace Mapper.JSON
             {
                 Type = JSchemaType.Array
             };
-            schema.Items.Add(MapBasicType(_type, restrictable));
+            schema.Items.Add(JsonMapper.MapBasicType(_type, restrictable, this.CarConfig));
             return schema;
         }
 
@@ -72,11 +79,12 @@ namespace Mapper.JSON
 
             astType.Fields.ToList().ForEach(field =>
             {
-                schema.Properties.Add(field.Name, MapTypeField(field));
+                var fieldName = JsonMapper.ToSnakeCase(field.Name);
+                schema.Properties.Add(fieldName, MapTypeField(field));
 
                 if (field.Types.First().Value != "Maybe")
                 {
-                    schema.Required.Add(field.Name);
+                    schema.Required.Add(fieldName);
                 }
             });
             return schema;
@@ -141,8 +149,8 @@ namespace Mapper.JSON
             if (_mod == "List" && isBasicType)
             {
                 result = MapBasicArray(_type, restrictable);
-                result.MinimumItems = int.Parse(min?.Value ?? "0");
-                result.MaximumItems = int.Parse(min?.Value ?? "10");
+                result.MinimumItems = int.Parse(min?.Value ?? this.CarConfig.DefaultRestrictions.ListRestrictions.Min.ToString());
+                result.MaximumItems = int.Parse(min?.Value ?? this.CarConfig.DefaultRestrictions.ListRestrictions.Max.ToString());
             }
             else if (_mod == "List" && !isBasicType)
             {
@@ -150,14 +158,14 @@ namespace Mapper.JSON
                 result = new JSchema
                 {
                     Type = JSchemaType.Array,
-                    MinimumItems = int.Parse(min?.Value ?? "0"),
-                    MaximumItems = int.Parse(min?.Value ?? "10")
+                    MinimumItems = int.Parse(min?.Value ?? this.CarConfig.DefaultRestrictions.ListRestrictions.Min.ToString()),
+                    MaximumItems = int.Parse(min?.Value ?? this.CarConfig.DefaultRestrictions.ListRestrictions.Max.ToString())
                 };
                 result.Items.Add(temp);
             }
             else if (isBasicType)
             {
-                result = MapBasicType(_type, restrictable);
+                result = JsonMapper.MapBasicType(_type, restrictable, this.CarConfig);
             }
             else
             {
@@ -189,50 +197,6 @@ namespace Mapper.JSON
             return result;
         }
 
-        private JSchema MapBasicType(string _type, IRestrictable restrictable)
-        {
-            var min = restrictable.Restrictions.FirstOrDefault(r => r.Key == "min");
-            var max = restrictable.Restrictions.FirstOrDefault(r => r.Key == "max");
-            var pattern = restrictable.Restrictions.FirstOrDefault(r => r.Key == "pattern");
-            var decimals = restrictable.Restrictions.FirstOrDefault(r => r.Key == "decimals");
 
-            var multipleOf = int.Parse(decimals?.Value ?? "2");
-            var d = multipleOf switch
-            {
-                0 => 1d,
-                1 => 0.1,
-                2 => 0.01,
-                3 => 0.001,
-                4 => 0.0001,
-                5 => 0.00001,
-                6 => 0.000001,
-                7 => 0.0000001,
-                8 => 0.00000001,
-                9 => 0.000000001,
-                10 => 0.0000000001,
-                _ => 0.00000000001
-            };
-
-            return _type switch
-            {
-                "String" => new JSchema { Type = JSchemaType.String },
-                "Number" => new JSchema {
-                    Type = JSchemaType.Integer,
-                    Minimum = int.Parse(min?.Value ?? "0"),
-                    Maximum = int.Parse(min?.Value ?? "100")
-                },
-                "Decimal" => new JSchema {
-                    Type = JSchemaType.Number,
-                    Minimum = int.Parse(min?.Value ?? "0"),
-                    Maximum = int.Parse(min?.Value ?? "100"),
-                    MultipleOf = d
-                },
-                "Boolean" => new JSchema { Type = JSchemaType.Boolean },
-                "Date" => new JSchema { Type = JSchemaType.String, Format = "date" },
-                "Time" => new JSchema { Type = JSchemaType.String, Format = "time" },
-                "DateTime" => new JSchema { Type = JSchemaType.String, Format = "date-time" },
-                _ => new JSchema { Type = JSchemaType.String }
-            };
-        }
     }
 }

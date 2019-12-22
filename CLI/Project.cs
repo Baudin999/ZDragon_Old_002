@@ -14,19 +14,35 @@ namespace CLI
 {
     public partial class Project : IDisposable
     {
+
         public static Project? Current { get; private set; }
 
-        public string Path { get; } = "";
+        /// <summary>
+        /// The Directory in which the project is created. This is the root path,
+        /// the path where the zdragon.json file is located.
+        /// </summary>
+        public string BasePath { get; } = "";
+
+        /// <summary>
+        /// Where the assets, the results are published to.
+        /// </summary>
         public string OutPath { get; } = "";
+
+        /// <summary>
+        /// Where the zdragon.json file is located.
+        /// </summary>
         public string ConfigPath { get; } = "";
-        public CarConfig? CarConfig { get; private set; }
+
+
+        public CarConfig CarConfig { get; private set; }
         public ObservableCollection<Module> Modules { get; } = new ObservableCollection<Module>();
 
         public Project(string path)
         {
-            this.Path = path;
-            this.OutPath = System.IO.Path.GetFullPath($"out", this.Path);
-            this.ConfigPath = System.IO.Path.GetFullPath("zdragon.json", this.Path);
+            this.BasePath = path;
+            this.OutPath = Path.GetFullPath($"out", this.BasePath);
+            this.ConfigPath = Path.GetFullPath("zdragon.json", this.BasePath);
+            this.CarConfig = CarConfig.Load(this.ConfigPath);
 
             Directory.CreateDirectory(OutPath);
 
@@ -38,7 +54,6 @@ namespace CLI
                 module.Parse();
             }
 
-            InitCarConfig();
             CreateAssets();
 
             Project.Current = this;
@@ -68,14 +83,15 @@ namespace CLI
 
         private void CreateAssets()
         {
-            // Nothing yet
+            Helpers.ReadAndWriteAsset("mermaid.min.js", this.OutPath);
+            Helpers.ReadAndWriteAsset("mermaid.min.js.map", this.OutPath);
         }
 
         public void CreateModule(string name)
         {
             
             var fileName = String.Join("/", name.Split(".").Select(UppercaseFirst)) + ".car";
-            var modulePath = System.IO.Path.GetFullPath(fileName, this.Path);
+            var modulePath = System.IO.Path.GetFullPath(fileName, this.BasePath);
             var directoryName = System.IO.Path.GetDirectoryName(modulePath);
             Directory.CreateDirectory(directoryName);
             try
@@ -131,119 +147,7 @@ Have fun with your module!
             return this.Modules.FirstOrDefault(m => m.Name == name);
         }
 
-        public int Watch()
-        {
-            // Create a new FileSystemWatcher and set its properties.
-            using var watcher = new FileSystemWatcher
-            {
-                IncludeSubdirectories = true,
-                Path = this.Path,
-
-                // Watch for changes in LastAccess and LastWrite times, and
-                // the renaming of files or directories.
-                NotifyFilter = NotifyFilters.LastAccess
-                                 | NotifyFilters.LastWrite
-                                 | NotifyFilters.FileName
-                                 | NotifyFilters.DirectoryName,
-
-                // Only watch text files.
-                Filter = "*.car"
-            };
-
-            // Add event handlers.
-            watcher.Changed += OnChanged;
-            watcher.Created += OnCreate;
-            watcher.Deleted += OnDelete;
-            watcher.Renamed += OnRenamed;
-
-            SignalSingleton.ExitSignal.Subscribe(() =>
-            {
-                Console.WriteLine("Disposing the file watcher...");
-                watcher.Dispose();
-            });
-
-            // Begin watching.
-            watcher.EnableRaisingEvents = true;
-            while (Console.ReadKey().Key != ConsoleKey.Q) { }
-            Console.WriteLine();
-
-            return SignalSingleton.ExitSignal.Dispatch();
-        }
-
-
-        // Define the event handlers.
-        private void OnChanged(object source, FileSystemEventArgs e)
-        {
-            try
-            {
-                var module = Modules.FirstOrDefault(m => m.Path == e.FullPath);
-                if (!(module is null))
-                {
-                    module.Parse();
-                    module.SaveModuleOutput();
-                }
-                else
-                {
-                    module = new Module(e.FullPath, this.Path, this);
-                    module.Parse();
-                    module.SaveModuleOutput();
-                    Modules.Add(module);
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-        }
-
-        private void OnCreate(object source, FileSystemEventArgs e)
-        {
-            try
-            {
-                var module = Modules.FirstOrDefault(m => m.Path == e.FullPath);
-                if (module is null)
-                {
-                    Console.WriteLine($"{e.ChangeType}: {e.FullPath}");
-                    module = new Module(e.FullPath, this.Path, this);
-                    Modules.Add(module);
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-        }
-
-        private void OnDelete(object source, FileSystemEventArgs e)
-        {
-            try
-            {
-                Console.WriteLine($"{e.ChangeType}: {e.FullPath}");
-                Modules.Remove(Modules.FirstOrDefault(m => m.Path == e.FullPath));
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-        }
-
-        private void OnRenamed(object source, RenamedEventArgs e)
-        {
-            try
-            {
-                Console.WriteLine($"{e.ChangeType}: {e.OldFullPath} renamed to {e.FullPath}");
-                Modules.Remove(Modules.FirstOrDefault(m => m.Path == e.OldFullPath));
-
-                var module = new Module(e.FullPath, this.Path, this);
-                Modules.Add(module);
-                module.Parse();
-                module.SaveModuleOutput(false);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-        }
+        
 
         public void Dispose()
         {
@@ -255,7 +159,7 @@ Have fun with your module!
             public static string ReadAsset(string name)
             {
                 var assembly = Assembly.GetExecutingAssembly();
-                var resourceName = name;
+                var resourceName = "CLI.Assets." + name;
 
                 using (var stream = assembly.GetManifestResourceStream(resourceName))
                 {
@@ -283,7 +187,8 @@ Have fun with your module!
 
             public static void ReadAndWriteAsset(string assetName, string outPath)
             {
-                Helpers.WriteAsset(outPath, Helpers.ReadAsset(assetName));
+                var outName = System.IO.Path.GetFullPath(assetName, outPath);
+                Helpers.WriteAsset(outName, Helpers.ReadAsset(assetName));
             }
         }
 

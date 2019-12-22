@@ -34,7 +34,7 @@ namespace CLI
             this.Project = project;
             XsdMapper = new XSDMapper(generator);
             HtmlMapper = new HtmlMapper(generator);
-            JsonMapper = new JsonMapper(generator);
+            JsonMapper = new JsonMapper(generator, project.CarConfig);
             DescriptionMapper = new DescriptionMapper(generator);
         }
 
@@ -64,7 +64,7 @@ namespace CLI
         }
 
 
-        public void StartTranspilation(string moduleName, ErdConfig erdConfig)
+        public void StartTranspilation(string moduleName)
         {
             this.Imports = ImportResolver.ResolveImports(this.Generator);
             this.Generator.Resolve(this.Imports);
@@ -72,10 +72,10 @@ namespace CLI
             this.XsdMapper = new XSDMapper(this.Generator);
             this.XsdMapper.Start().ToList();
 
-            this.HtmlMapper = new HtmlMapper(this.Generator, erdConfig);
+            this.HtmlMapper = new HtmlMapper(this.Generator, this.Project.CarConfig.ErdConfig);
             this.HtmlMapper.Start().ToList();
 
-            this.JsonMapper = new JsonMapper(this.Generator);
+            this.JsonMapper = new JsonMapper(this.Generator, this.Project.CarConfig);
             this.JsonMapper.Start();
         }
 

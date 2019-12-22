@@ -8,14 +8,3 @@ const app = new App({
 });
 
 export default app;
-
-if (!Prism || !Prism.languages) {
-  debugger;
-}
-Prism.languages.carlang = {
-  prolog: /<\?[\s\S]+?\?>/,
-  keyword: /\b(?:type|alias|choice|data|flow|view|compose|loop)\b/,
-  number: /\b0x[\da-f]+\b|(?:\b\d+\.?\d*|\B\.\d+)(?:e[+-]?\d+)?/i,
-  operator: /[<>]=?|[!=]=?=?|--?|\+\+?|&&?|\|\|?|[?*/~^%]/,
-  chapter: /#.*\n/
-};

@@ -93,7 +93,7 @@ namespace CLI.Controllers
             var m = Project.Current?.FindModule(module);
             if (m is null) return NotFound();
 
-            return Ok(m.Generator.Code);
+            return Ok(m.Code);
         }
 
         [HttpPost("/api/module/{module}")]

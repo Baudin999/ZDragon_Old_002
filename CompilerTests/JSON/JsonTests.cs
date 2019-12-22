@@ -1,4 +1,5 @@
 ﻿using Compiler;
+using Configuration;
 using Mapper.JSON;
 using Xunit;
 
@@ -6,6 +7,12 @@ namespace CompilerTests.JSON
 {
     public class JsonTests
     {
+        private CarConfig CarConfig { get; }
+        public JsonTests()
+        {
+            this.CarConfig = new CarConfig();
+        }
+
         [Fact]
         public void TestJson()
         {
@@ -34,7 +41,7 @@ type Person =
 
 ";
             var generator = new ASTGenerator(code);
-            var mapper = new JsonMapper(generator);
+            var mapper = new JsonMapper(generator, this.CarConfig);
             mapper.Start();
 
 
@@ -59,7 +66,7 @@ choice Gender =
     | ""Other""
 ";
             var generator = new ASTGenerator(code);
-            var mapper = new JsonMapper(generator);
+            var mapper = new JsonMapper(generator, this.CarConfig);
             mapper.Start();
 
 
@@ -82,7 +89,7 @@ data Response =
     | School
 ";
             var generator = new ASTGenerator(code);
-            var mapper = new JsonMapper(generator);
+            var mapper = new JsonMapper(generator, this.CarConfig);
             mapper.Start();
 
 

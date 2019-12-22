@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using CLI;
 using Xunit;
@@ -11,6 +12,15 @@ namespace ApplicationTests
         readonly Project project;
         public CreateModuleInProject()
         {
+            try
+            {
+                Directory.Delete(dir, true);
+            }
+            catch (Exception)
+            {
+                Debug.WriteLine("Delete Directory failed in unit test.");
+            }
+            Directory.CreateDirectory(dir);
             project = new Project(dir);
         }
 
@@ -33,7 +43,7 @@ namespace ApplicationTests
         public void Dispose()
         {
             project.Dispose();
-            Directory.Delete(dir, true);
+            //Directory.Delete(dir, true);
         }
 
         private string path(string add)

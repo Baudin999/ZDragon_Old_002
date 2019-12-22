@@ -48,6 +48,9 @@ To quit the application press 'q'
 
                           project.Watch();
 
+                          while (Console.ReadKey().Key != ConsoleKey.Q) { }
+                          Console.WriteLine();
+
                           SignalSingleton.ExitSignal.Dispatch();
                           return 0;
                       });

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Compiler;
+using Configuration;
 using Mapper.JSON;
 using Newtonsoft.Json;
 using Xunit;
@@ -9,6 +10,12 @@ namespace CompilerTests
 {
     public class ParserTests_Recursive
     {
+        private CarConfig CarConfig { get; }
+        public ParserTests_Recursive()
+        {
+            this.CarConfig = new CarConfig();
+        }
+
         [Fact(DisplayName = "Recursive Type")]
         public void RecursiveType()
         {
@@ -34,7 +41,7 @@ type Person =
     Familly: List Person;
 ";
             var g = new ASTGenerator(code);
-            var jsonMapper = new JsonMapper(g);
+            var jsonMapper = new JsonMapper(g, this.CarConfig);
             jsonMapper.Start();
             var dict = jsonMapper.ToFileNameAndContentDict();
 

@@ -21,6 +21,7 @@ namespace ApplicationTests
             } catch (Exception) {
                 Debug.WriteLine("Delete Directory failed in unit test.");
             }
+            Directory.CreateDirectory(dir);
 
             this.output = output;
             project = new Project(dir);

@@ -67,6 +67,7 @@ namespace Mapper.HTML
             
 
             var tables = this.TableMapper.Start().ToList();
+            tables.Sort();
             var tablesBlock = tables.Any() ? $@"
 <h2>Tables</h2>
 {string.Join(Environment.NewLine + Environment.NewLine, tables)}

@@ -62,5 +62,50 @@ namespace Mapper.HTML
 </div>
 ";
         }
+
+        public override string VisitASTAlias(ASTAlias astAlias)
+        {
+            var typeDescription = $@"From module: <a href=""/index.html?path=preview&module={astAlias.Module}"" target='_parent'>{astAlias.Module}</a>
+{string.Join(" ", astAlias.Annotations.Select(a => a.Value).ToList()).Trim()}";
+
+            var _mod = astAlias.Types.First().Value;
+            var _type = astAlias.Types.Last().Value;
+            var restrictions = String.Join(Environment.NewLine, astAlias.Restrictions.Select(r => $"{r.Key} {r.Value}"));
+
+            return $@"
+<div class=""table-container"">
+<table>
+    <thead>
+        <tr>
+            <th colspan=""5"">{astAlias.Name}</th>
+        </tr>
+        <tr class=""description"">
+            <th colspan=""5"">{typeDescription}</th>
+        </tr>
+        <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Required</th>
+            <th>Restrictions</th>
+            <th>Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+    <td>{astAlias.Name}</td>
+    <td>{string.Join(" ", astAlias.Types.Select(t => t.Value).ToList())}</td>
+    <td>{_mod != "Maybe"}</td>
+    <td>{restrictions}</td>
+    <td>
+        From module: <a href=""/index.html?path=preview&module={astAlias.Module}"" target='_parent'>{astAlias.Module}</a>
+        <br />
+        {string.Join(" ", astAlias.Annotations.Select(a => a.Value).ToList())}
+    </td>
+</tr>
+    <tbody>
+</table>
+</div>
+";
+        }
     }
 }
