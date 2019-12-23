@@ -25,7 +25,7 @@ namespace CLI
             var app = new CommandLineApplication();
             app.Name = "ckc";
             app.HelpOption("-?|-h|--help");
-            app.VersionOption("-v|--version", "v2.1.13-beta");
+            app.VersionOption("-v|--version", "v2.1.14-beta");
 
             app.OnExecute(() => 0);
 
