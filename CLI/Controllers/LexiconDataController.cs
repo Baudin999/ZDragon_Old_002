@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using CLI.Models;
 using LiteDB;
 using Microsoft.AspNetCore.Mvc;
+using Project;
 
 namespace CLI.Controllers
 {
@@ -41,7 +42,7 @@ namespace CLI.Controllers
         [HttpGet("/api/lexicon/config")]
         public IActionResult ConfigurationData()
         {
-            var project = Project.Current;
+            var project = FileProject.Current;
             if (project is null) return NotFound();
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
             else return Ok(project.CarConfig.LexiconConfig);
@@ -52,7 +53,7 @@ namespace CLI.Controllers
         [HttpGet("/api/lexicon/remote")]
         public IActionResult GetRemoteLexiconData()
         {
-            var config = Project.Current?.CarConfig;
+            var config = FileProject.Current?.CarConfig;
             if (config is null) return NotFound();
             else
             {

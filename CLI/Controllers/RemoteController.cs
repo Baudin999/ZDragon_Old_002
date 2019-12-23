@@ -4,6 +4,7 @@ using System.Net;
 using System.Threading.Tasks;
 using CLI.Models;
 using Microsoft.AspNetCore.Mvc;
+using Project;
 
 namespace CLI.Controllers
 {
@@ -12,7 +13,7 @@ namespace CLI.Controllers
         [HttpGet("/api/remote/module/{module}")]
         public async Task<IActionResult> GetModuleText(string module)
         {
-            var project = Project.Current;
+            var project = FileProject.Current;
             if (project is null) return NotFound();
             
             var url = project.CarConfig?.Remote + "/api/module/" + module;

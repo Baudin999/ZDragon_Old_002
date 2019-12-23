@@ -29,16 +29,15 @@ namespace CLI.Commands
 
                       command.OnExecute(() =>
                       {
-                          Console.WriteLine(@"
-To quit the application press 'q'
-");
+                          Console.WriteLine("\nTo quit the application press 'q'");
                           var directory = fileOption.HasValue() switch
                           {
                               false => Directory.GetCurrentDirectory(),
                               true => fileOption.Value()
                           };
 
-                          var project = new Project(directory);
+                          var project = new Project.FileProject(directory);
+                          SignalSingleton.ExitSignal.Subscribe(project.Dispose);
 
                           Task? webserverTask = null;
                           if (serve.HasValue())

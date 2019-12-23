@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 
-namespace CLI
+namespace Project
 {
     public class ModuleStream : IDisposable
     {
@@ -46,12 +46,18 @@ namespace CLI
         /// </summary>
         /// <param name="subscriberName"></param>
         /// <param name="action"></param>
-        public void Subscribe(string subscriberName, Action<ModuleStreamMessage> action)
+        public Action Subscribe(string subscriberName, Action<ModuleStreamMessage> action)
         {
             if (!subscribers.ContainsKey(subscriberName))
             {
                 subscribers.Add(subscriberName, moduleMessageSubject.Subscribe(action));
+
+                return () =>
+                {
+                    subscribers.Remove(subscriberName);
+                };
             }
+            return () => { };
         }
 
 
@@ -62,7 +68,7 @@ namespace CLI
         /// <param name="subscriberName">Simple unique name of the subscriber</param>
         /// <param name="messageType">The message type you would like to subscribe to</param>
         /// <param name="action">The action which you'd want to take one a valid message is published.</param>
-        public void Subscribe(string subscriberName, MessageType messageType, Action<ModuleStreamMessage> action)
+        public Action Subscribe(string subscriberName, MessageType messageType, Action<ModuleStreamMessage> action)
         {
             if (!subscribers.ContainsKey(subscriberName))
             {
@@ -72,7 +78,13 @@ namespace CLI
                         .Where(msm => msm.MessageType == messageType)
                         .Subscribe(action)
                 );
+
+                return () =>
+                {
+                    subscribers.Remove(subscriberName);
+                };
             }
+            return () => { };
         }
 
 

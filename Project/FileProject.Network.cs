@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using CLI.Models;
+using Project.Models;
 using Compiler;
 using Compiler.AST;
 
-namespace CLI
+namespace Project
 {
-    public partial class Project
+    public partial class FileProject
     {
         public Topology GetTopology(bool includeDetails)
         {

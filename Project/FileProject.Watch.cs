@@ -1,26 +1,22 @@
 ﻿using System;
 using System.Linq;
-using CLI.Signals;
 
-namespace CLI
+namespace Project
 {
-    public partial class Project
+    public partial class FileProject
     {
+        internal ProjectFilesWatcher? ProjectWatcher { get; private set; }
         public void Watch()
         {
-            var projectWatcher = new ProjectFilesWatcher(this.BasePath);
-            projectWatcher.Start();
-            SignalSingleton.ExitSignal.Subscribe(() =>
+            ProjectWatcher = new ProjectFilesWatcher(this.BasePath);
+            ProjectWatcher.Start();
+            
+            ProjectWatcher.ModuleStream.Subscribe("Logger", msm =>
             {
-                projectWatcher.Dispose();
+                //Console.WriteLine($"{msm}");
             });
 
-            projectWatcher.ModuleStream.Subscribe("Logger", msm =>
-            {
-                Console.WriteLine($"{msm}");
-            });
-
-            projectWatcher.ModuleStream.Subscribe("OnChange", MessageType.ModuleChanged, msm =>
+            ProjectWatcher.ModuleStream.Subscribe("OnChange", MessageType.ModuleChanged, msm =>
             {
                 var module = this.Modules.FirstOrDefault(m => m.Name == msm.ModuleName);
                 if (module != null)
@@ -30,7 +26,7 @@ namespace CLI
                 }
             });
 
-            projectWatcher.ModuleStream.Subscribe("OnCreate", MessageType.ModuleCreated, msm =>
+            ProjectWatcher.ModuleStream.Subscribe("OnCreate", MessageType.ModuleCreated, msm =>
             {
                 var module = Modules.FirstOrDefault(m => m.Name == msm.ModuleName);
                 if (module is null)
@@ -40,7 +36,7 @@ namespace CLI
                 }
             });
 
-            projectWatcher.ModuleStream.Subscribe("OnDelete", MessageType.ModuleDeleted, msm =>
+            ProjectWatcher.ModuleStream.Subscribe("OnDelete", MessageType.ModuleDeleted, msm =>
             {
                 var module = Modules.FirstOrDefault(m => m.Name == msm.ModuleName);
                 if (!(module is null))
@@ -50,7 +46,7 @@ namespace CLI
                 }
             });
 
-            projectWatcher.ModuleStream.Subscribe("OnMove", MessageType.ModuleMoved, msm =>
+            ProjectWatcher.ModuleStream.Subscribe("OnRename", MessageType.ModuleRenamed, msm =>
             {
                 var moduleOld = Modules.FirstOrDefault(m => m.Name == msm.ModuleName);
                 if (!(moduleOld is null))

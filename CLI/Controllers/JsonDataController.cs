@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
 using Bogus;
+using Project;
 using Compiler.AST;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -18,7 +19,7 @@ namespace CLI.Controllers
         public IActionResult GetData(string module, string type, [FromQuery]bool list)
         {
 
-            Module = Project.Current?.Modules.First(m => m.Name == module);
+            Module = Project.FileProject.Current?.Modules.First(m => m.Name == module);
             var result = list ? new Faker().Make(10, () => Generate(type)) : Generate(type);
             if (result is null)
             {

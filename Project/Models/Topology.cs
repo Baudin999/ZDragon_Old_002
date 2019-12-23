@@ -1,7 +1,7 @@
 ﻿
 using System.Collections.Generic;
 
-namespace CLI.Models
+namespace Project.Models
 {
     public class Topology
     {

@@ -1,11 +1,13 @@
 ﻿using System.Diagnostics;
 using System.IO;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Project;
 
 namespace CLI
 {
@@ -14,13 +16,19 @@ namespace CLI
         public static string RootPath = "";
         public static Task Start(string rootPath)
         {
-            var portNumber = Project.Current?.CarConfig?.PortNumber ?? "5000";
+            var portNumber = FileProject.Current?.CarConfig?.PortNumber ?? "5000";
             RootPath = rootPath;
             Task.Run(async () =>
             {
                 await Task.Delay(1500);
                 WebServer.OpenBrowser($"http://localhost:{portNumber}/index.html");
             });
+
+            if (FileProject.Current != null)
+            {
+                WebServer.CreateAssets(FileProject.Current.OutPath);
+            }
+
             return Task.Run(() =>
             {
                 System.Console.WriteLine($@"
@@ -64,5 +72,51 @@ http://localhost:{portNumber}/
             }
 
         }
+
+        private static void CreateAssets(string outPath)
+        {
+            Helpers.ReadAndWriteAsset("mermaid.min.js", outPath);
+            Helpers.ReadAndWriteAsset("mermaid.min.js.map", outPath);
+        }
+
+        private static class Helpers
+        {
+            public static string ReadAsset(string name)
+            {
+                var assembly = Assembly.GetExecutingAssembly();
+                var resourceName = "CLI.Assets." + name;
+
+                using (var stream = assembly.GetManifestResourceStream(resourceName))
+                {
+                    if (!(stream is null))
+                    {
+                        using (var reader = new StreamReader(stream))
+                        {
+                            var result = reader.ReadToEnd();
+                            reader.Close();
+                            reader.Dispose();
+                            return result;
+                        }
+                    }
+                    else
+                    {
+                        return "";
+                    }
+                }
+            }
+
+            public static void WriteAsset(string path, string content)
+            {
+                File.WriteAllText(path, content);
+            }
+
+            public static void ReadAndWriteAsset(string assetName, string outPath)
+            {
+                var outName = System.IO.Path.GetFullPath(assetName, outPath);
+                Helpers.WriteAsset(outName, Helpers.ReadAsset(assetName));
+            }
+        }
     }
+
+   
 }

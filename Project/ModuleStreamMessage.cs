@@ -1,5 +1,5 @@
 ﻿using System;
-namespace CLI
+namespace Project
 {
     public class ModuleStreamMessage
     {
@@ -43,6 +43,7 @@ namespace CLI
         ModuleCreated,
         ModuleChanged,
         ModuleDeleted,
-        ModuleMoved
+        ModuleMoved,
+        ModuleRenamed
     }
 }

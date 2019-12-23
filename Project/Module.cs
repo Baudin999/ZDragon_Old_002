@@ -7,7 +7,7 @@ using Compiler.AST;
 using Mapper.Application;
 using Configuration;
 
-namespace CLI
+namespace Project
 {
     public class Module : IDisposable
     {
@@ -15,11 +15,23 @@ namespace CLI
         public string FilePath { get; }
         public string BasePath { get; }
         public string OutPath { get; }
-        public Project Project { get; }
+        public FileProject Project { get; }
         public List<string> ReferencedModules { get; private set; } = new List<string>();
         public Transpiler Transpiler { get; private set; }
         public ASTGenerator Generator { get; private set; }
         public DateTime LastParsed { get; private set; }
+
+        public List<IASTNode> AST
+        {
+            get
+            {
+                if (this.Generator is null)
+                {
+                    this.Parse();
+                }
+                return Generator?.AST ?? new List<IASTNode>();
+            }
+        }
 
         public string Code
         {
@@ -28,14 +40,26 @@ namespace CLI
                 if (Generator.Code == String.Empty)
                 {
                     return ReadModuleText();
-                } else
+                }
+                else
                 {
                     return Generator.Code;
                 }
             }
         }
 
-        public Module(string path, string basePath, Project project)
+        public Descriptor ToDescriptor(string description)
+        {
+            return new Descriptor(this.Name)
+            {
+                Module = this.Name,
+                Description = description,
+                Name = this.Name,
+                DescriptorType = DescriptorType.Module.ToString("g")
+            };
+        }
+
+        public Module(string path, string basePath, FileProject project)
         {
             this.FilePath = path;
             this.BasePath = basePath;
@@ -95,10 +119,14 @@ namespace CLI
         {
             try
             {
-                System.IO.Directory.Delete(OutPath);
+                if (Directory.Exists(OutPath))
+                {
+                    Directory.Delete(OutPath, true);
+                }
             }
             catch (Exception ex)
             {
+                Console.WriteLine("Error Cleaning Module " + this.Name);
                 Console.WriteLine(ex.Message);
             }
         }
@@ -115,7 +143,7 @@ namespace CLI
             try
             {
 
-                System.IO.File.WriteAllText(this.FilePath, source);
+                File.WriteAllText(this.FilePath, source);
                 return true;
             }
             catch (Exception ex)
@@ -129,6 +157,7 @@ namespace CLI
         {
             try
             {
+                if (!File.Exists(this.FilePath)) return "";
                 using (var fs = new FileStream(this.FilePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                 {
                     using (var sr = new StreamReader(fs))
@@ -136,7 +165,6 @@ namespace CLI
                         return sr.ReadToEnd();
                     }
                 }
-                throw new IOException("ReadModule failed with unknown exception.");
             }
             catch (IOException ioe)
             {
@@ -167,7 +195,7 @@ LastParsed: {LastParsed}
 ";
         }
 
-        public void Dispose(){}
+        public void Dispose() { }
 
         public static string FromPathToName(string path, string basePath)
         {

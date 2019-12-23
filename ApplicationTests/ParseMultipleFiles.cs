@@ -1,60 +1,42 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
-using CLI;
+using Project;
 using Xunit;
 using Xunit.Abstractions;
 
 namespace ApplicationTests
 {
-    public class ParseMultipleFiles : IDisposable
+    public class ParseMultipleFiles : BaseFileWatcherTest
     {
-        
-        private readonly string dir = Path.GetFullPath("ParseMultipleFiles", Directory.GetCurrentDirectory());
-        private readonly Project project;
-        public ParseMultipleFiles()
+
+        public ParseMultipleFiles(ITestOutputHelper output) : base(output, "ParseMultipleFiles") { }
+
+        [Fact]
+        public async Task Execute()
         {
             try
             {
-                Directory.Delete(dir, true);
-            } catch (Exception) {
-                Debug.WriteLine("Delete Directory failed in unit test.");
-            }
-            Directory.CreateDirectory(dir);
-            File.WriteAllText(path("First.car"), @"# The first document
+                var tasks = new List<Task>();
+                tasks.Add(project.CreateModule("First", @"# The first document
 
 type Person
-");
-            File.WriteAllText(path("Second.car"), @"
+"));
+                tasks.Add(project.CreateModule("Second", @"
 open Person
 # The second document
 type School
-");
-
-            project = new Project(dir);
+"));
+                await Task.WhenAll(tasks.ToArray());
+                Assert.Equal(2, project.Modules.Count);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(dir + ": " + ex.Message);
+            }
         }
 
-        [Fact]
-#pragma warning disable IDE0051 // Remove unused private members
-        private void CreateModule()
-#pragma warning restore IDE0051 // Remove unused private members
-        {
-            Assert.Equal(2, project.Modules.Count);
-            var second = project.FindModule("Second");
-            Assert.Equal(3, second.Generator.AST.Count);
-        }
-
-
-        public void Dispose()
-        {
-            project.Dispose();
-            Directory.Delete(dir, true);
-        }
-
-        private string path(string add)
-        {
-            return Path.GetFullPath(add, dir);
-        }
     }
 }

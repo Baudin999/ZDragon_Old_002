@@ -7,6 +7,7 @@ using Compiler.AST;
 using Mapper.Application;
 using Mapper.HTML;
 using Microsoft.AspNetCore.Mvc;
+using Project;
 
 namespace CLI.Controllers
 {
@@ -16,28 +17,26 @@ namespace CLI.Controllers
         [HttpGet("/api/modules")]
         public IEnumerable<string> GetModules()
         {
-            return Project.Current?.Modules.Select(m => m.Name) ?? Enumerable.Empty<string>();
+            return FileProject.Current?.Modules.Select(m => m.Name) ?? Enumerable.Empty<string>();
         }
 
         [HttpPost("/api/modules/{name}")]
-        public IActionResult CreateModule(string name)
+        public async Task<IActionResult> CreateModuleAsync(string name)
         {
-            var module = Project.Current?.FindModule(name);
-            if (module != null)
+            var checkModule = FileProject.Current?.FindModule(name);
+            if (checkModule != null)
             {
                 return BadRequest($"Module: {name}, already exists and cannot be created.");
             }
 
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+            var module = await FileProject.Current?.CreateModule(name);
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
 
-            Project.Current?.CreateModule(name);
+            if (module is null) return BadRequest($"Failed to created module {name}.");
+
             return Ok(new List<Descriptor> {
-                new Descriptor(name)
-                {
-                    Module = name,
-                    Description = "Your newly created module!",
-                    Name = name,
-                    DescriptorType = DescriptorType.Module.ToString("g")
-                }
+                module.ToDescriptor("Your newly created module")
             });
         }
 
@@ -45,7 +44,7 @@ namespace CLI.Controllers
         public IEnumerable<Descriptor> Search(string param)
         {
 
-            var moduleDescriptions = Project.Current?.Modules.Select(m =>
+            var moduleDescriptions = FileProject.Current?.Modules.Select(m =>
             {
                 return new Descriptor(m.Name)
                 {
@@ -61,7 +60,7 @@ namespace CLI.Controllers
                 return moduleDescriptions;
             }
 
-            var descriptors = Project
+            var descriptors = FileProject
                .Current?
                .Modules
                .SelectMany(m => m.GetDescriptions());
@@ -77,7 +76,7 @@ namespace CLI.Controllers
         public IActionResult RenderDescriptor([FromQuery]Descriptor descriptor)
         {
             
-            var module = Project.Current?.Modules.FirstOrDefault(m => m.Name == descriptor.Module);
+            var module = Project.FileProject.Current?.Modules.FirstOrDefault(m => m.Name == descriptor.Module);
             var node = module?.Transpiler.AST.FirstOrDefault(a => a is INamable && ((INamable)a).Name == descriptor.Name);
             if (node is null) return NotFound(descriptor);
 
@@ -90,7 +89,7 @@ namespace CLI.Controllers
         [HttpGet("/api/module/{module}")]
         public IActionResult GetModuleText(string module)
         {
-            var m = Project.Current?.FindModule(module);
+            var m = FileProject.Current?.FindModule(module);
             if (m is null) return NotFound();
 
             return Ok(m.Code);
@@ -99,7 +98,7 @@ namespace CLI.Controllers
         [HttpPost("/api/module/{module}")]
         public async Task<IActionResult> SaveModuleTextAsync(string module)
         {
-            var m = Project.Current?.FindModule(module);
+            var m = FileProject.Current?.FindModule(module);
 
 
             if (m is null)
@@ -122,7 +121,7 @@ namespace CLI.Controllers
         [HttpGet("/api/module/{module}/errors")]
         public IActionResult GetModuleErrors(string module)
         {
-            var m = Project.Current?.FindModule(module);
+            var m = FileProject.Current?.FindModule(module);
             if (m is null) return NotFound();
             return Ok(m.Generator.Errors);
         }

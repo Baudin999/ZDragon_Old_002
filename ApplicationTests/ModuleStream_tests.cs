@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using CLI;
+using Project;
 using Xunit;
 
 namespace ApplicationTests
@@ -12,6 +12,7 @@ namespace ApplicationTests
 
         public ModuleStream_tests()
         {
+            Console.WriteLine("STARTING: ModuleStream");
             moduleStream = new ModuleStream();
         }
 
@@ -37,6 +38,7 @@ namespace ApplicationTests
         public void Dispose()
         {
             moduleStream.Dispose();
+            Console.WriteLine("CLEANUP: ModuleStream");
         }
     }
 }

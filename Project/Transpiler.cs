@@ -10,13 +10,13 @@ using Mapper.JSON;
 using Mapper.XSD;
 using Configuration;
 
-namespace CLI
+namespace Project
 {
     public class Transpiler
     {
         private IEnumerable<Descriptor> Descriptions = Enumerable.Empty<Descriptor>();
 
-        public Project Project { get; }
+        public FileProject Project { get; }
         public string Code => Generator.Code;
         public ASTGenerator Generator { get; }
         public XSDMapper XsdMapper { get; private set; }
@@ -28,7 +28,7 @@ namespace CLI
 
         public List<IASTNode> AST => Imports.Concat(Generator.AST).ToList();
 
-        public Transpiler(ASTGenerator generator, Project project)
+        public Transpiler(ASTGenerator generator, FileProject project)
         {
             this.Generator = generator;
             this.Project = project;

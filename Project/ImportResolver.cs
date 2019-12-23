@@ -4,7 +4,7 @@ using System.Linq;
 using Compiler;
 using Compiler.AST;
 
-namespace CLI
+namespace Project
 {
     public static class ImportResolver
     {
@@ -16,7 +16,7 @@ namespace CLI
             _imports.ForEach(node =>
             {
                 var import = (ASTImport)node;
-                var ast = Project.Current?.GetAstForModule(import.ModuleName);
+                var ast = FileProject.Current?.GetAstForModule(import.ModuleName);
                 if (!import.Imports.Any())
                 {
                     var copies = ast?

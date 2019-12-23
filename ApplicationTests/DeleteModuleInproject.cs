@@ -9,9 +9,9 @@ using Xunit.Abstractions;
 
 namespace ApplicationTests
 {
-    public class CreateModuleInProject : BaseFileWatcherTest
+    public class DeleteModuleInproject : BaseFileWatcherTest
     {
-        public CreateModuleInProject(ITestOutputHelper output) : base(output, "CreateModuleInProject") { }
+        public DeleteModuleInproject(ITestOutputHelper output) : base(output, "DeleteModuleInproject") { }
 
         [Fact]
         public async Task CreateModule()
@@ -19,12 +19,21 @@ namespace ApplicationTests
             try
             {
                 var module = await project.CreateModule("Test");
+                var filePath = module.FilePath.Clone().ToString();
+                var outPath = module.OutPath.Clone().ToString();
+
                 Assert.True(File.Exists(path("Test.car")));
                 Assert.NotNull(module);
                 Assert.Equal("Test", module.Name);
                 Assert.Equal(this.path("Test.car"), module.FilePath);
-            }
-            catch (Exception ex)
+
+                var deleteResult = await project.DeleteModule("Test");
+
+                await Task.Delay(100);
+                Assert.True(deleteResult);
+                Assert.False(File.Exists(filePath));
+                Assert.False(Directory.Exists(outPath));
+            } catch (Exception ex)
             {
                 Console.WriteLine(dir + ": " + ex.Message);
             }

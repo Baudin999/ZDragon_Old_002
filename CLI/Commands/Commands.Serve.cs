@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Threading.Tasks;
+using CLI.Signals;
 using Microsoft.Extensions.CommandLineUtils;
 
 namespace CLI.Commands
@@ -31,7 +32,9 @@ To quit the application press 'q'
                         true => fileOption.Value()
                     };
 
-                    var project = new Project(directory);
+                    var project = new Project.FileProject(directory);
+                    SignalSingleton.ExitSignal.Subscribe(project.Dispose);
+
                     WebServer.Start(project.OutPath);
 
                     // Wait for the user to quit the program.

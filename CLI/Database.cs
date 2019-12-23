@@ -9,7 +9,7 @@ namespace CLI
 {
     public static class Database
     {
-        private static string path = Path.Combine(Project.Current?.OutPath ?? "", "Lexicon.db");
+        private static string path = Path.Combine(Project.FileProject.Current?.OutPath ?? "", "Lexicon.db");
         private static ConnectionString ConnectionString()
         {
             var connectionString = new ConnectionString(path);

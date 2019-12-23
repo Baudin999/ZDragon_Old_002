@@ -19,10 +19,10 @@ body {
     overflow: hidden;
 }
 
-body .content-scrollable {
-    overflow: auto;
-    height: 100%;
-}
+    body .content-scrollable {
+        overflow: auto;
+        height: 100%;
+    }
 
 h1.title {
     color: #ff3e00;
@@ -40,6 +40,7 @@ h1.title {
     .nav-button:hover {
         cursor: pointer;
     }
+
 p {
     text-align: justify;
 }
@@ -75,30 +76,30 @@ form {
     flex-direction: row;
 }
 
-form label {
-    font-weight: bold;
-    display: block;
-}
-
-form input,
-form select,
-form option,
-form textarea,
-form button {
-    outline: none;
-    border-radius: 0;
-}
-
-    button:hover {
-        cursor: pointer;
+    form label {
+        font-weight: bold;
+        display: block;
     }
 
-    form input:active,
-    form select:active,
-    form option:active,
-    form textarea:active {
+    form input,
+    form select,
+    form option,
+    form textarea,
+    form button {
         outline: none;
+        border-radius: 0;
     }
+
+button:hover {
+    cursor: pointer;
+}
+
+form input:active,
+form select:active,
+form option:active,
+form textarea:active {
+    outline: none;
+}
 
 .left,
 .right {
@@ -132,9 +133,14 @@ form button {
     margin: 0 auto;
 }
 
+    .content--center p {
+        text-align: center;
+    }
+
 .svg-container {
     overflow-x: auto;
 }
+
 .vis-network:focus {
     outline: none;
 }
