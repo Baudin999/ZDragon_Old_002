@@ -4,9 +4,17 @@ export const tokenizer = {
   autoClosingPairs: [{ open: "{*", close: "*}" }],
   digits: /\d+(_+\d+)*/,
   tokenizer: {
-    root: [{ include: "@chapter" }, { include: "@annotation" }, { include: "common" }],
+    root: [
+      { include: "@chapter" },
+      { include: "@annotation" },
+      { include: "@directive" },
+      // { include: "@field" },
+      { include: "common" }
+    ],
     chapter: [[/#.*/, "chapter"]],
     annotation: [[/@.*/, "annotation"]],
+    directive: [[/(%)(.*)(:)(.*)/, ["number", "annotation", "number", "word"]]],
+    // field: [[/(.*)(:)(.*)/, ["keyword", "number", "keyword"]]],
     common: [
       [
         /^.[a-z$][\w$]*/,

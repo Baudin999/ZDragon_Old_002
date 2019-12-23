@@ -8,6 +8,7 @@ using Compiler.AST;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using Configuration;
 
 namespace CLI.Controllers
 {
@@ -68,13 +69,13 @@ namespace CLI.Controllers
             dynamic result = new ExpandoObject();
             foreach (var field in node.Fields)
             {
-                var fakerDirective = field.Directives.FirstOrDefault(f => f.Key == "faker")?.Value;
+                var fakerDirective = field.Directives.FirstOrDefault(f => f.Key == "faker")?.Value.ToLower();
                 var (_mod, _type) = (field.Types.First().Value, field.Types.Last().Value);
                 var data = (_mod, _type) switch
                 {
-                    ("Maybe", _) => GenerateBaseValue(_type),
-                    ("List", _) => GenerateList(_type),
-                    (_, _) => GenerateBaseValue(_type, fakerDirective)
+                    ("Maybe", _) => GenerateBaseValue(_type, field, fakerDirective),
+                    ("List", _) => GenerateList(_type, field, fakerDirective),
+                    (_, _) => GenerateBaseValue(_type, field, fakerDirective)
                 };
 
                 AddProperty(result, field.Name, data);
@@ -84,54 +85,81 @@ namespace CLI.Controllers
 
         private dynamic GenerateEnum(ASTChoice choice)
         {
-            var faker = new Bogus.Faker();
+            var faker = new Faker();
             return faker.Random.ListItem(choice.Options.ToList()).Value;
         }
 
         private dynamic GenerateAlias(ASTAlias alias)
         {
-            var fakerDirective = alias.Directives.FirstOrDefault(f => f.Key == "faker")?.Value;
+            var fakerDirective = alias.Directives.FirstOrDefault(f => f.Key == "faker")?.Value.ToLower();
             var (_mod, _type) = (alias.Types.First().Value, alias.Types.Last().Value);
             return (_mod, _type) switch
             {
-                ("Maybe", _) => GenerateBaseValue(_type),
-                ("List", _) => GenerateList(_type),
-                (_, _) => GenerateBaseValue(_type, fakerDirective)
+                ("Maybe", _) => GenerateBaseValue(_type, alias, fakerDirective),
+                ("List", _) => GenerateList(_type, alias, fakerDirective),
+                (_, _) => GenerateBaseValue(_type, alias, fakerDirective)
             };
         }
 
-        private List<object> GenerateList(string _type)
+        private List<object> GenerateList(string _type, IRestrictable restrictable, string? fakerDirective = null)
         {
             var randomAmount = new Random().Next(0, 5);
-            return new Faker<dynamic>().Generate(randomAmount).Select(i => this.GenerateBaseValue(_type)).ToList();
+            return new Faker<dynamic>()
+                .Generate(randomAmount)
+                .Select(i => this.GenerateBaseValue(_type, restrictable, fakerDirective))
+                .ToList();
         }
 
-        private object GenerateBaseValue(string _type, string? fakerDirective = null)
+        private object GenerateBaseValue(string _type, IRestrictable restrictable, string? fakerDirective = null)
         {
-            var faker = new Bogus.Faker("nl");
-            if (!(fakerDirective is null))
+            var config = ProjectContext.Instance?.CarConfig ?? new CarConfig();
+            var faker = new Faker("nl");
+            dynamic? result = null;
+            
+            result = fakerDirective?.ToLower() switch
             {
+                // person
+                "person.firstname" => faker.Person.FirstName,
+                "person.lastname" => faker.Person.LastName,
+                "person.fullname" => faker.Person.FullName,
+                "person.dateofbirth" => faker.Person.DateOfBirth.ToShortDateString(),
+                "person.avatar" => faker.Person.Avatar,
+                "person.email" => faker.Person.Email,
+                "person.gender" => faker.Person.Gender.ToString("g"),
+                "person.phone" => faker.Person.Phone,
+                "person.username" => faker.Person.UserName,
 
-                return fakerDirective.ToLower() switch
-                {
-                    "person.firstname" => faker.Person.FirstName,
-                    "lastname" => BogusWrapper.Person.FirstName,
-                    "person.lastname" => BogusWrapper.Person.LastName,
-                    _ => "Not a faker directive"
-                };
+                // address 
+                "address.street" => faker.Address.StreetName(),
+                "address.housenumber" => faker.Address.BuildingNumber(),
+                "address.extension" => faker.Random.Char('A', 'Z').ToString(),
+                "address.city" => faker.Address.City(),
+                "address.postalcode" => faker.Address.ZipCode(),
+                "address.country" => faker.Address.Country(),
+                "address.countrycode" => faker.Address.CountryCode(),
+                "address.fulladdress" => faker.Address.FullAddress(),
+                _ => null
+            };
 
-                //return faker.GetPropValue(fakerDirective) ?? "Not a valid faker directive";
-            }
-            return _type switch
+            if (result != null) return result;
+
+            var minR = restrictable.Restrictions.FirstOrDefault(r => r.Key == "min")?.Value;
+            var maxR = restrictable.Restrictions.FirstOrDefault(r => r.Key == "max")?.Value;
+
+            result = _type switch
             {
-                "String" => faker.Person.FirstName,
-                "Number" => faker.Random.Int(0, 100),
+                "String" => faker.Lorem.Text(),
+                "Number" => faker.Random.Int(
+                    minR == null ? config.DefaultRestrictions.NumberRestrictions.Min : int.Parse(minR),
+                    maxR == null ? config.DefaultRestrictions.NumberRestrictions.Max : int.Parse(maxR)).ToString(),
                 "Boolean" => faker.Random.Bool().ToString(),
                 "Date" => faker.Person.DateOfBirth.ToShortDateString(),
                 "Time" => faker.Person.DateOfBirth.ToShortTimeString(),
                 "DateTime" => faker.Person.DateOfBirth.ToString(),
                 _ => Generate(_type),
             };
+
+            return result;
         }
 
         private static int Rnd(int min, int max)
@@ -151,26 +179,39 @@ namespace CLI.Controllers
     }
 
 
-    public static class BogusWrapper
-    {
-        private static Faker Bogus { get => new Faker("nl"); }
-        public static class Person
-        {
-            public static string FirstName => BogusWrapper.Bogus.Person.FirstName;
-            public static string LastName => BogusWrapper.Bogus.Person.LastName;
-            public static string FullName => BogusWrapper.Bogus.Person.FullName;
-        }
-        public static class Address
-        {
-            public static string Street => BogusWrapper.Bogus.Address.StreetName();
-            public static string HouseNumber => BogusWrapper.Bogus.Random.Number(0, 100).ToString();
-        }
+    //public static class BogusWrapper
+    //{
+    //    private static Faker Bogus { get => new Faker("nl"); }
+    //    public static class Person
+    //    {
+    //        public static string FirstName => new Faker("nl").Person.FirstName;
+    //        public static string LastName => BogusWrapper.Bogus.Person.LastName;
+    //        public static string FullName => BogusWrapper.Bogus.Person.FullName;
+    //        public static string DateOfBirth => BogusWrapper.Bogus.Person.DateOfBirth.ToShortDateString();
+    //        public static string Avatar => BogusWrapper.Bogus.Person.Avatar;
+    //        public static string Email => BogusWrapper.Bogus.Person.Email;
+    //        public static string Gender => BogusWrapper.Bogus.Person.Gender.ToString("g");
+    //        public static string Phone => BogusWrapper.Bogus.Person.Phone;
+    //        public static string UserName => BogusWrapper.Bogus.Person.UserName;
+    //    }
+    //    public static class Address
+    //    {
+    //        public static string Street => BogusWrapper.Bogus.Address.StreetName();
+    //        public static string HouseNumber => BogusWrapper.Bogus.Random.Number(1, 1000).ToString();
+    //        public static string HouseNumberExtension => BogusWrapper.Bogus.Random.Char('A', 'Z').ToString();
+    //        public static string PostalCode => BogusWrapper.Bogus.Address.ZipCode();
+    //        public static string City => BogusWrapper.Bogus.Address.City();
+    //        public static string Country => BogusWrapper.Bogus.Address.Country();
+    //        public static string CountryCode => BogusWrapper.Bogus.Address.CountryCode();
+    //        public static string FullAddress => BogusWrapper.Bogus.Address.FullAddress();
+    //        public static string County => BogusWrapper.Bogus.Address.County();
+    //    }
 
-        public static class Finance
-        {
-            public static string Number => BogusWrapper.Bogus.Finance.Account();
-        }
-    }
+    //    public static class Finance
+    //    {
+    //        public static string Number => BogusWrapper.Bogus.Finance.Account();
+    //    }
+    //}
 
 
     public static class DataHelpers
