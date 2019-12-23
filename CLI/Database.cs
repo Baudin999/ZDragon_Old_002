@@ -4,12 +4,13 @@ using System.IO;
 using CLI.Models;
 using CLI.Signals;
 using LiteDB;
+using Project;
 
 namespace CLI
 {
     public static class Database
     {
-        private static string path = Path.Combine(Project.FileProject.Current?.OutPath ?? "", "Lexicon.db");
+        private static string path = Path.Combine(ProjectContext.Instance?.OutPath ?? "", "Lexicon.db");
         private static ConnectionString ConnectionString()
         {
             var connectionString = new ConnectionString(path);

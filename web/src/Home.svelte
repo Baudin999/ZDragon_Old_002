@@ -49,7 +49,10 @@
 </script>
 
 <style>
-
+  .result-list {
+    overflow: auto;
+    height: 400px;
+  }
 </style>
 
 <div class="content--center">
@@ -71,12 +74,14 @@
       on:keypress={keypress} />
   </div>
 
-  {#if data && data.length > 0}
-    {#each data as d}
-      <SearchResult descriptor={d} />
-    {/each}
-  {:else}
-    <div>Your query returned no results.</div>
-  {/if}
+  <div class="result-list">
+    {#if data && data.length > 0}
+      {#each data as d}
+        <SearchResult descriptor={d} />
+      {/each}
+    {:else}
+      <div>Your query returned no results.</div>
+    {/if}
+  </div>
 </div>
 <!-- <HomeHelp /> -->

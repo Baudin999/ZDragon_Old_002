@@ -3,6 +3,7 @@ using System.IO;
 using System.Threading.Tasks;
 using CLI.Signals;
 using Microsoft.Extensions.CommandLineUtils;
+using Project;
 
 namespace CLI.Commands
 {
@@ -35,23 +36,33 @@ namespace CLI.Commands
                               false => Directory.GetCurrentDirectory(),
                               true => fileOption.Value()
                           };
-
-                          var project = new Project.FileProject(directory);
-                          SignalSingleton.ExitSignal.Subscribe(project.Dispose);
-
-                          Task? webserverTask = null;
-                          if (serve.HasValue())
+                          ProjectContext.Init(directory);
+                          var project = ProjectContext.Instance;
+                          if (project != null)
                           {
-                              webserverTask = WebServer.Start(project.OutPath);
+                              SignalSingleton.ExitSignal.Subscribe(() => {
+                                  project.Dispose();
+                              });
+
+                              Task? webserverTask = null;
+                              if (serve.HasValue())
+                              {
+                                  webserverTask = WebServer.Start(project.OutPath);
+                              }
+
+                              project.Watch();
+
+                              while (Console.ReadKey().Key != ConsoleKey.Q) { }
+                              Console.WriteLine();
+
+                              SignalSingleton.ExitSignal.Dispatch();
+                              return 0;
                           }
-
-                          project.Watch();
-
-                          while (Console.ReadKey().Key != ConsoleKey.Q) { }
-                          Console.WriteLine();
-
-                          SignalSingleton.ExitSignal.Dispatch();
-                          return 0;
+                          else
+                          {
+                              Console.WriteLine("Could not initialize the project.");
+                              return 1;
+                          }
                       });
                   });
         }

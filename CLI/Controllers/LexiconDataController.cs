@@ -42,7 +42,7 @@ namespace CLI.Controllers
         [HttpGet("/api/lexicon/config")]
         public IActionResult ConfigurationData()
         {
-            var project = FileProject.Current;
+            var project = ProjectContext.Instance;
             if (project is null) return NotFound();
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
             else return Ok(project.CarConfig.LexiconConfig);
@@ -53,7 +53,7 @@ namespace CLI.Controllers
         [HttpGet("/api/lexicon/remote")]
         public IActionResult GetRemoteLexiconData()
         {
-            var config = FileProject.Current?.CarConfig;
+            var config = ProjectContext.Instance?.CarConfig;
             if (config is null) return NotFound();
             else
             {

@@ -16,7 +16,7 @@ namespace Project
             _imports.ForEach(node =>
             {
                 var import = (ASTImport)node;
-                var ast = FileProject.Current?.GetAstForModule(import.ModuleName);
+                var ast = ProjectContext.Instance?.GetAstForModule(import.ModuleName);
                 if (!import.Imports.Any())
                 {
                     var copies = ast?

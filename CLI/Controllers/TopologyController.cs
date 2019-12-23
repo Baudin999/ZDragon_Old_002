@@ -1,6 +1,7 @@
 ﻿using System;
 using CLI.Models;
 using Microsoft.AspNetCore.Mvc;
+using Project;
 
 namespace CLI.Controllers
 {
@@ -10,7 +11,7 @@ namespace CLI.Controllers
         [HttpGet("/api/topology")]
         public IActionResult GetTopology()
         {
-            var topology = Project.FileProject.Current?.GetTopology(true);
+            var topology = ProjectContext.Instance?.GetTopology(true);
             if (topology is null) return NoContent();
             else return Ok(topology);
         }
@@ -18,7 +19,7 @@ namespace CLI.Controllers
         [HttpGet("/api/topology/modules")]
         public IActionResult GetTopologyModules()
         {
-            var topology = Project.FileProject.Current?.GetTopology(false);
+            var topology = ProjectContext.Instance?.GetTopology(false);
             if (topology is null) return NoContent();
             else return Ok(topology);
         }

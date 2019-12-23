@@ -9,7 +9,6 @@
   }
   iframe {
     width: 100%;
-    margin: 2rem 0;
     height: 100%;
     border: none;
   }

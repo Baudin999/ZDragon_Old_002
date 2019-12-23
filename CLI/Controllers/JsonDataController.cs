@@ -19,7 +19,7 @@ namespace CLI.Controllers
         public IActionResult GetData(string module, string type, [FromQuery]bool list)
         {
 
-            Module = Project.FileProject.Current?.Modules.First(m => m.Name == module);
+            Module = Project.ProjectContext.Instance?.Modules.First(m => m.Name == module);
             var result = list ? new Faker().Make(10, () => Generate(type)) : Generate(type);
             if (result is null)
             {

@@ -16,7 +16,7 @@ namespace CLI
         public static string RootPath = "";
         public static Task Start(string rootPath)
         {
-            var portNumber = FileProject.Current?.CarConfig?.PortNumber ?? "5000";
+            var portNumber = ProjectContext.Instance?.CarConfig?.PortNumber ?? "5000";
             RootPath = rootPath;
             Task.Run(async () =>
             {
@@ -24,9 +24,10 @@ namespace CLI
                 WebServer.OpenBrowser($"http://localhost:{portNumber}/index.html");
             });
 
-            if (FileProject.Current != null)
+            var project = ProjectContext.Instance;
+            if (project != null)
             {
-                WebServer.CreateAssets(FileProject.Current.OutPath);
+                WebServer.CreateAssets(project.OutPath);
             }
 
             return Task.Run(() =>

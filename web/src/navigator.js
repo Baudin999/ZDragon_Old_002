@@ -18,6 +18,10 @@ class Navigator {
     window.location.href = `/index.html?path=preview&module=${module}`;
   }
 
+  edit(module) {
+    window.location.href = `/index.html?path=editor&module=${module}`;
+  }
+
   subscribe(f) {
     this.route.subscribe(f);
   }

@@ -3,6 +3,7 @@ using System.IO;
 using System.Threading.Tasks;
 using CLI.Signals;
 using Microsoft.Extensions.CommandLineUtils;
+using Project;
 
 namespace CLI.Commands
 {
@@ -32,7 +33,7 @@ To quit the application press 'q'
                         true => fileOption.Value()
                     };
 
-                    var project = new Project.FileProject(directory);
+                    var project = ProjectContext.Init(directory);
                     SignalSingleton.ExitSignal.Subscribe(project.Dispose);
 
                     WebServer.Start(project.OutPath);

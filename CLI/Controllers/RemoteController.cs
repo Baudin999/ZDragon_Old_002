@@ -13,7 +13,7 @@ namespace CLI.Controllers
         [HttpGet("/api/remote/module/{module}")]
         public async Task<IActionResult> GetModuleText(string module)
         {
-            var project = FileProject.Current;
+            var project = ProjectContext.Instance;
             if (project is null) return NotFound();
             
             var url = project.CarConfig?.Remote + "/api/module/" + module;

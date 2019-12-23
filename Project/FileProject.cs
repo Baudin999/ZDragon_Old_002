@@ -12,7 +12,7 @@ namespace Project
     public partial class FileProject : IProject, IDisposable
     {
 
-        public static FileProject? Current { get; private set; }
+        //public static FileProject? Current { get; private set; }
 
         /// <summary>
         /// The Directory in which the project is created. This is the root path,
@@ -50,8 +50,6 @@ namespace Project
                 Modules.Add(module);
                 module.Parse();
             }
-
-            FileProject.Current = this;
 
             Task.Run(ParseAllModules);
         }
@@ -164,7 +162,7 @@ namespace Project
         public void Dispose()
         {
             Console.WriteLine("Disposing of the project...");
-            FileProject.Current = null;
+            ProjectContext.Destruct();
             this.ProjectWatcher?.Dispose();
             foreach (Module m in this.Modules)
             {
