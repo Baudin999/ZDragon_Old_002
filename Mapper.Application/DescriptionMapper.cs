@@ -30,15 +30,18 @@ namespace Mapper.Application
 
             foreach (var field in astType.Fields)
             {
-                yield return new Descriptor(field.Name)
+                if (field.Module == ModuleName)
                 {
-                    Module = ModuleName,
-                    Name = field.Name,
-                    Description = MapAnnotations(field.Annotations),
-                    Parent = astType.Name,
-                    Type = MapTypes(field.Types),
-                    DescriptorType = DescriptorType.Field.ToString("g")
-                };
+                    yield return new Descriptor(field.Name)
+                    {
+                        Module = ModuleName,
+                        Name = field.Name,
+                        Description = MapAnnotations(field.Annotations),
+                        Parent = astType.Name,
+                        Type = MapTypes(field.Types),
+                        DescriptorType = DescriptorType.Field.ToString("g")
+                    };
+                }
             }
         }
 

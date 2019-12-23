@@ -38,6 +38,7 @@
     margin-bottom: 1rem;
     margin-left: 50%;
     transform: translateX(-50%);
+    background: white;
   }
   .descriptor:hover {
     cursor: pointer;

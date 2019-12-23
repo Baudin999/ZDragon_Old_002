@@ -88,6 +88,8 @@
         theme: "carlangTheme",
         scrollBeyondLastLine: false,
         roundedSelection: true,
+        wordWrapColumn: 120,
+        wordWrap: "on",
         minimap: {
           enabled: false
         }

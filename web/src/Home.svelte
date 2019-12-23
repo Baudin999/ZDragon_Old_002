@@ -53,17 +53,26 @@
     overflow: auto;
     height: 400px;
   }
+  .logo {
+    /*position: fixed;
+    top: 0;
+    left: 0; 
+    width: 100%;
+    height: 100%;
+    max-height: 100%;
+    background-image: url("/logo.jpg");
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    opacity: 0.6;
+    z-index: -2; */
+  }
 </style>
 
+<div class="logo" />
 <div class="content--center">
   <h1 class="title">Welcome to ZDragon!</h1>
-  <p>
-    Visit
-    <a href="https://zdragon.nl" target="_blank" rel="noopener noreferrer">
-      ZDragon.nl
-    </a>
-    to learn more about zdragon!
-  </p>
 
   <div>
     <h2>Search your models:</h2>

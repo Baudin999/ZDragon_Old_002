@@ -21,7 +21,9 @@
       let [n, ...rest] = params.nodes;
       let node = topology.nodes.find(node => node.id === n);
       if (node && node.module) {
-        navigator.preview(node.module);
+        navigator.edit(node.module);
+      } else {
+        // change the node color
       }
     });
   };
