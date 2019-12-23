@@ -148,7 +148,7 @@ namespace CLI.Controllers
 
             result = _type switch
             {
-                "String" => faker.Lorem.Text(),
+                "String" => faker.Lorem.Words(3),
                 "Number" => faker.Random.Int(
                     minR == null ? config.DefaultRestrictions.NumberRestrictions.Min : int.Parse(minR),
                     maxR == null ? config.DefaultRestrictions.NumberRestrictions.Max : int.Parse(maxR)).ToString(),
