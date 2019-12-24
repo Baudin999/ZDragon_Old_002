@@ -6,7 +6,8 @@ services:
 
 before_install:
   - docker pull mcr.microsoft.com/dotnet/core/sdk:3.1
+  - docker run -it mcr.microsoft.com/dotnet/core/sdk:3.1
 
 script:
-  - docker run -d mcr.microsoft.com/dotnet/core/sdk:3.1 /bin/sh -c "dotnet build --configuration Release"
-  - docker run -d mcr.microsoft.com/dotnet/core/sdk:3.1 /bin/sh -c "dotnet build --configuration Release"
+  - ls
+
