@@ -1,5 +1,6 @@
 ﻿language: csharp
 solution: ZDragon.NET.sln
+mono: none
 services:
   - docker
 
