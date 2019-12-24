@@ -1,30 +1,12 @@
-dist: xenial
-addons:
-  snaps:
-  - name: dotnet-sdk
-    classic: true
-    channel: latest/beta
-sudo: required
-language: csharp
+﻿language: csharp
 solution: ZDragon.NET.sln
-mono: none
-# Normal script that runs every push / pr
+services:
+  - docker
+
+before_install:
+  - docker pull mcr.microsoft.com/dotnet/core/sdk:3.1
+  - docker run -d mcr.microsoft.com/dotnet/core/sdk:3.1 /bin/sh
+
 script:
-  - sudo snap alias dotnet-sdk.dotnet dotnet
   - dotnet build --configuration Release
   - dotnet test
-before_deploy:
-  - NAME=$(git describe --tag --abbrev=0)
-  - bash ./release.sh $NAME $ZDragon_GitHub_Token
-# Create github release when a tag is added to the master branch
-deploy:
-    provider: releases
-    api_key: $ZDragon_GitHub_Token
-    draft: false
-    skip_cleanup: true
-    name: $NAME
-    on:
-        tags: true
-        branch: master
-    file_glob: true
-    file: lib/*
