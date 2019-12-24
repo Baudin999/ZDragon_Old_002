@@ -12,7 +12,7 @@ mono: none
 script:
   - sudo snap alias dotnet-sdk.dotnet dotnet
   - dotnet build --configuration Release
-  - dotnet test ./CompilerTests
+  - dotnet test
 before_deploy:
   - NAME=$(git describe --tag --abbrev=0)
   - bash ./release.sh $NAME $ZDragon_GitHub_Token

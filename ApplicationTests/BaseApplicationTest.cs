@@ -29,7 +29,14 @@ namespace ApplicationTests
         public void Dispose()
         {
             project.Dispose();
-            Directory.Delete(dir, true);
+            try
+            {
+                Directory.Delete(dir, true);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
             Console.WriteLine("CLEANUP: " + dir);
         }
 
