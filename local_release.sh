@@ -1,12 +1,15 @@
-﻿# The following variables are defaults, but can be overwritten as cli arguments, such as by running zdragon_release /usr/local/tempBinForDev
-# This can be useful for one-time changes, but it is recommended to just edit the file if you want to do this often.
-
+﻿
 # Default bin location for mac
 OUTPUT_DIR="${1:-/usr/local/bin/}"
+
 # Defaults to mac
 OS="${2:-osx-x64}"
-# If your zdragon source location differs from this, edit this variable.
-SOURCE_DIR="${3:-$HOME/Projects/dotnet/ZDragon.NET/CLI}"
+
+# The name of the cli app
 APP_NAME="${4:-ckc}"
-dotnet publish "$SOURCE_DIR" -c Release --runtime "$OS" /p:PublishSingleFile=true -o "$OUTPUT_DIR"
+
+# publish the app
+dotnet publish ./CLI -c Release --runtime "$OS" /p:PublishSingleFile=true -o "$OUTPUT_DIR"
+
+# rename
 mv -v "$OUTPUT_DIR"CLI "$OUTPUT_DIR""$APP_NAME"
