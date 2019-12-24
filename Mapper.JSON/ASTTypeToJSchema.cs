@@ -187,7 +187,7 @@ namespace Mapper.JSON
                 ASTAlias n => MapASTAlias(n),
                 ASTChoice n => MapASTChoice(n),
                 ASTData n => MapASTData(n),
-                _ => throw new NotImplementedException("Not implemented.")
+                _ => new JSchema()
             };
 
             if (result != null)

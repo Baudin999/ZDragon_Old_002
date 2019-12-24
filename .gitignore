@@ -410,3 +410,5 @@ ASALocalRun/
 
 
 NuGetScratch/
+VBCSCompiler/
+.dotnet/
