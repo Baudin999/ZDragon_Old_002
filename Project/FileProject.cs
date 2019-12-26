@@ -113,7 +113,7 @@ namespace Project
 
             _ = await DeleteModule(oldName);
             var module = await CreateModule(newName);
-            module.SaveCode(code);
+            await module.SaveCode(code);
             return module;
         }
 
