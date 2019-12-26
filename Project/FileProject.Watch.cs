@@ -39,13 +39,13 @@ namespace Project
             //    }
             //});
 
-            ProjectWatcher.ModuleStream.Subscribe("OnDelete", MessageType.ModuleDeleted, msm =>
+            ProjectWatcher.ModuleStream.Subscribe("OnDelete", MessageType.ModuleDeleted, async msm =>
             {
                 var module = Modules.FirstOrDefault(m => m.Name == msm.ModuleName);
                 if (!(module is null))
                 {
-                    module.Clean();
                     Modules.Remove(module);
+                    await module.Clean();
                 }
             });
 
@@ -54,7 +54,7 @@ namespace Project
                 var moduleOld = Modules.FirstOrDefault(m => m.Name == msm.ModuleName);
                 if (!(moduleOld is null))
                 {
-                    moduleOld.Clean();
+                    await moduleOld.Clean();
                     Modules.Remove(moduleOld);
                 }
                 var module = new Module(msm.FileFullPath, this.BasePath, this);

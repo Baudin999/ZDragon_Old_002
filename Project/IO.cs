@@ -65,5 +65,15 @@ namespace Project
                 throw ioe;
             }
         }
+
+        internal static async Task DeleteFile(string fileName)
+        {
+            await Task.Run(() => File.Delete(fileName));
+        }
+
+        internal static async Task DeleteDirectory(string directoryName)
+        {
+            await Task.Run(() => Directory.Delete(directoryName, true));
+        }
     }
 }

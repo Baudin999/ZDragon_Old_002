@@ -128,35 +128,35 @@ namespace Project
             return this.Modules.FirstOrDefault(m => m.Name == name);
         }
 
-        public Task<bool> DeleteModule(string moduleName)
+        public async Task<bool> DeleteModule(string moduleName)
         {
             var tcs = new TaskCompletionSource<bool>();
             try
             {
                 var module = FindModule(moduleName);
-                if (module is null) return Task.FromResult(false);
+                if (module is null) return await Task.FromResult(false);
 
                 if (this.ProjectWatcher != null)
                 {
-                    Task.Factory.StartNew(() =>
-                    {
-                        Action cleanup = () => { };
-                        var listenerName = "CREATEOR: " + DateTime.Now + new Random().Next(1000000).ToString();
-                        cleanup = this.ProjectWatcher.ModuleStream.Subscribe(listenerName, MessageType.ModuleDeleted, msm =>
-                        {
-                            tcs.TrySetResult(true);
-                            Task.Run(cleanup);
-                        });
-                    });
+                    await Task.Factory.StartNew(() =>
+                      {
+                          Action cleanup = () => { };
+                          var listenerName = "CREATEOR: " + DateTime.Now + new Random().Next(1000000).ToString();
+                          cleanup = this.ProjectWatcher.ModuleStream.Subscribe(listenerName, MessageType.ModuleDeleted, msm =>
+                          {
+                              tcs.TrySetResult(true);
+                              Task.Run(cleanup);
+                          });
+                      });
                 }
 
-                File.Delete(module.FilePath);
+                await IO.DeleteFile(module.FilePath);
             }
             catch (Exception ex)
             {
                 tcs.TrySetException(ex);
             }
-            return tcs.Task;
+            return await tcs.Task;
         }
 
         public void Dispose()
@@ -170,34 +170,34 @@ namespace Project
             }
         }
 
-//        private void CreateNewModuleFile(string modulePath, string moduleName, string? code = null)
-//        {
-//            try
-//            {
-//                using (var fs = new FileStream(modulePath, FileMode.CreateNew, FileAccess.Write, FileShare.ReadWrite))
-//                {
-//                    using (var sr = new StreamWriter(fs))
-//                    {
-//                        sr.Write(code ?? $@"
-//# {moduleName}
+        //        private void CreateNewModuleFile(string modulePath, string moduleName, string? code = null)
+        //        {
+        //            try
+        //            {
+        //                using (var fs = new FileStream(modulePath, FileMode.CreateNew, FileAccess.Write, FileShare.ReadWrite))
+        //                {
+        //                    using (var sr = new StreamWriter(fs))
+        //                    {
+        //                        sr.Write(code ?? $@"
+        //# {moduleName}
 
-//Have fun with your module!
-//");
-//                        sr.Flush();
-//                        sr.Close();
-//                        sr.Dispose();
-//                    }
-//                    fs.Close();
-//                    fs.Dispose();
+        //Have fun with your module!
+        //");
+        //                        sr.Flush();
+        //                        sr.Close();
+        //                        sr.Dispose();
+        //                    }
+        //                    fs.Close();
+        //                    fs.Dispose();
 
-//                }
-//            }
-//            catch (IOException ioe)
-//            {
-//                Console.WriteLine("ReadModuleText: Caught Exception reading file [{0}]", ioe);
-//                throw ioe;
-//            }
-//        }
+        //                }
+        //            }
+        //            catch (IOException ioe)
+        //            {
+        //                Console.WriteLine("ReadModuleText: Caught Exception reading file [{0}]", ioe);
+        //                throw ioe;
+        //            }
+        //        }
 
 
         static string UppercaseFirst(string s)

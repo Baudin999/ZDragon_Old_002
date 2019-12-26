@@ -116,13 +116,14 @@ namespace Project
                         });
             }
         }
-        public void Clean()
+        public async Task Clean()
         {
             try
             {
                 if (OutPath != null && Directory.Exists(OutPath))
                 {
-                    Task.Factory.StartNew(() => Directory.Delete(OutPath, true));
+                    //Directory.Delete(OutPath, true);
+                    await Task.Run(() => Directory.Delete(OutPath, true));
                 }
             }
             catch (Exception ex)
