@@ -20,7 +20,7 @@ namespace Configuration
         {
             if (File.Exists(path))
             {
-                var json = File.ReadAllText(path);
+                var json = IO.ReadFileText(path);
                 var serializer = new JsonSerializer();
                 var result = serializer.Deserialize<CarConfig>(new JsonTextReader(new StringReader(json)));
 

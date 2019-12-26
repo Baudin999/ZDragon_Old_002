@@ -73,7 +73,7 @@ namespace Project
                 var fileName = String.Join("/", name.Split(".").Select(UppercaseFirst)) + ".car";
                 var modulePath = Path.GetFullPath(fileName, this.BasePath);
                 var directoryName = Path.GetDirectoryName(modulePath);
-                Directory.CreateDirectory(directoryName);
+                //Directory.CreateDirectory(directoryName);
 
                 if (this.ProjectWatcher != null)
                 {
@@ -91,7 +91,7 @@ namespace Project
                     });
                 }
 
-                CreateNewModuleFile(modulePath, name, code);
+                _ = IO.SaveFile(modulePath, directoryName, $"# {name}");
             }
             catch (Exception ex)
             {
@@ -170,34 +170,34 @@ namespace Project
             }
         }
 
-        private void CreateNewModuleFile(string modulePath, string moduleName, string? code = null)
-        {
-            try
-            {
-                using (var fs = new FileStream(modulePath, FileMode.CreateNew, FileAccess.Write, FileShare.ReadWrite))
-                {
-                    using (var sr = new StreamWriter(fs))
-                    {
-                        sr.Write(code ?? $@"
-# {moduleName}
+//        private void CreateNewModuleFile(string modulePath, string moduleName, string? code = null)
+//        {
+//            try
+//            {
+//                using (var fs = new FileStream(modulePath, FileMode.CreateNew, FileAccess.Write, FileShare.ReadWrite))
+//                {
+//                    using (var sr = new StreamWriter(fs))
+//                    {
+//                        sr.Write(code ?? $@"
+//# {moduleName}
 
-Have fun with your module!
-");
-                        sr.Flush();
-                        sr.Close();
-                        sr.Dispose();
-                    }
-                    fs.Close();
-                    fs.Dispose();
+//Have fun with your module!
+//");
+//                        sr.Flush();
+//                        sr.Close();
+//                        sr.Dispose();
+//                    }
+//                    fs.Close();
+//                    fs.Dispose();
 
-                }
-            }
-            catch (IOException ioe)
-            {
-                Console.WriteLine("ReadModuleText: Caught Exception reading file [{0}]", ioe);
-                throw ioe;
-            }
-        }
+//                }
+//            }
+//            catch (IOException ioe)
+//            {
+//                Console.WriteLine("ReadModuleText: Caught Exception reading file [{0}]", ioe);
+//                throw ioe;
+//            }
+//        }
 
 
         static string UppercaseFirst(string s)

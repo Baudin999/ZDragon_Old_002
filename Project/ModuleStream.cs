@@ -7,7 +7,7 @@ namespace Project
 {
     public class ModuleStream : IDisposable
     {
-        
+
         private Subject<ModuleStreamMessage> moduleMessageSubject;
         private IDictionary<string, IDisposable> subscribers;
 

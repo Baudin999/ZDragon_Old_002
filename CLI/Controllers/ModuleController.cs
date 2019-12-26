@@ -108,11 +108,12 @@ namespace CLI.Controllers
             {
                 return await Task.Run(NotFound);
             }
-            else { 
+            else {
+
                 using (var reader = new StreamReader(Request.Body, Encoding.UTF8))
                 {
                     var code = await reader.ReadToEndAsync();
-                    m.SaveCode(code);
+                    await m.SaveCode(code);
                     var result = Ok(m.Generator.Code);
                     reader.Close();
                     reader.Dispose();

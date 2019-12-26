@@ -40,7 +40,7 @@ namespace Project
             {
                 if (Generator.Code == String.Empty)
                 {
-                    return ReadModuleText();
+                    return IO.ReadFileText(this.FilePath);
                 }
                 else
                 {
@@ -74,7 +74,7 @@ namespace Project
 
         public void Parse()
         {
-            var code = ReadModuleText() + Environment.NewLine;
+            var code = IO.ReadFileText(this.FilePath) + Environment.NewLine;
             this.Generator = new ASTGenerator(code, this.Name);
             this.LastParsed = DateTime.Now;
             this.Transpiler = new Transpiler(this.Generator, this.Project);
@@ -89,12 +89,12 @@ namespace Project
             {
                 Console.WriteLine($"Perfectly parsed: {Name}");
             }
-            await SaveResult("Model.xsd", Transpiler.XsdToString());
-            await SaveResult("index.html", Transpiler.HtmlToString());
+            await IO.SaveFile("Model.xsd", this.OutPath, Transpiler.XsdToString());
+            await IO.SaveFile("index.html", this.OutPath, Transpiler.HtmlToString());
 
             foreach (var (key, value) in Transpiler.JsonToString())
             {
-                await SaveResult(key, value);
+                await IO.SaveFile(key, this.OutPath, value);
             }
 
             // Trickery to not parse infinately...
@@ -120,7 +120,10 @@ namespace Project
         {
             try
             {
-                Task.Factory.StartNew(path => Directory.Delete((string)path, true), OutPath);
+                if (OutPath != null && Directory.Exists(OutPath))
+                {
+                    Task.Factory.StartNew(() => Directory.Delete(OutPath, true));
+                }
             }
             catch (Exception ex)
             {
@@ -129,72 +132,15 @@ namespace Project
             }
         }
 
+        public async Task SaveCode(string code) {
+            await IO.SaveFile(this.FilePath, code);
+        }
+
         public IEnumerable<Descriptor> GetDescriptions()
         {
             var mapper = new DescriptionMapper(this.Generator, this.Name);
             var nodes = mapper.Start().SelectMany(s => s);
             return nodes.ToList();
-        }
-
-        public bool SaveCode(string source)
-        {
-            try
-            {
-
-                File.WriteAllText(this.FilePath, source);
-                return true;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex);
-                return false;
-            }
-        }
-
-        private string ReadModuleText()
-        {
-            try
-            {
-                if (!File.Exists(this.FilePath)) return "";
-                using (var fs = new FileStream(this.FilePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
-                {
-                    using (var sr = new StreamReader(fs))
-                    {
-                        return sr.ReadToEnd();
-                    }
-                }
-            }
-            catch (IOException ioe)
-            {
-                Console.WriteLine("ReadModuleText: Caught Exception reading file [{0}]", ioe);
-                throw ioe;
-            }
-        }
-
-        private async Task SaveResult(string fileName, string source)
-        {
-            try
-            {
-                var filePath = System.IO.Path.GetFullPath(fileName, OutPath);
-                Directory.CreateDirectory(OutPath);
-                using (var fs = new FileStream(fileName, FileMode.OpenOrCreate, FileAccess.Write, FileShare.ReadWrite))
-                {
-                    using (var sr = new StreamWriter(fs))
-                    {
-                        await sr.WriteAsync(source);
-                        sr.Flush();
-                        sr.Close();
-                        sr.Dispose();
-                    }
-                    fs.Close();
-                    fs.Dispose();
-                }
-            }
-            catch (IOException ioe)
-            {
-                Console.WriteLine("ReadModuleText: Caught Exception reading file [{0}]", ioe);
-                throw ioe;
-            }
         }
 
         private string CreateModuleName()
