@@ -16,25 +16,28 @@ namespace Project
                 //Console.WriteLine($"{msm}");
             });
 
-            ProjectWatcher.ModuleStream.Subscribe("OnChange", MessageType.ModuleChanged, msm =>
+            ProjectWatcher.ModuleStream.Subscribe("OnChange", MessageType.ModuleChanged, async msm =>
             {
                 var module = this.Modules.FirstOrDefault(m => m.Name == msm.ModuleName);
-                if (module != null)
-                {
-                    module.Parse();
-                    module.SaveModuleOutput(false);
-                }
-            });
-
-            ProjectWatcher.ModuleStream.Subscribe("OnCreate", MessageType.ModuleCreated, msm =>
-            {
-                var module = Modules.FirstOrDefault(m => m.Name == msm.ModuleName);
                 if (module is null)
                 {
                     module = new Module(msm.FileFullPath, this.BasePath, this);
                     Modules.Add(module);
                 }
+                
+                module.Parse();
+                await module.SaveModuleOutput(false);
             });
+
+            //ProjectWatcher.ModuleStream.Subscribe("OnCreate", MessageType.ModuleCreated, msm =>
+            //{
+            //    var module = Modules.FirstOrDefault(m => m.Name == msm.ModuleName);
+            //    if (module is null)
+            //    {
+            //        module = new Module(msm.FileFullPath, this.BasePath, this);
+            //        Modules.Add(module);
+            //    }
+            //});
 
             ProjectWatcher.ModuleStream.Subscribe("OnDelete", MessageType.ModuleDeleted, msm =>
             {
@@ -46,7 +49,7 @@ namespace Project
                 }
             });
 
-            ProjectWatcher.ModuleStream.Subscribe("OnRename", MessageType.ModuleRenamed, msm =>
+            ProjectWatcher.ModuleStream.Subscribe("OnRename", MessageType.ModuleRenamed, async msm =>
             {
                 var moduleOld = Modules.FirstOrDefault(m => m.Name == msm.ModuleName);
                 if (!(moduleOld is null))
@@ -57,7 +60,7 @@ namespace Project
                 var module = new Module(msm.FileFullPath, this.BasePath, this);
                 Modules.Add(module);
                 module.Parse();
-                module.SaveModuleOutput();
+                await module.SaveModuleOutput();
             });
         }
     }

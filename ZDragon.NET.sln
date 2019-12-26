@@ -1,39 +1,38 @@
-
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CLI", "CLI\CLI.csproj", "{14F5497C-BA36-4183-8BCE-F426FCEDB58B}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Compiler", "Compiler\Compiler.csproj", "{95AB3300-95BD-4E69-9E1B-CD281EA76F28}"
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29613.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CLI", "CLI\CLI.csproj", "{14F5497C-BA36-4183-8BCE-F426FCEDB58B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{BE20F938-359D-49B2-A33B-4CDF07792C55}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CompilerTests", "CompilerTests\CompilerTests.csproj", "{5AFE6847-C9C1-40C5-810C-4C12B4569C11}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CompilerTests", "CompilerTests\CompilerTests.csproj", "{5AFE6847-C9C1-40C5-810C-4C12B4569C11}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{CE53B498-276B-408B-BB34-4D950C54F4BA}"
 	ProjectSection(SolutionItems) = preProject
-		README.md = README.md
 		.gitignore = .gitignore
 		.travis.yml = .travis.yml
-		release.sh = release.sh
-		github_release.sh = github_release.sh
 		clean.sh = clean.sh
-		local_release_TEMP.sh = local_release_TEMP.sh
+		github_release.sh = github_release.sh
 		local_release.sh = local_release.sh
+		local_release_TEMP.sh = local_release_TEMP.sh
+		README.md = README.md
+		release.sh = release.sh
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mapper.XSD", "Mapper.XSD\Mapper.XSD.csproj", "{CC0033CB-E0DD-435D-B3E6-84C2A33DFBFC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mapper.XSD", "Mapper.XSD\Mapper.XSD.csproj", "{CC0033CB-E0DD-435D-B3E6-84C2A33DFBFC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mapper.JSON", "Mapper.JSON\Mapper.JSON.csproj", "{49F4178D-D276-41A7-979C-E4AD5F6AB14E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mapper.JSON", "Mapper.JSON\Mapper.JSON.csproj", "{49F4178D-D276-41A7-979C-E4AD5F6AB14E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mapper.HTML", "Mapper.HTML\Mapper.HTML.csproj", "{FAEF3166-4534-43E0-ADCE-2E7AFC3C48AB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mapper.HTML", "Mapper.HTML\Mapper.HTML.csproj", "{FAEF3166-4534-43E0-ADCE-2E7AFC3C48AB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mapper.Application", "Mapper.Application\Mapper.Application.csproj", "{E975E743-A4CB-4B83-A755-4870DBA588B2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mapper.Application", "Mapper.Application\Mapper.Application.csproj", "{E975E743-A4CB-4B83-A755-4870DBA588B2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApplicationTests", "ApplicationTests\ApplicationTests.csproj", "{A95E08D8-BFC7-47D9-B36D-23202444E29E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApplicationTests", "ApplicationTests\ApplicationTests.csproj", "{A95E08D8-BFC7-47D9-B36D-23202444E29E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Configuration", "Configuration\Configuration.csproj", "{091D5B31-A977-44EA-A63A-1D80948F2C9D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Configuration", "Configuration\Configuration.csproj", "{091D5B31-A977-44EA-A63A-1D80948F2C9D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Project", "Project\Project.csproj", "{EF7B7077-9326-4C21-B913-6EEA09DD449E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Project", "Project\Project.csproj", "{EF7B7077-9326-4C21-B913-6EEA09DD449E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,10 +44,6 @@ Global
 		{14F5497C-BA36-4183-8BCE-F426FCEDB58B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{14F5497C-BA36-4183-8BCE-F426FCEDB58B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{14F5497C-BA36-4183-8BCE-F426FCEDB58B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{95AB3300-95BD-4E69-9E1B-CD281EA76F28}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{95AB3300-95BD-4E69-9E1B-CD281EA76F28}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{95AB3300-95BD-4E69-9E1B-CD281EA76F28}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{95AB3300-95BD-4E69-9E1B-CD281EA76F28}.Release|Any CPU.Build.0 = Release|Any CPU
 		{5AFE6847-C9C1-40C5-810C-4C12B4569C11}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{5AFE6847-C9C1-40C5-810C-4C12B4569C11}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5AFE6847-C9C1-40C5-810C-4C12B4569C11}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -82,9 +77,15 @@ Global
 		{EF7B7077-9326-4C21-B913-6EEA09DD449E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EF7B7077-9326-4C21-B913-6EEA09DD449E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{5AFE6847-C9C1-40C5-810C-4C12B4569C11} = {BE20F938-359D-49B2-A33B-4CDF07792C55}
 		{A95E08D8-BFC7-47D9-B36D-23202444E29E} = {BE20F938-359D-49B2-A33B-4CDF07792C55}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B0BF22BA-CA05-4235-A6FE-BF1CDD98C85B}
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		version = v2.1.15-beta

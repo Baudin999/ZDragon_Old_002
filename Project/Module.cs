@@ -6,6 +6,7 @@ using Compiler;
 using Compiler.AST;
 using Mapper.Application;
 using Configuration;
+using System.Threading.Tasks;
 
 namespace Project
 {
@@ -81,19 +82,19 @@ namespace Project
             ReferencedModules = Generator.AST.FindAll(n => n is ASTImport).Select(i => ((ASTImport)i).ModuleName).ToList();
         }
 
-        public void SaveModuleOutput(bool decend = true, bool suppressMessage = false)
+        public async Task SaveModuleOutput(bool decend = true, bool suppressMessage = false)
         {
             this.Transpiler.StartTranspilation(this.Name);
             if (!suppressMessage)
             {
                 Console.WriteLine($"Perfectly parsed: {Name}");
             }
-            SaveResult("Model.xsd", Transpiler.XsdToString());
-            SaveResult("index.html", Transpiler.HtmlToString());
+            await SaveResult("Model.xsd", Transpiler.XsdToString());
+            await SaveResult("index.html", Transpiler.HtmlToString());
 
             foreach (var (key, value) in Transpiler.JsonToString())
             {
-                SaveResult(key, value);
+                await SaveResult(key, value);
             }
 
             // Trickery to not parse infinately...
@@ -108,10 +109,10 @@ namespace Project
                     .Modules
                     .ToList()
                     .FindAll(m => m.ReferencedModules.FirstOrDefault(r => r == this.Name) != null)
-                    .ForEach(m =>
+                    .ForEach(async m =>
                         {
                             m.Parse();
-                            m.SaveModuleOutput(false);
+                            await m.SaveModuleOutput(false);
                         });
             }
         }
@@ -119,10 +120,7 @@ namespace Project
         {
             try
             {
-                if (Directory.Exists(OutPath))
-                {
-                    Directory.Delete(OutPath, true);
-                }
+                Task.Factory.StartNew(path => Directory.Delete((string)path, true), OutPath);
             }
             catch (Exception ex)
             {
@@ -173,11 +171,35 @@ namespace Project
             }
         }
 
-        private void SaveResult(string fileName, string source)
+        private async Task SaveResult(string fileName, string source)
         {
             var filePath = System.IO.Path.GetFullPath(fileName, OutPath);
             System.IO.Directory.CreateDirectory(OutPath);
-            System.IO.File.WriteAllText(filePath, source);
+            await WriteAllTextAsync(filePath, source);
+        }
+
+        private async Task WriteAllTextAsync(string fileName, string source)
+        {
+            try
+            {
+                using (var fs = new FileStream(fileName, FileMode.OpenOrCreate, FileAccess.Write, FileShare.ReadWrite))
+                {
+                    using (var sr = new StreamWriter(fs))
+                    {
+                        await sr.WriteAsync(source);
+                        sr.Flush();
+                        sr.Close();
+                        sr.Dispose();
+                    }
+                    fs.Close();
+                    fs.Dispose();
+                }
+            }
+            catch (IOException ioe)
+            {
+                Console.WriteLine("ReadModuleText: Caught Exception reading file [{0}]", ioe);
+                throw ioe;
+            }
         }
 
         private string CreateModuleName()

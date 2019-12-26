@@ -9,10 +9,10 @@
     <Compile Remove="Class1.cs" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Baudin999.CarLang" Version="1.0.0" />
     <PackageReference Include="System.Reactive" Version="4.3.1" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Compiler\Compiler.csproj" />
     <ProjectReference Include="..\Configuration\Configuration.csproj" />
     <ProjectReference Include="..\Mapper.Application\Mapper.Application.csproj" />
     <ProjectReference Include="..\Mapper.HTML\Mapper.HTML.csproj" />

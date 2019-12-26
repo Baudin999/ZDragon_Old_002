@@ -54,13 +54,15 @@ namespace Project
             Task.Run(ParseAllModules);
         }
 
-        public void ParseAllModules()
+        public async void ParseAllModules()
         {
+            var awaitables = new List<Task>();
             foreach (var module in this.Modules)
             {
                 module.Parse();
-                module.SaveModuleOutput(false);
+                awaitables.Add(module.SaveModuleOutput(false));
             }
+            await Task.WhenAll(awaitables);
         }
 
         public Task<Module> CreateModule(string name, string? code = null)
@@ -79,7 +81,7 @@ namespace Project
                     {
                         Action cleanup = () => { };
                         var listenerName = "CREATEOR: " + DateTime.Now + new Random().Next(1000000).ToString();
-                        cleanup = this.ProjectWatcher.ModuleStream.Subscribe(listenerName, MessageType.ModuleCreated, msm =>
+                        cleanup = this.ProjectWatcher.ModuleStream.Subscribe(listenerName, MessageType.ModuleChanged, msm =>
                         {
                             var module = this.FindModule(msm.ModuleName);
                             if (module != null) tcs.TrySetResult(module);
@@ -142,9 +144,7 @@ namespace Project
                         var listenerName = "CREATEOR: " + DateTime.Now + new Random().Next(1000000).ToString();
                         cleanup = this.ProjectWatcher.ModuleStream.Subscribe(listenerName, MessageType.ModuleDeleted, msm =>
                         {
-                            module.Clean();
-                            if (module != null) tcs.TrySetResult(true);
-                            else tcs.TrySetException(new Exception("Failed to delete the Module"));
+                            tcs.TrySetResult(true);
                             Task.Run(cleanup);
                         });
                     });

@@ -12,7 +12,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Compiler\Compiler.csproj" />
     <ProjectReference Include="..\Mapper.XSD\Mapper.XSD.csproj" />
     <ProjectReference Include="..\Mapper.JSON\Mapper.JSON.csproj" />
     <ProjectReference Include="..\Mapper.HTML\Mapper.HTML.csproj" />
@@ -21,6 +20,7 @@
     <ProjectReference Include="..\Project\Project.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Baudin999.CarLang" Version="1.0.0" />
     <PackageReference Include="Microsoft.Extensions.CommandLineUtils" Version="1.1.1" />
     <PackageReference Include="System.IO.FileSystem" Version="4.3.0" />
     <PackageReference Include="System.IO.FileSystem.Watcher" Version="4.3.0" />

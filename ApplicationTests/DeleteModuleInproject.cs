@@ -14,7 +14,7 @@ namespace ApplicationTests
         public DeleteModuleInproject(ITestOutputHelper output) : base(output, "DeleteModuleInproject") { }
 
         [Fact]
-        public async Task CreateModule()
+        public async Task DeleteModule()
         {
             try
             {
@@ -29,7 +29,6 @@ namespace ApplicationTests
 
                 var deleteResult = await project.DeleteModule("Test");
 
-                await Task.Delay(100);
                 Assert.True(deleteResult);
                 Assert.False(File.Exists(filePath));
                 Assert.False(Directory.Exists(outPath));

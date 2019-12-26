@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Baudin999.CarLang" Version="1.0.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.4.0" />
     <PackageReference Include="xunit" Version="2.4.1" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.1"><IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -19,7 +20,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Compiler\Compiler.csproj" />
     <ProjectReference Include="..\Mapper.XSD\Mapper.XSD.csproj" />
     <ProjectReference Include="..\Mapper.JSON\Mapper.JSON.csproj" />
     <ProjectReference Include="..\Mapper.HTML\Mapper.HTML.csproj" />

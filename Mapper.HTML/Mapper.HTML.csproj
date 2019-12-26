@@ -6,10 +6,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Compiler\Compiler.csproj" />
     <ProjectReference Include="..\Configuration\Configuration.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Baudin999.CarLang" Version="1.0.0" />
     <PackageReference Include="Markdig" Version="0.18.0" />
   </ItemGroup>
 </Project>

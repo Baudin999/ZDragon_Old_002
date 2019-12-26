@@ -62,6 +62,8 @@ type Teacher
 
             Assert.Null(project.FindModule("School"));
             Assert.NotNull(project.FindModule("Foo.Bar"));
+
+            await Task.Run(() => Task.Delay(100));
         }
 
         [Fact]

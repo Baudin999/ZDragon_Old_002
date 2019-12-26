@@ -7,6 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Compiler\Compiler.csproj" />
+    <PackageReference Include="Baudin999.CarLang" Version="1.0.0" />
   </ItemGroup>
 </Project>

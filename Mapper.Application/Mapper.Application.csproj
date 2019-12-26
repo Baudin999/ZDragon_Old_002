@@ -4,10 +4,6 @@
     <TargetFramework>netcoreapp3.0</TargetFramework>
     <ReleaseVersion>v2.1.15-beta</ReleaseVersion>
   </PropertyGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Compiler\Compiler.csproj" />
-  </ItemGroup>
   <ItemGroup>
     <Compile Remove="Class1.cs" />
   </ItemGroup>
@@ -15,5 +11,8 @@
     <Folder Include="TypeScript\" />
     <Folder Include="CSharp\" />
     <Folder Include="Topology\" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Baudin999.CarLang" Version="1.0.0" />
   </ItemGroup>
 </Project>
