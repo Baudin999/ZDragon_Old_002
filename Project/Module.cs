@@ -173,15 +173,10 @@ namespace Project
 
         private async Task SaveResult(string fileName, string source)
         {
-            var filePath = System.IO.Path.GetFullPath(fileName, OutPath);
-            System.IO.Directory.CreateDirectory(OutPath);
-            await WriteAllTextAsync(filePath, source);
-        }
-
-        private async Task WriteAllTextAsync(string fileName, string source)
-        {
             try
             {
+                var filePath = System.IO.Path.GetFullPath(fileName, OutPath);
+                Directory.CreateDirectory(OutPath);
                 using (var fs = new FileStream(fileName, FileMode.OpenOrCreate, FileAccess.Write, FileShare.ReadWrite))
                 {
                     using (var sr = new StreamWriter(fs))

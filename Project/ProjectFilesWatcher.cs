@@ -24,8 +24,7 @@ namespace Project
 
                 // Watch for changes in LastAccess and LastWrite times, and
                 // the renaming of files or directories.
-                NotifyFilter = NotifyFilters.LastAccess
-                                 | NotifyFilters.LastWrite
+                NotifyFilter =  NotifyFilters.LastWrite
                                  | NotifyFilters.FileName
                                  | NotifyFilters.DirectoryName,
 
