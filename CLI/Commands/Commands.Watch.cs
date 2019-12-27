@@ -37,6 +37,7 @@ namespace CLI.Commands
                               true => fileOption.Value()
                           };
                           ProjectContext.Init(directory);
+                          //ProjectContext.InitInMemory();
                           var project = ProjectContext.Instance;
                           if (project != null)
                           {

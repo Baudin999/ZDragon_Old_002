@@ -14,7 +14,7 @@ namespace CLI.Controllers
 {
     public class JsonDataController : ControllerBase
     {
-        private Module? Module;
+        private IModule? Module;
 
         [HttpGet("/api/data/{module}/{type}")]
         public IActionResult GetData(string module, string type, [FromQuery]bool list)

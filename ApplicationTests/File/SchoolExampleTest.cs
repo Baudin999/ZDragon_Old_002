@@ -75,7 +75,7 @@ type Teacher
         {
             Console.WriteLine("STARTED: AddStudentModule");
             await Init();
-            var studentModule = await project.CreateModule("Student");
+            var studentModule = await project.CreateModule("Student", "");
             var schoolModule = project.FindModule("School");
 
             Assert.NotNull(studentModule);

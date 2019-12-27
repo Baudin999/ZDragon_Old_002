@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Project.FileProject;
+using System;
 using System.IO;
 
 namespace Project
@@ -22,8 +23,7 @@ namespace Project
                 IncludeSubdirectories = true,
                 Path = this.BasePath,
 
-                // Watch for changes in LastAccess and LastWrite times, and
-                // the renaming of files or directories.
+                // Watch for changes in FileName and LastWrite 
                 NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.FileName,
 
                 // Only watch text files.
@@ -46,7 +46,7 @@ namespace Project
             try
             {
                 ModuleStream.Publish(new ModuleStreamMessage(
-                    Module.FromPathToName(e.FullPath, this.BasePath),
+                    FileModule.FromPathToName(e.FullPath, this.BasePath),
                     e.FullPath,
                     MessageType.ModuleChanged
                 ));
@@ -78,7 +78,7 @@ namespace Project
             try
             {
                 ModuleStream.Publish(new ModuleStreamMessage(
-                    Module.FromPathToName(e.FullPath, this.BasePath),
+                    FileModule.FromPathToName(e.FullPath, this.BasePath),
                     e.FullPath,
                     MessageType.ModuleDeleted
                 ));
@@ -94,9 +94,9 @@ namespace Project
             try
             {
                 ModuleStream.Publish(new ModuleStreamMessage(
-                    Module.FromPathToName(e.FullPath, this.BasePath),
+                    FileModule.FromPathToName(e.FullPath, this.BasePath),
                     e.FullPath,
-                    Module.FromPathToName(e.OldFullPath, this.BasePath),
+                    FileModule.FromPathToName(e.OldFullPath, this.BasePath),
                     e.OldFullPath,
                     MessageType.ModuleMoved
                 ));

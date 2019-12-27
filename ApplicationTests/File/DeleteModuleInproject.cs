@@ -18,7 +18,7 @@ namespace ApplicationTests
         {
             try
             {
-                var module = await project.CreateModule("Test");
+                var module = await project.CreateModule("Test", "");
                 var filePath = module.FilePath.Clone().ToString();
                 var outPath = module.OutPath.Clone().ToString();
 

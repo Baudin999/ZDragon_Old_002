@@ -1,22 +1,23 @@
-﻿using System;
+﻿using Compiler;
+using Compiler.AST;
+using Mapper.Application;
+using Project.FileSystems;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Compiler;
-using Compiler.AST;
-using Mapper.Application;
-using Configuration;
 using System.Threading.Tasks;
 
-namespace Project
+namespace Project.FileProject
 {
-    public class Module : IDisposable
+    public class FileModule : IModule, IDisposable
     {
+        private IFileSystem FileSystem { get; }
         public string Name { get; }
         public string FilePath { get; }
         public string BasePath { get; }
         public string OutPath { get; }
-        public FileProject Project { get; }
+        public IProject Project { get; }
         public List<string> ReferencedModules { get; private set; } = new List<string>();
         public Transpiler Transpiler { get; private set; }
         public ASTGenerator Generator { get; private set; }
@@ -40,7 +41,7 @@ namespace Project
             {
                 if (Generator.Code == String.Empty)
                 {
-                    return IO.ReadFileText(this.FilePath);
+                    return FileSystem.ReadFileText(this.FilePath);
                 }
                 else
                 {
@@ -60,8 +61,9 @@ namespace Project
             };
         }
 
-        public Module(string path, string basePath, FileProject project)
+        public FileModule(string path, string basePath, IProject project)
         {
+            this.FileSystem = ProjectContext.FileSystem ?? throw new Exception("FileSystem does not exist");
             this.FilePath = path;
             this.BasePath = basePath;
             this.Name = CreateModuleName();
@@ -74,7 +76,7 @@ namespace Project
 
         public void Parse()
         {
-            var code = IO.ReadFileText(this.FilePath) + Environment.NewLine;
+            var code = FileSystem.ReadFileText(this.FilePath) + Environment.NewLine;
             this.Generator = new ASTGenerator(code, this.Name);
             this.LastParsed = DateTime.Now;
             this.Transpiler = new Transpiler(this.Generator, this.Project);
@@ -89,12 +91,12 @@ namespace Project
             {
                 Console.WriteLine($"Perfectly parsed: {Name}");
             }
-            await IO.SaveFile("Model.xsd", this.OutPath, Transpiler.XsdToString());
-            await IO.SaveFile("index.html", this.OutPath, Transpiler.HtmlToString());
+            await FileSystem.SaveFile("Model.xsd", this.OutPath, Transpiler.XsdToString());
+            await FileSystem.SaveFile("index.html", this.OutPath, Transpiler.HtmlToString());
 
             foreach (var (key, value) in Transpiler.JsonToString())
             {
-                await IO.SaveFile(key, this.OutPath, value);
+                await FileSystem.SaveFile(key, this.OutPath, value);
             }
 
             // Trickery to not parse infinately...
@@ -117,24 +119,12 @@ namespace Project
             }
         }
         public async Task Clean()
-        {
-            try
-            {
-                if (OutPath != null && Directory.Exists(OutPath))
-                {
-                    //Directory.Delete(OutPath, true);
-                    await Task.Run(() => Directory.Delete(OutPath, true));
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error Cleaning Module " + this.Name);
-                Console.WriteLine(ex.Message);
-            }
+        {    
+            await FileSystem.DeleteDirectory(OutPath);
         }
 
         public async Task SaveCode(string code) {
-            await IO.SaveFile(this.FilePath, code);
+            await FileSystem.SaveFile(this.FilePath, code);
         }
 
         public IEnumerable<Descriptor> GetDescriptions()
@@ -146,7 +136,7 @@ namespace Project
 
         private string CreateModuleName()
         {
-            return Module.FromPathToName(this.FilePath, this.BasePath);
+            return FileModule.FromPathToName(this.FilePath, this.BasePath);
         }
 
         public override string ToString()

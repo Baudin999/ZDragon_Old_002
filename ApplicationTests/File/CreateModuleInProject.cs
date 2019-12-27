@@ -9,18 +9,20 @@ using Xunit.Abstractions;
 
 namespace ApplicationTests
 {
-    public class ProjectFileWatcher : BaseFileWatcherTest
+    public class CreateModuleInProject : BaseFileWatcherTest
     {
-
-        public ProjectFileWatcher(ITestOutputHelper output) : base(output, "ProjectFileWatcher") { }
+        public CreateModuleInProject(ITestOutputHelper output) : base(output, "CreateModuleInProject") { }
 
         [Fact]
         public async Task CreateModule()
         {
             try
             {
-                await project.CreateModule("Test");
+                var module = await project.CreateModule("Test", "Code");
                 Assert.True(File.Exists(path("Test.car")));
+                Assert.NotNull(module);
+                Assert.Equal("Test", module.Name);
+                Assert.Equal(this.path("Test.car"), module.FilePath);
             }
             catch (Exception ex)
             {

@@ -1,7 +1,8 @@
-﻿using System;
+﻿using Project.FileProject;
+using System;
 using System.Linq;
 
-namespace Project
+namespace Project.File
 {
     public partial class FileProject
     {
@@ -21,7 +22,7 @@ namespace Project
                 var module = this.Modules.FirstOrDefault(m => m.Name == msm.ModuleName);
                 if (module is null)
                 {
-                    module = new Module(msm.FileFullPath, this.BasePath, this);
+                    module = new FileModule(msm.FileFullPath, this.BasePath, this);
                     Modules.Add(module);
                 }
                 
@@ -57,7 +58,7 @@ namespace Project
                     await moduleOld.Clean();
                     Modules.Remove(moduleOld);
                 }
-                var module = new Module(msm.FileFullPath, this.BasePath, this);
+                var module = new FileModule(msm.FileFullPath, this.BasePath, this);
                 Modules.Add(module);
                 module.Parse();
                 await module.SaveModuleOutput();

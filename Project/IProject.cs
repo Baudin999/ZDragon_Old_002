@@ -14,28 +14,28 @@ namespace Project
         /// The Directory in which the project is created. This is the root path,
         /// the path where the zdragon.json file is located.
         /// </summary>
-        public string BasePath { get; }
+        string BasePath { get; }
 
         /// <summary>
         /// Where the assets, the results are published to.
         /// </summary>
-        public string OutPath { get; }
+        string OutPath { get; }
 
         /// <summary>
         /// Where the zdragon.json file is located.
         /// </summary>
-        public string ConfigPath { get; }
+        string ConfigPath { get; }
 
 
         CarConfig CarConfig { get; }
 
-        ObservableCollection<Module> Modules { get; }
+        ObservableCollection<IModule> Modules { get; }
 
-        Task<Module> CreateModule(string moduleName, string? code);
+        Task<IModule> CreateModule(string moduleName, string? code);
 
-        Task<Module> MoveModule(string oldName, string newName);
+        Task<IModule> MoveModule(string oldName, string newName);
 
-        Module? FindModule(string moduleName);
+        IModule? FindModule(string moduleName);
 
         Task<bool> DeleteModule(string moduleName);
 

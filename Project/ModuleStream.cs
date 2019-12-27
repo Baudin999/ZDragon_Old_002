@@ -10,11 +10,13 @@ namespace Project
 
         private Subject<ModuleStreamMessage> moduleMessageSubject;
         private IDictionary<string, IDisposable> subscribers;
+        private List<Action<ModuleStreamMessage>> once;
 
         public ModuleStream()
         {
             moduleMessageSubject = new Subject<ModuleStreamMessage>();
             subscribers = new Dictionary<string, IDisposable>();
+            once = new List<Action<ModuleStreamMessage>>();
         }
 
         public void Dispose()
@@ -28,6 +30,8 @@ namespace Project
             {
                 subscriber.Value.Dispose();
             }
+
+            once = new List<Action<ModuleStreamMessage>>();
         }
 
 
@@ -38,6 +42,13 @@ namespace Project
         public void Publish(ModuleStreamMessage moduleMessage)
         {
             moduleMessageSubject.OnNext(moduleMessage);
+
+            
+            foreach (var action in once)
+            {
+                action(moduleMessage);
+            }
+            once = new List<Action<ModuleStreamMessage>>();
         }
 
 
@@ -87,7 +98,30 @@ namespace Project
             return () => { };
         }
 
+        public void Once(Action<ModuleStreamMessage> action)
+        {
+            once.Add(action);
+        }
+
+
+        private static string key()
+        {
+            var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+            var stringChars = new char[8];
+            var random = new Random();
+
+            for (int i = 0; i < stringChars.Length; i++)
+            {
+                stringChars[i] = chars[random.Next(chars.Length)];
+            }
+
+            var finalString = new String(stringChars);
+            return finalString;
+        }
+
 
     }
+
+
 
 }

@@ -1,7 +1,6 @@
-﻿using System;
+﻿using Project;
+using System;
 using System.IO;
-using System.Threading.Tasks;
-using Project;
 using Xunit.Abstractions;
 
 namespace ApplicationTests
@@ -10,7 +9,7 @@ namespace ApplicationTests
     {
         protected readonly ITestOutputHelper output;
         protected readonly string dir;
-        protected readonly FileProject project;
+        protected readonly IProject project;
 
         public BaseFileWatcherTest(ITestOutputHelper _output, string _dir)
         {
@@ -22,7 +21,7 @@ namespace ApplicationTests
             }
             Directory.CreateDirectory(dir);
             output = _output;
-            project = new FileProject(dir);
+            project = ProjectContext.Init(dir);
             project.Watch();
         }
 

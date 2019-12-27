@@ -16,7 +16,7 @@ namespace Project
     {
         private IEnumerable<Descriptor> Descriptions = Enumerable.Empty<Descriptor>();
 
-        public FileProject Project { get; }
+        public IProject Project { get; }
         public string Code => Generator.Code;
         public ASTGenerator Generator { get; }
         public XSDMapper XsdMapper { get; private set; }
@@ -28,7 +28,7 @@ namespace Project
 
         public List<IASTNode> AST => Imports.Concat(Generator.AST).ToList();
 
-        public Transpiler(ASTGenerator generator, FileProject project)
+        public Transpiler(ASTGenerator generator, IProject project)
         {
             this.Generator = generator;
             this.Project = project;

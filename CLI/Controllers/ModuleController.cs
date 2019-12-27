@@ -32,7 +32,7 @@ namespace CLI.Controllers
             var project = ProjectContext.Instance;
             if (project != null)
             {
-                Module? module = await project.CreateModule(name, null);
+                IModule? module = await project.CreateModule(name, null);
                 if (module is null) return BadRequest($"Failed to created module {name}.");
 
                 return Ok(new List<Descriptor> {

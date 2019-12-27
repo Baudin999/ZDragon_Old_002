@@ -18,7 +18,7 @@ namespace CLI
         {
             var portNumber = ProjectContext.Instance?.CarConfig?.PortNumber ?? "5000";
             RootPath = rootPath;
-            Task.Run(async () =>
+            Task.Run(async () => 
             {
                 await Task.Delay(1500);
                 WebServer.OpenBrowser($"http://localhost:{portNumber}/index.html");
@@ -53,7 +53,7 @@ http://localhost:{portNumber}/
             });
         }
 
-        public static void OpenBrowser(string url)
+        private static void OpenBrowser(string url)
         {
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
@@ -76,47 +76,11 @@ http://localhost:{portNumber}/
 
         private static void CreateAssets(string outPath)
         {
-            Helpers.ReadAndWriteAsset("mermaid.min.js", outPath);
-            Helpers.ReadAndWriteAsset("mermaid.min.js.map", outPath);
+            AssetHelpers.ReadAndWriteAsset("mermaid.min.js", outPath);
+            AssetHelpers.ReadAndWriteAsset("mermaid.min.js.map", outPath);
         }
 
-        private static class Helpers
-        {
-            public static string ReadAsset(string name)
-            {
-                var assembly = Assembly.GetExecutingAssembly();
-                var resourceName = "CLI.Assets." + name;
-
-                using (var stream = assembly.GetManifestResourceStream(resourceName))
-                {
-                    if (!(stream is null))
-                    {
-                        using (var reader = new StreamReader(stream))
-                        {
-                            var result = reader.ReadToEnd();
-                            reader.Close();
-                            reader.Dispose();
-                            return result;
-                        }
-                    }
-                    else
-                    {
-                        return "";
-                    }
-                }
-            }
-
-            public static void WriteAsset(string path, string content)
-            {
-                File.WriteAllText(path, content);
-            }
-
-            public static void ReadAndWriteAsset(string assetName, string outPath)
-            {
-                var outName = System.IO.Path.GetFullPath(assetName, outPath);
-                Helpers.WriteAsset(outName, Helpers.ReadAsset(assetName));
-            }
-        }
+        
     }
 
    

@@ -1,11 +1,9 @@
-﻿using System;
+﻿using Compiler.AST;
+using Project.Models;
 using System.Collections.Generic;
 using System.Linq;
-using Project.Models;
-using Compiler;
-using Compiler.AST;
 
-namespace Project
+namespace Project.File
 {
     public partial class FileProject
     {
