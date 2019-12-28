@@ -21,6 +21,14 @@ steps:
   displayName: 'dotnet build $(buildConfiguration)'
 - script: dotnet test
   displayName: 'dotnet test'
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'publish'
+    publishWebProjects: false
+    projects: './CLI'
+    arguments: '-c Release --runtime "linux-x64" --self-contained -o $(build.artifactstagingdirectory)'
+    zipAfterPublish: false
+    modifyOutputPath: false
 - task: PublishBuildArtifacts@1    
   displayName: 'Publish Artifact: drop'
   inputs:
