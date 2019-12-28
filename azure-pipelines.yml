@@ -21,5 +21,8 @@ steps:
   displayName: 'dotnet build $(buildConfiguration)'
 - script: dotnet test
   displayName: 'dotnet test'
-
+- task: PublishBuildArtifacts@1    
+  displayName: 'Publish Artifact: drop'
+  inputs:
+    PathtoPublish: '$(build.artifactstagingdirectory)'
 
