@@ -36,8 +36,8 @@ namespace CLI.Commands
                               false => Directory.GetCurrentDirectory(),
                               true => fileOption.Value()
                           };
-                          ProjectContext.Init(directory);
-                          //ProjectContext.InitInMemory();
+                          //ProjectContext.Init(directory);
+                          ProjectContext.InitInMemory();
                           var project = ProjectContext.Instance;
                           if (project != null)
                           {

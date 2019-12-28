@@ -87,7 +87,10 @@ namespace Mapper.HTML
 <!DOCTYPE html>
 <html>
 <head>
-    <script defer src=""/mermaid.min.js""></script>
+    <meta http-equiv='Content-type' content='text/html;charset=UTF-8'>
+	<meta charset='utf-8'>
+	<meta name='viewport' content='width=device-width,initial-scale=1'>
+    <script src='/mermaid.min.js' type='application/javascript'></script>
     <link rel='stylesheet' type='text/css' href='/global.css' />
   </head>
 <body>
@@ -114,6 +117,8 @@ namespace Mapper.HTML
 
 </div>
 <script>
+
+
 mermaid.initialize({{
     startOnLoad: false,
     sequence: {{ actorMargin: 250 }}
@@ -123,6 +128,7 @@ mermaid.initialize({{
     const id = `mermaid-${{Date.now()}}`;	
 	mermaid.render(id, element.textContent.trim(), (svg, bind) => {{element.innerHTML = svg;}}, element);
 }});
+   
 
 </script>
 

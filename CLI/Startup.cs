@@ -1,15 +1,22 @@
-﻿using System.IO;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
-using Microsoft.AspNetCore.Mvc.Razor.Compilation;
-using System.Reflection;
-using Microsoft.AspNetCore.Http;
-using System.Threading.Tasks;
+using Project;
+using Project.FileSystems;
 using System;
+using System.IO;
+using System.Reflection;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
+using Microsoft.AspNetCore.Mvc.Abstractions;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using System.Text;
+using System.Net.Http.Headers;
 
 namespace CLI
 {
@@ -49,6 +56,38 @@ namespace CLI
                 app.UseExceptionHandler("/Home/Error");
             }
             app.UseMiddleware<ErrorLoggingMiddleware>();
+
+            if (ProjectContext.FileSystem?.FileSystemType == FileSystemType.InMemory)
+            {
+                app.Use(async (context, next) =>
+                {
+                    var path = (ProjectContext.Instance?.OutPath ?? "") + context.Request.Path;
+                    path = path.Replace("//", "/");
+                    if (ProjectContext.FileSystem.HasFile(path))
+                    {
+                        var text = ProjectContext.FileSystem.ReadFileText(path);
+                        if (path.EndsWith(".html"))
+                        {
+                            var result = new FileContentResult(Encoding.ASCII.GetBytes(text), "text/html");
+                            await context.WriteResultAsync(result);
+                        }
+                        else if (path.EndsWith(".js"))
+                        {
+                            var result = new FileContentResult(Encoding.ASCII.GetBytes(text), "application/javascript");
+                            await context.WriteResultAsync(result);
+                        }
+                        else if (path.EndsWith(".json"))
+                        {
+                            var result = new FileContentResult(Encoding.ASCII.GetBytes(text), "application/json");
+                            await context.WriteResultAsync(result);
+                        }
+                    }
+                    else
+                    {
+                        await next.Invoke();
+                    }
+                });
+            }
             app.UseCors(MyAllowSpecificOrigins);
             app.UseStaticFiles();
             app.UseStaticFiles(new StaticFileOptions
@@ -63,6 +102,35 @@ namespace CLI
             {
                 endpoints.MapControllers();
             });
+        }
+    }
+
+    public static class HttpContextExtensions
+    {
+        private static readonly RouteData EmptyRouteData = new RouteData();
+
+        private static readonly ActionDescriptor EmptyActionDescriptor = new ActionDescriptor();
+
+        public static Task WriteResultAsync<TResult>(this HttpContext context, TResult result)
+            where TResult : IActionResult
+        {
+            if (context == null)
+            {
+                throw new ArgumentNullException(nameof(context));
+            }
+
+            var executor = context.RequestServices.GetService<IActionResultExecutor<TResult>>();
+
+            if (executor == null)
+            {
+                throw new InvalidOperationException($"No result executor for '{typeof(TResult).FullName}' has been registered.");
+            }
+
+            var routeData = context.GetRouteData() ?? EmptyRouteData;
+
+            var actionContext = new ActionContext(context, routeData, EmptyActionDescriptor);
+
+            return executor.ExecuteAsync(actionContext, result);
         }
     }
 
@@ -88,5 +156,6 @@ namespace CLI
             }
         }
     }
+
 
 }

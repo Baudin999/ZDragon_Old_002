@@ -35,7 +35,7 @@ namespace Project.MemoryProject
 
         public List<IASTError> Errors => Generator.Errors;
 
-        public string Code { get;  }
+        public string Code { get; private set; }
 
         public MemoryModule(string moduleName, string code)
         {
@@ -65,12 +65,45 @@ namespace Project.MemoryProject
 
         public async Task SaveCode(string code)
         {
+            this.Code = code;
             await this.FileSystem.SaveFile(this.FilePath, code);
+            this.Parse();
+            await this.SaveModuleOutput();
         }
 
-        public Task SaveModuleOutput(bool decend = true, bool suppressMessage = false)
+        public async Task SaveModuleOutput(bool decend = true, bool suppressMessage = false)
         {
-            throw new NotImplementedException();
+            this.Transpiler.StartTranspilation(this.Name);
+            if (!suppressMessage)
+            {
+                Console.WriteLine($"Perfectly parsed: {Name}");
+            }
+            await FileSystem.SaveFile("Model.xsd", this.OutPath, Transpiler.XsdToString());
+            await FileSystem.SaveFile("index.html", this.OutPath, Transpiler.HtmlToString());
+
+            foreach (var (key, value) in Transpiler.JsonToString())
+            {
+                await FileSystem.SaveFile(key, this.OutPath, value);
+            }
+
+            // Trickery to not parse infinately...
+            // TODO: replace with propper topological order...
+            if (decend)
+            {
+                // We would now also want to resolve the other modules
+                // which depend upon this module so that they are automatically
+                // regenerated and their output changed.
+                // TODO: notice circular dependencies, remove diamond of death...
+                this.Project
+                    .Modules
+                    .ToList()
+                    .FindAll(m => m.ReferencedModules.FirstOrDefault(r => r == this.Name) != null)
+                    .ForEach(async m =>
+                    {
+                        m.Parse();
+                        await m.SaveModuleOutput(false);
+                    });
+            }
         }
 
         public async Task Clean()

@@ -34,6 +34,12 @@ namespace ApplicationTests.InMemoryTests
             var instance = Project.FileSystems.MemorySystem.Instance;
 
             Assert.NotNull(test);
+            Assert.NotNull(other);
+            Assert.NotNull(something);
+            Assert.NotNull(foo);
+            Assert.NotNull(bar);
+
+            Assert.Equal(5, instance.Count);
 
 
         }

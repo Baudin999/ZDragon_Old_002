@@ -13,7 +13,7 @@ namespace Project.File
 {
     public partial class FileProject : IProject, IDisposable
     {
-        private IFileSystem FileSystem { get;  }
+        private IFileSystem FileSystem { get; }
 
         /// <summary>
         /// The Directory in which the project is created. This is the root path,
@@ -32,7 +32,7 @@ namespace Project.File
         public string ConfigPath { get; } = "";
 
         public CarConfig CarConfig { get; private set; }
-        
+
         public ObservableCollection<IModule> Modules { get; } = new ObservableCollection<IModule>();
 
         public FileProject(string path)
@@ -77,29 +77,16 @@ namespace Project.File
             {
                 var fileName = String.Join("/", name.Split(".").Select(UppercaseFirst)) + ".car";
                 var modulePath = Path.GetFullPath(fileName, this.BasePath);
-                var directoryName = Path.GetDirectoryName(modulePath);
+                var directoryName = Path.GetDirectoryName(modulePath) ?? throw new Exception("Directory does not exist.");
 
                 if (this.ProjectWatcher != null)
                 {
-                    //Task.Factory.StartNew(() =>
-                    //{
-                        this.ProjectWatcher.ModuleStream.Once(msm =>
-                        {
-                            var module = this.FindModule(msm.ModuleName);
-                            if (module != null) tcs.TrySetResult(module);
-                            else tcs.TrySetException(new Exception("Failed to create the Module"));
-                        });
-
-                        //Action cleanup = () => { };
-                        //var listenerName = "CREATEOR: " + DateTime.Now + new Random().Next(1000000).ToString();
-                        //cleanup = this.ProjectWatcher.ModuleStream.Subscribe(listenerName, MessageType.ModuleChanged, msm =>
-                        //{
-                        //    var module = this.FindModule(msm.ModuleName);
-                        //    if (module != null) tcs.TrySetResult(module);
-                        //    else tcs.TrySetException(new Exception("Failed to create the Module"));
-                        //    Task.Run(cleanup);
-                        //});
-                    //});
+                    this.ProjectWatcher.ModuleStream.Once(msm =>
+                    {
+                        var module = this.FindModule(msm.ModuleName);
+                        if (module != null) tcs.TrySetResult(module);
+                        else tcs.TrySetException(new Exception("Failed to create the Module"));
+                    });
                 }
 
                 _ = FileSystem.SaveFile(modulePath, directoryName, $"# {name}");
@@ -149,20 +136,10 @@ namespace Project.File
 
                 if (this.ProjectWatcher != null)
                 {
-                    //await Task.Factory.StartNew(() =>
-                      //{
-                          this.ProjectWatcher.ModuleStream.Once(msm =>
-                          {
-                              tcs.TrySetResult(true);
-                          });
-                          //    Action cleanup = () => { };
-                          //var listenerName = "CREATEOR: " + DateTime.Now + new Random().Next(1000000).ToString();
-                          //cleanup = this.ProjectWatcher.ModuleStream.Subscribe(listenerName, MessageType.ModuleDeleted, msm =>
-                          //{
-                          //    tcs.TrySetResult(true);
-                          //    Task.Run(cleanup);
-                          //});
-                      //});
+                    this.ProjectWatcher.ModuleStream.Once(msm =>
+                    {
+                        tcs.TrySetResult(true);
+                    });
                 }
 
                 await FileSystem.DeleteFile(module.FilePath);

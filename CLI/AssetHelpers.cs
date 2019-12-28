@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Project;
 using System.IO;
 using System.Reflection;
-using System.Text;
 
 namespace CLI
 {
@@ -34,12 +32,17 @@ namespace CLI
 
         internal static void WriteAsset(string path, string content)
         {
-            File.WriteAllText(path, content);
+            ProjectContext.FileSystem?.SaveFile(path, content);
+            //File.WriteAllText(path, content);
         }
 
         internal static void ReadAndWriteAsset(string assetName, string outPath)
         {
-            var outName = System.IO.Path.GetFullPath(assetName, outPath);
+            string outName = $"{outPath}/{assetName}".Replace("//", "/");
+            if (ProjectContext.FileSystem is Project.FileSystems.FileSystem)
+            {
+                outName = System.IO.Path.GetFullPath(assetName, outPath);
+            }
             AssetHelpers.WriteAsset(outName, AssetHelpers.ReadAsset(assetName));
         }
     }

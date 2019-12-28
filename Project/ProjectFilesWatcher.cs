@@ -24,7 +24,7 @@ namespace Project
                 Path = this.BasePath,
 
                 // Watch for changes in FileName and LastWrite 
-                NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.FileName,
+                NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.FileName | NotifyFilters.CreationTime,
 
                 // Only watch text files.
                 Filter = "*.car"
@@ -32,7 +32,6 @@ namespace Project
 
             // Add event handlers.
             watcher.Changed += OnChanged;
-            //watcher.Created += OnCreate;
             watcher.Deleted += OnDelete;
             watcher.Renamed += OnRenamed;
 
@@ -56,22 +55,6 @@ namespace Project
                 Console.WriteLine(ex.Message);
             }
         }
-
-        //private void OnCreate(object source, FileSystemEventArgs e)
-        //{
-        //    try
-        //    {
-        //        ModuleStream.Publish(new ModuleStreamMessage(
-        //            Module.FromPathToName(e.FullPath, this.BasePath),
-        //            e.FullPath,
-        //            MessageType.ModuleCreated
-        //        ));
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Console.WriteLine(ex.Message);
-        //    }
-        //}
 
         private void OnDelete(object source, FileSystemEventArgs e)
         {

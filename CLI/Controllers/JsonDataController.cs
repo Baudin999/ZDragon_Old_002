@@ -115,7 +115,7 @@ namespace CLI.Controllers
             var config = ProjectContext.Instance?.CarConfig ?? new CarConfig();
             var faker = new Faker("nl");
             dynamic? result = null;
-            
+
             result = fakerDirective?.ToLower() switch
             {
                 // person
@@ -177,82 +177,47 @@ namespace CLI.Controllers
                 expandoDict.Add(propertyName, propertyValue);
         }
     }
-
-
-    //public static class BogusWrapper
-    //{
-    //    private static Faker Bogus { get => new Faker("nl"); }
-    //    public static class Person
-    //    {
-    //        public static string FirstName => new Faker("nl").Person.FirstName;
-    //        public static string LastName => BogusWrapper.Bogus.Person.LastName;
-    //        public static string FullName => BogusWrapper.Bogus.Person.FullName;
-    //        public static string DateOfBirth => BogusWrapper.Bogus.Person.DateOfBirth.ToShortDateString();
-    //        public static string Avatar => BogusWrapper.Bogus.Person.Avatar;
-    //        public static string Email => BogusWrapper.Bogus.Person.Email;
-    //        public static string Gender => BogusWrapper.Bogus.Person.Gender.ToString("g");
-    //        public static string Phone => BogusWrapper.Bogus.Person.Phone;
-    //        public static string UserName => BogusWrapper.Bogus.Person.UserName;
-    //    }
-    //    public static class Address
-    //    {
-    //        public static string Street => BogusWrapper.Bogus.Address.StreetName();
-    //        public static string HouseNumber => BogusWrapper.Bogus.Random.Number(1, 1000).ToString();
-    //        public static string HouseNumberExtension => BogusWrapper.Bogus.Random.Char('A', 'Z').ToString();
-    //        public static string PostalCode => BogusWrapper.Bogus.Address.ZipCode();
-    //        public static string City => BogusWrapper.Bogus.Address.City();
-    //        public static string Country => BogusWrapper.Bogus.Address.Country();
-    //        public static string CountryCode => BogusWrapper.Bogus.Address.CountryCode();
-    //        public static string FullAddress => BogusWrapper.Bogus.Address.FullAddress();
-    //        public static string County => BogusWrapper.Bogus.Address.County();
-    //    }
-
-    //    public static class Finance
-    //    {
-    //        public static string Number => BogusWrapper.Bogus.Finance.Account();
-    //    }
-    //}
-
-
-    public static class DataHelpers
-    {
-        public static object? GetPropValue(this object obj, string name)
-        {
-            foreach (var part in name.Split('.'))
-            {
-                if (obj == null) { return null; }
-
-                Type type = obj.GetType();
-                var info = type.GetProperty(part);
-                if (info != null)
-                {
-#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
-                    obj = info.GetValue(obj, null);
-#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
-                }
-                else
-                {
-                    var fieldInfo = type.GetField(part);
-                    if (fieldInfo != null)
-                    {
-#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
-                        obj = fieldInfo.GetValue(obj);
-#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
-                    }
-                }
-            }
-            return obj;
-        }
-
-        public static T GetPropValue<T>(this object obj, String name)
-        {
-            var retval = GetPropValue(obj, name);
-#pragma warning disable CS8653 // A default expression introduces a null value for a type parameter.
-            if (retval == null) { return default; }
-#pragma warning restore CS8653 // A default expression introduces a null value for a type parameter.
-
-            // throws InvalidCastException if types are incompatible
-            return (T)retval;
-        }
-    }
 }
+
+//    public static class DataHelpers
+//    {
+//        public static object? GetPropValue(this object obj, string name)
+//        {
+//            foreach (var part in name.Split('.'))
+//            {
+//                if (obj == null) { return null; }
+
+//                Type type = obj.GetType();
+//                var info = type.GetProperty(part);
+//                if (info != null)
+//                {
+//#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
+//                    obj = info.GetValue(obj, null);
+//#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
+//                }
+//                else
+//                {
+//                    var fieldInfo = type.GetField(part);
+//                    if (fieldInfo != null)
+//                    {
+//#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
+//                        obj = fieldInfo.GetValue(obj);
+//#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
+//                    }
+//                }
+//            }
+//            return obj;
+//        }
+
+//        public static T GetPropValue<T>(this object obj, String name)
+//        {
+//            var retval = GetPropValue(obj, name);
+//#pragma warning disable CS8653 // A default expression introduces a null value for a type parameter.
+//            if (retval == null) { return default; }
+//#pragma warning restore CS8653 // A default expression introduces a null value for a type parameter.
+
+//            // throws InvalidCastException if types are incompatible
+//            return (T)retval;
+//        }
+//    }
+//}

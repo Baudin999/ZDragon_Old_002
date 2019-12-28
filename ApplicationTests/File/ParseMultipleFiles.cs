@@ -19,16 +19,18 @@ namespace ApplicationTests
         {
             try
             {
-                var tasks = new List<Task>();
-                tasks.Add(project.CreateModule("First", @"# The first document
+                var tasks = new List<Task>
+                {
+                    project.CreateModule("First", @"# The first document
 
 type Person
-"));
-                tasks.Add(project.CreateModule("Second", @"
+"),
+                    project.CreateModule("Second", @"
 open Person
 # The second document
 type School
-"));
+")
+                };
                 await Task.WhenAll(tasks.ToArray());
                 Assert.Equal(2, project.Modules.Count);
             }

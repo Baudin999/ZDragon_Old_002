@@ -76,8 +76,10 @@ http://localhost:{portNumber}/
 
         private static void CreateAssets(string outPath)
         {
-            AssetHelpers.ReadAndWriteAsset("mermaid.min.js", outPath);
-            AssetHelpers.ReadAndWriteAsset("mermaid.min.js.map", outPath);
+            //AssetHelpers.ReadAndWriteAsset("mermaid.min.js", outPath);
+            //AssetHelpers.ReadAndWriteAsset("mermaid.min.js.map", outPath);
+            //AssetHelpers.ReadAndWriteAsset("vis-network.js", outPath);
+            //AssetHelpers.ReadAndWriteAsset("vis-network.js.map", outPath);
         }
 
         

@@ -21,6 +21,7 @@ namespace Project.MemoryProject
         public string ConfigPath => "zdragon.json";
 
         public CarConfig CarConfig { get; }
+
         public ObservableCollection<IModule> Modules { get; }
 
         public MemoryProject()
@@ -28,6 +29,29 @@ namespace Project.MemoryProject
             this.FileSystem = ProjectContext.FileSystem ?? throw new Exception("Invalid file system");
             this.CarConfig = new CarConfig();
             this.Modules = new ObservableCollection<IModule>();
+
+            Task.Run( async () =>
+            {
+                var schoolModule = await CreateModule("School", @"
+open Base
+# School
+
+% api: /school
+type School =
+    Name: Name;
+    Students: List Student;
+type Student extends Person;
+");
+                var baseModule = await CreateModule("Base", @"
+
+# Base
+
+alias Name = String;
+type Person =
+    FirstName: String;
+    LastName: String;
+");
+            });
         }
 
 
@@ -37,6 +61,7 @@ namespace Project.MemoryProject
             var module = new MemoryModule(moduleName, source);
             await this.FileSystem.SaveFile(module.FilePath, source);
             this.Modules.Add(module);
+            _ = module.SaveModuleOutput();
             return module;
         }
 
@@ -69,7 +94,51 @@ namespace Project.MemoryProject
 
         public Topology GetTopology(bool includeDetails)
         {
-            throw new NotImplementedException();
+            var nodes = new List<TopologyNode>();
+            var edges = new List<TopologyEdge>();
+
+            this.Modules.ToList().ForEach(m =>
+            {
+                var moduleName = "m::" + m.Name;
+                nodes.Add(new TopologyNode(moduleName, m.Name, new TopologyColor("Orange")) { Module = m.Name });
+                m.Generator.AST.ForEach(node =>
+                {
+                    if (node is ASTImport)
+                    {
+                        var _import = ((ASTImport)node);
+                        edges.Add(new TopologyEdge(moduleName, "m::" + _import.ModuleName, "")
+                        {
+                            Arrows = "to"
+                        });
+                    }
+                    else if (includeDetails && node is ASTType)
+                    {
+                        var _type = ((ASTType)node);
+                        var _id = $"{m.Name}.{_type.Name}";
+                        nodes.Add(new TopologyNode(_id, _type.Name));
+                        edges.Add(new TopologyEdge(moduleName, _id, ""));
+                    }
+                    else if (includeDetails && node is ASTAlias alias)
+                    {
+                        var _id = $"{m.Name}.{alias.Name}";
+                        nodes.Add(new TopologyNode(_id, alias.Name, new TopologyColor("#0096a0")));
+                        edges.Add(new TopologyEdge(moduleName, _id, ""));
+                    }
+                    else if (includeDetails && node is ASTData data)
+                    {
+                        var _id = $"{m.Name}.{data.Name}";
+                        nodes.Add(new TopologyNode(_id, data.Name, new TopologyColor("#fef6e1")));
+                        edges.Add(new TopologyEdge(moduleName, _id, ""));
+
+                        foreach (var option in data.Options)
+                        {
+                            //edges.Add(new TopologyEdge(_id, $"{data.Module}.{option.Name}", ""));
+                        }
+                    }
+                });
+            });
+
+            return new Topology(nodes, edges);
         }
 
         public Task<IModule> MoveModule(string oldName, string newName)
@@ -84,7 +153,7 @@ namespace Project.MemoryProject
 
         public void Watch()
         {
-            throw new NotImplementedException();
+            
         }
     }
 }

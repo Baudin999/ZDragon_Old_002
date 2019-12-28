@@ -26,19 +26,19 @@
     <PackageReference Include="System.IO.FileSystem.Watcher" Version="4.3.0" />
     <PackageReference Include="Bogus" Version="28.4.4" />
     <PackageReference Include="LiteDB" Version="4.1.4" />
-    <PackageReference Include="System.Reactive" Version="4.3.1" />
+    <PackageReference Include="System.Reactive" Version="4.3.2" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Assets\" />
     <Folder Include="Commands\" />
     <Folder Include="Controllers\" />
-    <Folder Include="wwwroot\" />
     <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="Assets\style.css" />
     <None Remove="Assets\mermaid.min.js" />
     <None Remove="Assets\mermaid.min.js.map" />
+    <None Remove="Assets\vis-network.js" />
+    <None Remove="Assets\vis-network.js.map" />
   </ItemGroup>
   <ItemGroup>
     <None Update="wwwroot\*">
@@ -50,5 +50,7 @@
   <ItemGroup>
     <EmbeddedResource Include="Assets\mermaid.min.js" />
     <EmbeddedResource Include="Assets\mermaid.min.js.map" />
+    <EmbeddedResource Include="Assets\vis-network.js" />
+    <EmbeddedResource Include="Assets\vis-network.js.map" />
   </ItemGroup>
 </Project>
