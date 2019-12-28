@@ -39,7 +39,8 @@ namespace ApplicationTests.InMemoryTests
             Assert.NotNull(foo);
             Assert.NotNull(bar);
 
-            Assert.Equal(5, instance.Count);
+            // I automatically generate 3 more modules
+            Assert.True(instance.Count > 4);
 
 
         }
